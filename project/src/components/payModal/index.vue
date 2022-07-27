@@ -259,20 +259,4 @@ h5,
 h6 {
   margin: 0;
 }
-
-// .modal {
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100%;
-//   z-index: 99;
-
-//   .maskLayer {
-//     width: 100%;
-//     height: 100%;
-//     background: #030303;
-//     opacity: 0.65;
-//   }
-// }
 </style>

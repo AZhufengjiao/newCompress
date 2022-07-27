@@ -23,3 +23,11 @@ export function getScanQRcodes(ticket) {
   formData.append("ticket", ticket);
   return requestWithoutToken("/api/wechat/portal/getUser", "POST", formData);
 }
+
+/**
+ * 退出登录
+ * @returns
+ */
+export function userLogOut() {
+  return requestWithoutToken("/api/wechat/portal/logout", "get");
+}

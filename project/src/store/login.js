@@ -4,15 +4,15 @@ const login = {
   // 返回该模式下存储的应用状态
   state() {
     return {
-      id: "",
+      userid: "",
     };
   },
   mutations: {
-    // setParams1(state, obj) {
-    //   state.params1 = obj;
-    // },
+    setParams(state, str) {
+      state.userid = str;
+    },
   },
   Atomics: {},
 };
 
-export default home;
+export default login;

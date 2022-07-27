@@ -95,6 +95,8 @@ import {
 import VueQr from "vue-qr/src/packages/vue-qr.vue";
 // 调用接口
 import { getScanQRcodes, userLogin } from "@/api/login";
+import { useStore } from "vuex";
+const store = useStore();
 // 二维码中图片url
 let logo = require("@/assets/logo.png");
 components: {
@@ -116,12 +118,21 @@ onUpdated(() => {
     loginHandle();
   }
 });
+// 设置定时器
+let time = ref(null);
 // 监听父组件传递的参数
 watch(
   () => props.loginFlag,
   (newValue) => {
-    // 父组件传递的值如果是true，就赋值，让弹出框显示
-    flag.value = newValue;
+    // 说明登录弹出框显示了，那就开始开启定时器判断是否登录
+    if (newValue) {
+      // 父组件传递的值如果是true，就赋值，让弹出框显示
+      flag.value = newValue;
+      // 处理轮训
+      time.value = window.setInterval(() => {
+        scanQRcodes(ticket.value);
+      }, 1000);
+    }
   },
   { deep: true }
 );
@@ -131,19 +142,13 @@ watch(
 let ticket = ref("");
 // 获取二维码要用的url
 let qrCodePictureUrl = ref("");
-// 设置定时器
-let time = ref(null);
+
 // 获取登录二维码
 const loginHandle = () => {
   return userLogin().then((res) => {
     if (res.data.code == 200) {
       ticket.value = res.data.data.ticket;
       qrCodePictureUrl.value = res.data.data.qrCodePictureUrl;
-      // 处理轮训
-      time.value = setInterval(() => {
-        console.log(11);
-        scanQRcodes(ticket.value);
-      }, 5000);
     }
   });
 };
@@ -162,10 +167,16 @@ const scanQRcodes = (ticket) => {
     console.log(res.data);
     // console.log(res.data.data.entity.id);
     if (res.data.code === 200) {
+      // 存储用户id到本地
+      let id = res.data.data.entity.id;
+      localStorage.setItem("userid", id);
+      store.commit("login/setParams", id);
       // 清除定时器
       clearInterval(time.value);
-      let id = res.data.data.entity.id;
-      localStorage.setItem("login-key", id);
+      time.value = null;
+
+      // 登录成功，关闭弹窗
+      cancelHandle();
     }
   });
 };
@@ -173,6 +184,7 @@ const scanQRcodes = (ticket) => {
 // 卸载组件清除定时器
 onUnmounted(() => {
   clearInterval(time.value);
+  time.value = null;
 });
 </script>
 

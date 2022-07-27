@@ -294,11 +294,13 @@
 <script setup>
 import HomeNav from "@/components/home/Nav/index.vue";
 import VipSetMeal from "@/components/myVip/VipSetMeal/index.vue";
+import { getSetMeal } from "@/api/vip";
 import { onMounted, ref } from "vue";
+import { useStore } from "vuex";
 components: {
-  HomeNav;
+  HomeNav, VipSetMeal;
 }
-
+const store = useStore();
 // vip会员特权数组
 const arr = [1, 2, 3, 4, 5, 6, 7, 8];
 // 年费大礼包数组
@@ -310,15 +312,29 @@ let privilege = ref(null);
 let privilegeTop = null;
 let quanyiFlag = ref(false);
 
+// 获取用户id
+const userid = ref(store.state.login.userid);
 onMounted(() => {
   privilegeTop = privilege.value.offsetTop;
   window.addEventListener("scroll", handleScroll);
+  // 获取套餐信息
+  setMealInfo(userid.value);
 });
+// 滚动定位
 const handleScroll = () => {
   let windowTop = document.documentElement.scrollTop;
   windowTop >= privilegeTop
     ? (quanyiFlag.value = true)
     : (quanyiFlag.value = false);
+};
+
+// 获取套餐信息列表
+const setMealInfo = (id) => {
+  return getSetMeal(id).then((res) => {
+    if (res.data.code == 200) {
+      console.log(res.data);
+    }
+  });
 };
 </script>
 

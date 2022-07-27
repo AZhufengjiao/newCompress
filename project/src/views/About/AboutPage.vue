@@ -226,10 +226,13 @@ import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import payModel from "@/components/payModal/index.vue";
 import aboutNav from "@/components/aboutNav/index.vue";
+import { userList } from "@/api/user";
+import { useStore } from "vuex";
 components: {
   payModel, aboutNav;
 }
 const $router = useRouter();
+const store = useStore();
 // 测试路由
 const handle1 = () => {
   $router.push({ path: "home", query: { id: 1 } });
@@ -249,16 +252,35 @@ const updataModalFlag = (bol) => {
   modalFlag.value = bol;
 };
 
-onMounted(() => {
-  // 获取本地存储的登录信息
-  let state = localStorage.getItem("login-key");
-  // 没有登录
-  if (!state) {
-    console.log("未登录");
-  } else {
-    // console.log("已登录，准备更新xxi");
+// 获取本地用户id，查看是否登录
+let state = ref("");
+state.value = store.state.login.userid;
+
+// 调用接口，获取用户信息
+const getUserInfo = (userid) => {
+  return userList(userid).then((res) => {
+    if (res.data.code == 200) {
+      console.log(res.data);
+    }
+  });
+};
+
+watch(
+  () => store.state.login.userid,
+  (newValue) => {
+    // 没有登录
+    if (newValue == null || newValue.length <= 0) {
+      console.log("未登录");
+    } else {
+      //   // 已登录，获取用户信息
+      getUserInfo(newValue);
+    }
+  },
+  {
+    deep: true,
+    immediate: true,
   }
-});
+);
 </script>
 
 <style lang="scss" scoped>
