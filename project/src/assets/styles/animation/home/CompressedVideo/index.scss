@@ -1,0 +1,41 @@
+.bounce-enter-active {
+  animation: bounce-in 1s forwards;
+}
+.bounce-leave-active {
+  animation: bounce-in 1s forwards;
+}
+// @keyframes bounce-in {
+//   0% {
+//     width: 0%;
+//   }
+//   100% {
+//     width: 100%;
+//     background: linear-gradient(90deg, #1bc2ed 0%, #2d19ce 100%);
+//   }
+// }
+
+.succeed-enter-active {
+  animation: succeed-in 1s forwards;
+}
+@keyframes succeed-in {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+    background: linear-gradient(90deg, #04c4f5 0%, #51ff82 100%);
+  }
+}
+
+.failure-enter-active {
+  animation: failure-in 1s forwards;
+}
+@keyframes failure-in {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+    background: linear-gradient(90deg, #ff906f 0%, #ff7d7d 100%);
+  }
+}

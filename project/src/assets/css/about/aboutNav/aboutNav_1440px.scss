@@ -1,0 +1,75 @@
+//  适配1440px
+@media screen and (max-width: 1440px) {
+  .container {
+    width: 1200px;
+    margin: auto;
+  }
+  //头部
+  .header {
+    background-color: #f6f7f9;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    .header-box {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 24px 0;
+      .header-logo {
+        display: flex;
+        .header-logo-left {
+          position: relative;
+          width: 32px;
+          height: 32px;
+          margin-right: 10px;
+          .wathet {
+            border-radius: 50%;
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: rgba(10, 199, 255, 0.8);
+          }
+          .blue {
+            z-index: 2;
+            border-radius: 50%;
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 28px;
+            height: 28px;
+            background: rgba(5, 68, 255, 0.7);
+            backdrop-filter: blur(1px);
+          }
+        }
+        .header-logo-right {
+          width: 91px;
+          height: 30px;
+          font-size: 30px;
+          font-family: Impact;
+          color: #000000;
+          line-height: 30px;
+        }
+      }
+      .header-login-box {
+        display: flex;
+        align-items: center;
+        .header-login {
+          font-size: 16px;
+          font-family: PingFangSC-Semibold, PingFang SC;
+          font-weight: 600;
+          color: #252525;
+          line-height: 22px;
+          letter-spacing: 3px;
+        }
+        .header-xian {
+          width: 2px;
+          height: 14px;
+          background: #c7c7c7;
+          opacity: 0.51;
+          margin: 0 21px;
+        }
+      }
+    }
+  }
+}

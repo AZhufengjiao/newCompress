@@ -1,0 +1,22 @@
+.StyleaLeft {
+  animation: styleaLeft 1s forwards;
+}
+.StyleaRight {
+  animation: styleaRight 1s forwards;
+}
+@keyframes styleaLeft {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -100px;
+  }
+}
+@keyframes styleaRight {
+  0% {
+    left: -100px;
+  }
+  100% {
+    left: 0;
+  }
+}

@@ -1,0 +1,84 @@
+.cliStyle {
+  animation: identifier 1s forwards;
+}
+.clitogglestyle {
+  animation: succeed-in 1s forwards;
+}
+@keyframes identifier {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -195px;
+  }
+}
+@keyframes succeed-in {
+  0% {
+    left: -195px;
+  }
+  100% {
+    left: 0;
+  }
+}
+
+// 依次出场
+// 1
+.myVip-setMealboxOne {
+  animation: beginOne 1s forwards;
+}
+@keyframes beginOne {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+// 2
+.myVip-setMealboxTwo {
+  animation: beginTwo 1s forwards 0.4s;
+}
+@keyframes beginTwo {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+// 3
+.myVip-setMealboxSan {
+  animation: beginSan 1s forwards 0.8s;
+}
+@keyframes beginSan {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+// 4
+.myVip-setMealboxSi {
+  animation: beginSi 1s forwards 1.2s;
+}
+@keyframes beginSi {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+// 5
+.myVip-setMealboxWu {
+  animation: beginWu 1s forwards 1.6s;
+}
+@keyframes beginWu {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,323 @@
+// 适配1280px
+@media screen and (max-width: 1280px) {
+  // 新添加的下载按钮
+  .home .home_uploadingVideo_box .download {
+    margin-top: 53px;
+    width: 331px;
+    height: 46px;
+    background: #0544ff;
+    border-radius: 6px;
+  }
+  // 新添加下拉框iconyangshi
+  .home #qw .ant-select {
+    display: flex;
+    align-items: center;
+    #select {
+      height: 68px !important;
+      font-size: 16px;
+    }
+  }
+  :deep .ant-select-selector {
+    height: 45px !important;
+  }
+  :deep .ant-select-selection-item {
+    line-height: 42px;
+  }
+
+  .home
+    #qw
+    .ant-select-single.ant-select-lg:not(.ant-select-customize-input)
+    .ant-select-selector {
+    height: 80px !important;
+  }
+
+  //
+  .home_fileCompression_box_center_box {
+    .ant-progress-text {
+      display: none !important;
+    }
+  }
+
+  /*文件上传css*/
+  .home_fileCompression {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 22px;
+
+    .home_fileCompression_flex {
+      width: 845px;
+      .home_fileCompression_box {
+        width: 100%;
+        display: flex;
+        // justify-content: space-between;
+        flex-wrap: wrap;
+        align-items: center;
+
+        .home_fileCompression_box_box {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          margin-top: 18px;
+        }
+        .home_fileCompression_box_zh {
+          width: 62px;
+          height: 20px;
+          font-size: 14px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #333333;
+          line-height: 20px;
+          letter-spacing: 1px;
+        }
+        .home_fileCompression_box_xz {
+          width: 62px;
+          height: 20px;
+          font-size: 14px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #333333;
+          line-height: 20px;
+          letter-spacing: 1px;
+        }
+        .home_fileCompression_box_name {
+          display: inline-block;
+          width: 44px;
+          height: 20px;
+          font-size: 14px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #333333;
+          line-height: 20px;
+          letter-spacing: 1px;
+          overflow: hidden;
+        }
+        .home_fileCompression_box_center {
+          display: flex;
+          align-items: center;
+          .home_fileCompression_box_memory {
+            width: 44px;
+            height: 20px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #333333;
+            line-height: 20px;
+            letter-spacing: 1px;
+          }
+          .home_fileCompression_box_center_box {
+            flex: 1;
+            margin: 0 18px;
+            width: 331px;
+            height: 27px;
+            background: #d6dff6;
+            border-radius: 16px;
+            .home_fileCompression_box_center_box_style {
+              width: 0%;
+              height: 100%;
+              background: linear-gradient(90deg, #1bc2ed 0%, #2d19ce 100%);
+              border-radius: 16px;
+              font-size: 12px;
+              font-family: PingFangSC-Regular, PingFang SC;
+              font-weight: 400;
+              color: #ffffff;
+              line-height: 18px;
+              letter-spacing: 1px;
+              text-align: center;
+              overflow: hidden;
+            }
+            .scStyle {
+              background: linear-gradient(to right, #1bc2ed, #2d19ce);
+            }
+            .zhtyle {
+              background: linear-gradient(90deg, #04c4f5 0%, #51ff82 100%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .home_compressedVideo {
+    width: 100%;
+    padding-top: 104px;
+    .home_compressedVideo_hanzi {
+      text-align: left;
+      margin: 12px 0 14px 196px;
+      font-size: 11px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #0544ff;
+      line-height: 11px;
+    }
+
+    .home_uploadingVideo_box {
+      margin-top: 15px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .home_uploadingVideo {
+      text-align: center;
+      width: 1000px;
+      height: 223px;
+      border-radius: 12px;
+      opacity: 0.6;
+      border: 3px solid #0544ff;
+      .home_uploadingVideo_bottom {
+        margin: auto;
+        margin-top: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 11px;
+        width: 168px;
+        height: 53px;
+        background: #0544ff;
+        box-shadow: inset 0px 4px 20px 0px rgba(255, 255, 255, 0.5);
+        border-radius: 6px;
+        .home_uploadingVideo_bottom_span {
+          font-size: 24px;
+          font-family: PingFangSC-Semibold, PingFang SC;
+          font-weight: 600;
+          color: #ffffff;
+        }
+        .home_uploadingVideo_bottom_img {
+          width: 24px;
+          height: 24px;
+          margin-right: 7px;
+          img {
+            width: 100%;
+            height: 100%;
+            /* vertical-align: baseline; */
+          }
+        }
+      }
+      p {
+        margin-bottom: 41px;
+        font-size: 16px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #0544ff;
+        line-height: 22px;
+        letter-spacing: 1px;
+      }
+      h1 {
+        font-size: 16px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #999999;
+        line-height: 22px;
+        letter-spacing: 1px;
+      }
+      span {
+        text-decoration: underline;
+        font-size: 16px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #0544ff;
+        line-height: 22px;
+        letter-spacing: 1px;
+      }
+    }
+  }
+  .home_compressedVideo_top {
+    padding-bottom: 45px;
+    h2 {
+      font-size: 40px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #000000;
+      line-height: 40px;
+      letter-spacing: 1px;
+    }
+    div {
+      font-size: 24px;
+      font-family: PingFangSC-Thin, PingFang SC;
+      font-weight: 100;
+      color: #000000;
+      line-height: 40px;
+    }
+  }
+
+  .home_compressedVideo_bottom {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .home_compressedVideo_bottom_box {
+      width: 1000px;
+      height: 132px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(7.321131447587355px);
+      .home_compressedVideo_bottom_top {
+        display: flex;
+        width: 539px;
+        height: 52px;
+
+        border-radius: 8px 15px 0px 0px;
+        div {
+          background: #ffffff;
+          width: 33.33%;
+          height: 52px;
+          line-height: 52px !important;
+          letter-spacing: 1px;
+          border-radius: 0 10px 0 0;
+          font-size: 16px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #0544ff;
+          line-height: 16px;
+          letter-spacing: 1px;
+        }
+      }
+      .home_compressedVideo_bottom_bottom {
+        padding: 0 0 0 29px;
+        height: 80px;
+        background: #e1e9ff;
+        div {
+          font-size: 16px !important;
+        }
+        .home_compressedVideo_bottom_bottom_one {
+          display: flex;
+          align-content: center !important;
+          line-height: 80px;
+          .zhuanhuan {
+            width: 102px;
+            height: 80px;
+            line-height: 80px;
+            font-size: 16px;
+          }
+          .zhi {
+            width: 53px;
+          }
+          div {
+            background: #e1e9ff;
+            height: 80px;
+            line-height: 80px;
+            backdrop-filter: blur(7.321131447587355px);
+            letter-spacing: 1px;
+            font-size: 16px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #0544ff;
+          }
+        }
+      }
+    }
+  }
+  .fenjxian {
+    margin-top: 21px;
+    margin-left: -2px;
+    width: 1px;
+    height: 15px;
+    border: 1px solid #e1e9ff;
+  }
+  .border_cor {
+    border-bottom: 3px #0544ff solid !important ;
+    border-radius: 3px;
+  }
+  .border_col {
+    background: #e1e9ff !important;
+  }
+}

@@ -1,0 +1,399 @@
+@media screen and (max-width: 1280px) {
+  .myVip-setMealbox {
+    width: 100%;
+    padding: 0 63px;
+  }
+  // 会员套餐部分
+  .myVip-setMeal {
+    width: 1168px;
+    // width: 1344px;
+    position: relative;
+    height: 964px;
+    // margin: 0 0 0 112px;
+    overflow: hidden;
+
+    .myVip-setMeal-layout {
+      position: absolute;
+      left: 0;
+      width: 1342px;
+      display: flex;
+    }
+    .myVip-setMeal-box {
+      position: relative;
+      width: 249px;
+      height: 964px;
+      background: #0040ff;
+      margin-right: 24px;
+      box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.5);
+      border-radius: 18px;
+      opacity: 0;
+      // 盒子上部分
+      .myVip-setMeal-box-plan {
+        padding-top: 39px;
+        width: 249px;
+        height: 334px;
+        text-align: center;
+        background: linear-gradient(
+          180deg,
+          #0432ba 0%,
+          rgba(5, 68, 255, 0) 100%
+        );
+        border-top-left-radius: 18px;
+        border-top-right-radius: 18px;
+        // 右上角定位
+        .myVip-setMeal-box-plan-preference {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 96px;
+          height: 30px;
+          background: linear-gradient(180deg, #efb21a 0%, #ffe547 100%);
+          border-radius: 0px 0px 0px 18px;
+          border-top-right-radius: 14px;
+          font-size: 14px;
+          font-family: HarmonyOS_Sans_SC_Medium;
+          color: #0437d1;
+
+          line-height: 30px;
+        }
+        p {
+          width: 185px;
+          height: 41px;
+          font-size: 28px;
+          font-family: HarmonyOS_Sans_SC_Bold;
+          color: #ffffff;
+          line-height: 41px;
+          margin: 0 auto 4px;
+        }
+        // price
+        .myVip-setMeal-box-plan-price-box {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          .myVip-setMeal-box-plan-price {
+            width: 112px;
+            height: 64px;
+            font-size: 64px;
+            font-family: HarmonyOS_Sans_SC_Bold;
+            color: #ffffff;
+            line-height: 64px;
+          }
+          .myVip-setMeal-box-plan-yuan {
+            margin: 30px 5px 10px;
+            width: 24px;
+            height: 24px;
+            background: #ffffff;
+            border-radius: 50%;
+            font-size: 16px;
+            font-family: HarmonyOS_Sans_SC;
+            color: #0544ff;
+            line-height: 24px;
+          }
+        }
+        // 仅剩时间
+        .myVip-setMeal-box-plan-time {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          margin-top: 17px;
+          .setMeal-box-time-js {
+            margin-right: 8px;
+            width: 32px;
+            height: 16px;
+            font-size: 16px;
+            font-family: HarmonyOS_Sans_SC;
+            color: #ffffff;
+            line-height: 16px;
+          }
+          .setMeal-box-time-box {
+            width: 32px;
+            height: 21px;
+            background: #ffffff;
+            border-radius: 3px;
+            font-size: 16px;
+            font-family: HarmonyOS_Sans_SC;
+            color: #0544ff;
+            line-height: 21px;
+          }
+          span {
+            margin: 0 4px;
+            width: 7px;
+            height: 16px;
+            font-size: 16px;
+            font-family: HarmonyOS_Sans_SC;
+            color: #010101;
+            line-height: 16px;
+          }
+        }
+        // 立即抢购
+        .myVip-setMeal-box-plan-PanicBuying {
+          margin: 25px auto 19px;
+          width: 196px;
+          height: 52px;
+          background: linear-gradient(180deg, #fff0cc 0%, #ffe547 100%);
+          border-radius: 10px;
+          font-size: 23px;
+          font-family: HarmonyOS_Sans_SC;
+          color: #0544ff;
+          line-height: 52px;
+        }
+        .myVip-setMeal-box-plan-xz {
+          margin: 0 auto 19px;
+          width: 150px;
+          height: 14px;
+          font-size: 14px;
+          font-family: HarmonyOS_Sans_SC;
+          color: #ffffff;
+          line-height: 14px;
+          span {
+            width: 28px;
+            height: 14px;
+            color: #f5c62c;
+          }
+        }
+      }
+      // 盒子上部分下的一个颜色
+      .myVip-setMeal-box-col {
+        width: 249px;
+        height: 23px;
+        background: linear-gradient(
+          180deg,
+          #ffffff 0%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        opacity: 0.11;
+      }
+      // 盒子权益部分
+      .myVip-setMeal-box-qy {
+        margin-top: 12px;
+        width: 100%;
+        .myVip-setMeal-box-qy-box {
+          margin: auto;
+          margin-bottom: 27px;
+          width: 195px;
+          .myVip-setMeal-box-qy-box-top {
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            h1 {
+              margin: 0;
+              height: 14px;
+              font-size: 14px;
+              font-family: PingFangSC-Medium, PingFang SC;
+              font-weight: 500;
+              color: #ffffff;
+              line-height: 14px;
+            }
+            div {
+              opacity: 0.2;
+              letter-spacing: 3px;
+              color: white;
+            }
+          }
+          .myVip-setMeal-box-qy-box-bottom {
+            .myVip-setMeal-box-qy-btmBox {
+              margin-bottom: 11px;
+              opacity: 0.6;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              h2 {
+                margin: 0;
+                width: 128px;
+                height: 12px;
+                font-size: 12px;
+                font-family: HarmonyOS_Sans_SC;
+                color: #f3f9ff;
+                line-height: 12px;
+              }
+              span {
+                width: 11px;
+                height: 11px;
+                border-radius: 50%;
+                border: 1px solid white;
+              }
+            }
+          }
+        }
+      }
+      // 查看权益详细说明
+      .myVip-setMeal-box-explain {
+        width: 196px;
+        height: 44px;
+        background: #4271ff;
+        border-radius: 22px;
+        line-height: 44px;
+        margin: 5px auto 32px;
+        text-align: center;
+        span {
+          width: 142px;
+          height: 18px;
+          font-size: 18px;
+          font-family: HarmonyOS_Sans_SC;
+          color: #ffffff;
+          text-decoration: underline;
+          opacity: 0.8;
+        }
+      }
+      // 后一个盒子
+      .myVip-setMeal-box-finally {
+        width: 196px;
+        margin: auto;
+        h2 {
+          width: 128px;
+          height: 14px;
+          font-size: 14px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #ffffff;
+          line-height: 14px;
+        }
+        .myVip-setMeal-box-finally-box {
+          margin-top: 16px;
+          display: flex;
+          justify-content: space-around;
+          width: 196px;
+          height: 52px;
+          line-height: 52px;
+          background: #fff8d1;
+          border-radius: 6px;
+          h1 {
+            width: 72px;
+            font-size: 14px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #ad5703;
+          }
+          span {
+            text-decoration: underline;
+            font-size: 14px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #3d56d5;
+          }
+        }
+      }
+    }
+
+    // 左右两边的点击按钮
+    .myVip-setMeal-clickBtn {
+      position: absolute;
+      top: 339px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 76px;
+      height: 69px;
+      background: rgba(0, 0, 0, 0.42);
+      border-radius: 0px 89px 89px 0px;
+      span {
+        display: block;
+        width: 0px;
+        height: 0px;
+        line-height: 68px;
+        border-top: 15px solid transparent;
+        border-bottom: 15px solid transparent;
+        border-right: 30px solid #ffffff;
+        border-radius: 5px;
+        opacity: 1;
+      }
+    }
+    .myVip-setMeal-clickBtn-left {
+      left: 0;
+    }
+    .myVip-setMeal-clickBtn-right {
+      right: 0;
+      border-radius: 89px 0px 0px 89px;
+      span {
+        border-right: none;
+        border-left: 30px solid #ffffff;
+      }
+    }
+  }
+
+  //  会员套餐不一样的样式
+  #myVip-setMeal-pattern {
+    background: #fff7e8;
+    color: black !important;
+    box-shadow: 0px 6px 12px 0px rgba(112, 124, 159, 0.21);
+    p,
+    h1,
+    h2,
+    div,
+    span {
+      color: black;
+    }
+    .myVip-setMeal-box-col {
+      width: 249px;
+      height: 23px;
+      background: linear-gradient(
+        180deg,
+        #a8b1ff 0%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      opacity: 0.17;
+    }
+    .myVip-setMeal-box-plan {
+      background: linear-gradient(
+        180deg,
+        #ffd1a5 0%,
+        rgba(253, 236, 212, 0) 100%
+      );
+      color: black !important;
+      .myVip-setMeal-box-plan-preference {
+        background: #ff5353;
+        color: white;
+      }
+      .myVip-setMeal-box-plan-PanicBuying {
+        background: #ff8405;
+        color: white;
+      }
+      .myVip-setMeal-box-plan-xz span {
+        color: #eb3434;
+      }
+    }
+    .myVip-setMeal-box-explain {
+      background-color: #f3e8d6;
+      color: #563d20;
+    }
+    .myVip-setMeal-box-finally {
+      .myVip-setMeal-box-finally-box {
+        background-color: white;
+        h1 {
+          color: #ad5703;
+        }
+        span {
+          color: #3d56d5;
+        }
+      }
+    }
+    .myVip-setMeal-box-qy-btmBox span {
+      border: 1px solid #000;
+    }
+
+    // 添加样式
+    .myVip-setMeal-box-plan-quan {
+      margin-top: 30px;
+      font-size: 16px;
+      font-family: HarmonyOS_Sans_SC;
+      color: #0b030a;
+    }
+    .myVip-setMeal-box-plan-yuan {
+      background-color: black;
+      color: white;
+    }
+    .myVip-setMeal-box-plan-yj {
+      margin-top: 20px;
+      font-size: 16px;
+      font-family: HarmonyOS_Sans_SC;
+      color: #010101;
+      line-height: 16px;
+      text-decoration: line-through;
+    }
+  }
+  //  最后一个盒子去除margin
+  .Remover {
+    margin: 0 !important;
+  }
+}

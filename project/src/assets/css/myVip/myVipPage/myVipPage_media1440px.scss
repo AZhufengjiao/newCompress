@@ -1,0 +1,329 @@
+@media screen and (min-width: 1128px) and(max-width:1440px) {
+  // @media screen and (min-width: 1128px) {
+  .myVip {
+    .header_logo {
+      width: 100%;
+      height: 100%;
+    }
+    .header_box {
+      background-color: #fff;
+    }
+
+    // SOOGIF部分
+    .myVip-soogif {
+      width: 100%;
+      margin-top: 107px;
+      min-width: 900px;
+      .myVip-soogif-top {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .myVip-soogif-top-left {
+          width: 178px;
+          height: 56px;
+          font-size: 43px;
+          font-family: Futura-Bold, Futura;
+          font-weight: bold;
+          color: #000000;
+          line-height: 57px;
+        }
+        .myVip-soogif-top-right {
+          width: 600px;
+          height: 43px;
+          font-size: 43px;
+          font-family: HarmonyOS_Sans_SC_Bold;
+          color: #000000;
+          line-height: 43px;
+        }
+      }
+      h1 {
+        margin: 16px auto 64px;
+        width: 350px;
+        height: 20px;
+        font-size: 20px;
+        font-family: HarmonyOS_Sans_SC;
+        color: #000000;
+        line-height: 20px;
+        letter-spacing: 10px;
+      }
+    }
+
+    // vip会员特权
+    .myVip-tq {
+      min-width: 1440px;
+      width: 100%;
+      margin: 60px auto 0;
+      text-align: center;
+      h1 {
+        padding: 0;
+        margin-bottom: 30px;
+      }
+      .myVip-tq-box {
+        margin: auto;
+        width: 1190px;
+        background: #e9efff;
+        border-radius: 20px;
+        backdrop-filter: blur(7.321131447587355px);
+      }
+      button {
+        width: 274px;
+        height: 56px;
+        background: #0040ff;
+        box-shadow: inset 0px 1px 3px 0px rgba(255, 255, 255, 0.5);
+        border-radius: 6px;
+        margin-bottom: 60px;
+      }
+      ul {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0;
+        padding-top: 40px;
+        width: 946px;
+        margin: auto;
+        text-decoration: none;
+        list-style: none;
+        li {
+          margin: 0px 50px;
+          width: 136px;
+          margin-bottom: 35px;
+          p {
+            margin: 0;
+            margin-top: 20px;
+          }
+
+          .myVip-tq-box-b {
+            width: 97px;
+            height: 97px;
+            background-color: #dde5ff;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: auto;
+            img {
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+            }
+          }
+        }
+      }
+    }
+
+    // 会员特权
+    .myVip-privilege {
+      min-width: 1440px;
+      width: 100%;
+      margin-top: 60px;
+      h2 {
+        text-align: center;
+        font-size: 44px;
+        font-family: HarmonyOS_Sans_SC_Bold;
+        color: #000000;
+        line-height: 44px;
+        -webkit-background-clip: text;
+      }
+      ul {
+        margin: auto;
+        width: 1190px;
+        background: #c2ceff;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #ced8ff;
+        li {
+          display: flex;
+          width: 100%;
+          height: 50px;
+          line-height: 50px;
+          background: white;
+          .myVip-privilege-title {
+            width: 265px;
+            height: 100%;
+            margin-left: 40px;
+          }
+          .myVip-privilege-font {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 125px;
+            height: 100%;
+            text-align: center;
+            padding-left: 40px;
+            .myVip-privilegeconfirm {
+              width: 23px;
+              height: 23px;
+              line-height: 23px;
+              border: 1px solid #0040ff;
+              border-radius: 50%;
+            }
+          }
+        }
+        .column {
+          height: 62px;
+          line-height: 62px;
+          background: #c2ceff;
+        }
+      }
+    }
+
+    // 提供发票 报销无忧
+    .myVip-invoice {
+      .myVip-tq-box {
+        display: flex;
+        padding: 62px 117px 61px 110px;
+        .myVip-tq-box-left {
+          width: 472px;
+          height: 304px;
+          margin-right: 78px;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .myVip-tq-box-right {
+          text-align: left;
+          button {
+            margin-top: 44px;
+            margin-bottom: 0;
+            width: 213px;
+            height: 55px;
+            background: #0040ff;
+            box-shadow: inset 0px 1px 3px 0px rgba(255, 255, 255, 0.5);
+            border-radius: 6px;
+          }
+          h1 {
+            margin: 0;
+            margin-bottom: 8px;
+            font-size: 21px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #464646;
+            line-height: 29px;
+          }
+          .myVip-tq-box-right-box {
+            margin-top: 26px;
+            display: flex;
+            width: 100%;
+            .myVip-dashed {
+              margin: 9px 16px;
+              color: #0040ff;
+              letter-spacing: 4px;
+              font-size: 18px;
+            }
+            .myVip-tq-smallB {
+              .myVip-tq-smallB-img {
+                margin: auto;
+                margin-bottom: 8px;
+                width: 70px;
+                height: 70px;
+                background-color: #dde5ff;
+                border-radius: 50%;
+                overflow: hidden;
+                img {
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+              h2 {
+                margin: 0;
+                font-size: 21px;
+                font-family: PingFangSC-Regular, PingFang SC;
+                font-weight: 400;
+                color: #000000;
+                line-height: 29px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // 常见问题
+    .myVip-tq {
+      .home_footer_box {
+        padding-bottom: 100px;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        .home_footer_smallBox {
+          text-align: left;
+          border: 1px solid rgba(255, 255, 255, 0.22);
+          backdrop-filter: blur(7.321131447587355px);
+          padding-left: 18px;
+          margin: 0 12px 20px;
+          box-sizing: border-box;
+          width: 588px;
+          background: #b1c4ff;
+          border-radius: 12px;
+          opacity: 0.65;
+          h2 {
+            margin-top: 15px;
+            font-size: 18px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #0030bf;
+          }
+          p {
+            margin: 0;
+            margin-bottom: 19px;
+            font-size: 18px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #0030bf;
+            line-height: 26px;
+          }
+        }
+      }
+    }
+
+    // 注释
+    .myVip-annotation {
+      width: 100%;
+      padding: 80px 125px 201px;
+      background-color: #f1f2f3;
+      border-radius: 12px 12px 0 0;
+      min-width: 1440px;
+      h1,
+      p {
+        margin: 0;
+        font-size: 18px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #1e1e1e;
+        line-height: 42px;
+      }
+    }
+
+    // 权益nav
+    .quanyiNav {
+      position: fixed;
+      top: 80px;
+      background: #e9efff;
+      width: 100%;
+      height: 62px;
+      line-height: 62px;
+      z-index: 10;
+      .quanyiNav-anv {
+        display: flex;
+        width: 1190px;
+        margin: auto;
+        padding-left: 32px;
+      }
+
+      .quanyiNav-list {
+        flex: 3;
+        display: flex;
+      }
+      .quanyiNav-span {
+        width: 125px;
+        margin-left: 40px;
+      }
+      .quanyiNav-one {
+        width: 265px;
+        margin: 0;
+      }
+    }
+  }
+} ;
