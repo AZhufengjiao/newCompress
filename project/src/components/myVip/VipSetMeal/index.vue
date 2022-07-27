@@ -16,7 +16,11 @@
       >
         <!-- <div class="myVip-setMeal-layout"> -->
         <!-- 1 -->
-        <div class="myVip-setMeal-box myVip-setMealboxOne">
+        <div
+          v-for="item in setMealList"
+          :key="item"
+          class="myVip-setMeal-box myVip-setMealboxOne"
+        >
           <!-- 盒子上部分 -->
           <div class="myVip-setMeal-box-plan">
             <!-- 右上角定位 -->
@@ -607,14 +611,22 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 import payModel from "@/components/payModal/index.vue";
-
+import { getSetMeal } from "@/api/vip";
+import { onMounted, ref } from "vue";
+import { useStore } from "vuex";
 components: {
   payModel;
 }
 const $router = useRouter();
+const store = useStore();
+// 获取用户id
+const userid = ref(store.state.login.userid);
+onMounted(() => {
+  // 获取套餐信息
+  setMealInfo(userid.value);
+});
 
 // 支付弹出框
 let modalFlag = ref(false);
@@ -628,6 +640,17 @@ const updataModalFlag = (bol) => {
 };
 
 const btnToggle = ref(null);
+
+let setMealList = ref([]);
+// 获取套餐信息列表
+const setMealInfo = (id) => {
+  return getSetMeal(id).then((res) => {
+    if (res.data.code == 200) {
+      setMealList.value = res.data.data;
+      console.log(setMealList.value);
+    }
+  });
+};
 </script>
 
 <style lang="scss" scoped>

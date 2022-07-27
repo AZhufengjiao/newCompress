@@ -294,7 +294,6 @@
 <script setup>
 import HomeNav from "@/components/home/Nav/index.vue";
 import VipSetMeal from "@/components/myVip/VipSetMeal/index.vue";
-import { getSetMeal } from "@/api/vip";
 import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 components: {
@@ -312,13 +311,9 @@ let privilege = ref(null);
 let privilegeTop = null;
 let quanyiFlag = ref(false);
 
-// 获取用户id
-const userid = ref(store.state.login.userid);
 onMounted(() => {
   privilegeTop = privilege.value.offsetTop;
   window.addEventListener("scroll", handleScroll);
-  // 获取套餐信息
-  setMealInfo(userid.value);
 });
 // 滚动定位
 const handleScroll = () => {
@@ -326,15 +321,6 @@ const handleScroll = () => {
   windowTop >= privilegeTop
     ? (quanyiFlag.value = true)
     : (quanyiFlag.value = false);
-};
-
-// 获取套餐信息列表
-const setMealInfo = (id) => {
-  return getSetMeal(id).then((res) => {
-    if (res.data.code == 200) {
-      console.log(res.data);
-    }
-  });
 };
 </script>
 
