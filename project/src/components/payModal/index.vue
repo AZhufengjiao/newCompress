@@ -14,8 +14,8 @@
           type="primary"
           :loading="loading"
           @click="handleOk"
-          >Submit</a-button
-        >
+          >Submit
+        </a-button>
       </template>
       <!-- 顶部 -->
       <div class="modal-header">
@@ -98,57 +98,40 @@
                   StyleFlag && StyleFlag != null ? 'StyleaRight' : '',
                 ]"
               >
-                <li>
+                <li
+                  @click="index != 0 ? (Id = item.pId) : null"
+                  v-for="(item, index) in taocanList"
+                  :class="[
+                    index !== 0 ? 'twoLi' : '',
+                    Id + '' == item.pId && index != 0 ? 'styleLi' : '',
+                    MousemoveNum + '' == item.pId && index != 0
+                      ? 'styleLi'
+                      : '',
+                  ]"
+                  :key="item"
+                  @mousemove="handleMousemove(item.pId)"
+                >
                   <h1>钻石会员·终身 + 智能抠图100次</h1>
-                  <div class="modal-robShopping">显示抢购</div>
+                  <div class="modal-robShopping">{{ item.pId }}显示抢购</div>
                   <div class="modal-mvpTC-price">
-                    <div class="modal-price">268</div>
+                    <div class="modal-price">{{ item.discountPrice }}</div>
                     <div class="modal-yuan">元</div>
-                    <span>¥1437</span>
+                    <span v-if="index === 0">¥1437</span>
                   </div>
+                  <h4 v-if="index !== 0">100.00元</h4>
                   <p>钻石会员¥1268 + 智能抠图¥169 = ¥1437</p>
-                  <h2>只能抠图100张/月</h2>
+                  <h2 v-if="index === 0">只能抠图100张/月</h2>
                 </li>
-                <li class="twoLi">
+                <!-- <li class="twoLi">
                   <h1>终身会员</h1>
                   <div class="modal-robShopping">显示抢购</div>
                   <div class="modal-mvpTC-price">
                     <div class="modal-price">268</div>
                     <div class="modal-yuan">元</div>
                   </div>
-                  <h4>100.00元</h4>
+                  <h4 v-if="index !== 0">100.00元</h4>
                   <p>全站编辑器内10张/天下载</p>
-                </li>
-                <li class="twoLi">
-                  <h1>终身会员</h1>
-                  <div class="modal-robShopping">显示抢购</div>
-                  <div class="modal-mvpTC-price">
-                    <div class="modal-price">268</div>
-                    <div class="modal-yuan">元</div>
-                  </div>
-                  <h4>100.00元</h4>
-                  <p>全站编辑器内10张/天下载</p>
-                </li>
-                <li class="twoLi">
-                  <h1>终身会员</h1>
-                  <div class="modal-robShopping">显示抢购</div>
-                  <div class="modal-mvpTC-price">
-                    <div class="modal-price">268</div>
-                    <div class="modal-yuan">元</div>
-                  </div>
-                  <h4>100.00元</h4>
-                  <p>全站编辑器内10张/天下载</p>
-                </li>
-                <li class="twoLi">
-                  <h1>终身会员</h1>
-                  <div class="modal-robShopping">显示抢购</div>
-                  <div class="modal-mvpTC-price">
-                    <div class="modal-price">268</div>
-                    <div class="modal-yuan">元</div>
-                  </div>
-                  <h4>100.00元</h4>
-                  <p>全站编辑器内10张/天下载</p>
-                </li>
+                </li> -->
               </ul>
 
               <div
@@ -211,15 +194,36 @@
 
 <script setup>
 import { ref, defineProps, watch, defineEmits, onMounted } from "vue";
-
-const prop = defineProps({ modalFlag: Boolean });
+import { useStore } from "vuex";
+const store = useStore();
+const props = defineProps({
+  modalFlag: Boolean,
+  currentId: String,
+});
 const emit = defineEmits(["updataVisible"]);
 // 点击切换动画
 const StyleFlag = ref(null);
 
-// 监听父组件传递的参数
+// 套餐数据
+let taocanList = ref([]);
+// 1.从本地拿套餐数据
+onMounted(() => {
+  // 1.1赋值
+  taocanList.value = store.state.home.setMealInfo;
+});
+
+let Id = ref(Number);
+// 监听父组件传递的套餐id currentId
 watch(
-  () => prop.modalFlag,
+  () => props.currentId,
+  (newValue) => {
+    Id.value = newValue;
+  }
+);
+
+// 监听父组件传递的状态 modalFlag
+watch(
+  () => props.modalFlag,
   (newValue) => {
     // 参数是true，就赋值显示弹出框
     if (newValue == true) {
@@ -231,13 +235,18 @@ watch(
 );
 
 // 控制显示与隐藏
-const visible = ref(prop.modalFlag);
+const visible = ref(props.modalFlag);
 // 点击确定弹出框隐藏
 const handleOk = (e) => {
   StyleFlag.value = null;
   visible.value = false;
   // 传递参数给父组件
   emit("updataVisible", false);
+};
+
+let MousemoveNum = ref(Number);
+const handleMousemove = (id) => {
+  MousemoveNum.value = id;
 };
 </script>
 

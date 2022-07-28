@@ -4,17 +4,20 @@ const home = {
   // 返回该模式下存储的应用状态
   state() {
     return {
-      name: "张三",
-      params1: null,
-      tokenData: null,
+      // 套餐信息
+      setMealInfo: [],
+      // 工具剩余次数
+      downloadNumber: Number,
     };
   },
   mutations: {
-    setParams1(state, obj) {
-      state.params1 = obj;
+    // 修改套餐数据
+    setSetMealInfo(state, array) {
+      state.setMealInfo = array;
     },
-    setTokenData(state, obj) {
-      state.tokenData = obj;
+    // 修改工具剩余次数
+    setDownloadNumber(state, number) {
+      state.downloadNumber = number;
     },
   },
   Atomics: {},

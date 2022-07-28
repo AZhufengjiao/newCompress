@@ -62,7 +62,7 @@
               style="display: none"
               v-on:change="handleInputV"
               accept="video/*"
-              multiple
+              :multiple="inputFlag"
             />
           </div>
           <p>直接拖拽视频 到此，或者点击上传按钮</p>
@@ -161,10 +161,6 @@ import {
   getTranscoding,
   homeTemplateList,
 } from "@/api/home";
-components: {
-  UploadModule;
-}
-
 import { useStore } from "vuex";
 import { message } from "ant-design-vue";
 import { httpcode } from "@/utils/httpCode";
@@ -173,6 +169,10 @@ import { saveFile } from "./download.js";
 import axios from "axios";
 import JSZip from "jszip";
 import FileSaver from "file-saver";
+components: {
+  UploadModule;
+}
+const inputFlag = ref(true);
 const store = useStore();
 const activeKey = ref(1);
 const activeKeySon = ref(1);
@@ -291,11 +291,32 @@ let videoTime = ref(null);
 let handleInputV = (e) => {
   // 获取选中的视频
   const uploadFiles = e.target.files;
+  // 获取视频大小
+  let videoSize = parseInt(uploadFiles[0].size / 1024 / 1024);
+  // 查看用户的身份
+  let roleType = store.state.user.userData.roleType;
   if (uploadFiles.length > 0) {
+    console.log("已选");
     // 选中添加进fileList数组
-    for (let i = 0; i < uploadFiles.length; i++) {
-      fileList.value.push(uploadFiles[i]);
+    function fn() {
+      for (let i = 0; i < uploadFiles.length; i++) {
+        fileList.value.push(uploadFiles[i]);
+      }
     }
+
+    if (roleType === "free") {
+      // 让input不能多选
+      inputFlag.value = false;
+      // 免费，视频大小控制在10M
+      if (videoSize > 10) {
+        console.log("我是免费，视频大小控制在10M");
+      } else {
+        fn();
+      }
+    }
+    console.log(roleType);
+  } else {
+    console.log("没选");
   }
 };
 //  获取videotime

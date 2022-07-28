@@ -12,7 +12,7 @@
 }
 // 支付弹出框
 //  适配1440px
-@media screen and (max-width: 1440px) {
+@media screen and (max-width: 1920px) {
   body .ant-modal {
     width: 970px !important;
   }
@@ -350,6 +350,13 @@
                   line-height: 14px;
                 }
               }
+              .styleLi {
+                background: rgba(255, 150, 117, 0.15) !important;
+                border: 2px solid #ff5b00;
+              }
+              .red {
+                background-color: red;
+              }
             }
           }
 
@@ -518,10 +525,12 @@
     .modal-mvpTC-box
     ul
     .twoLi {
+    z-index: 99;
     width: 140px;
     height: 197px;
     background: rgba(201, 169, 106, 0.15);
     border-radius: 8px;
+
     h1 {
       overflow: hidden;
       white-space: nowrap;

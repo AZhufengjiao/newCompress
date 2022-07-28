@@ -227,12 +227,23 @@ import { useRouter } from "vue-router";
 import payModel from "@/components/payModal/index.vue";
 import aboutNav from "@/components/aboutNav/index.vue";
 import { userList } from "@/api/user";
+import { getSetMeal, getDownloadNum } from "@/api/about";
 import { useStore } from "vuex";
 components: {
   payModel, aboutNav;
 }
 const $router = useRouter();
 const store = useStore();
+
+// 获取本地用户id，查看是否登录
+let state = ref("");
+state.value = store.state.login.userid;
+onMounted(() => {
+  // 获取套餐信息
+  setMealInfo(state.value);
+  // 获取工具剩余次数
+  getFrequency(state.value);
+});
 // 测试路由
 const handle1 = () => {
   $router.push({ path: "home", query: { id: 1 } });
@@ -252,19 +263,26 @@ const updataModalFlag = (bol) => {
   modalFlag.value = bol;
 };
 
-// 获取本地用户id，查看是否登录
-let state = ref("");
-state.value = store.state.login.userid;
-
-// 调用接口，获取用户信息
+// 1.2 调用接口，获取用户登录是否过期
 const getUserInfo = (userid) => {
   return userList(userid).then((res) => {
+    // 没有过期 保存用户状态信息
     if (res.data.code == 200) {
-      console.log(res.data);
+      // 存本地
+      store.commit("user/setUserData", res.data.data);
+    } else {
+      // 已过期 删除本地缓存
+      userLogOut().then((res) => {
+        if (res.data.code) {
+          localStorage.removeItem("userid");
+          store.commit("login/setParams", null);
+        }
+      });
     }
   });
 };
 
+// 1.进入首页，判断本地缓存是否存在userid，有就是已登录
 watch(
   () => store.state.login.userid,
   (newValue) => {
@@ -281,6 +299,25 @@ watch(
     immediate: true,
   }
 );
+
+// 2.进入首页，获取套餐信息列表存储本地
+const setMealInfo = (id) => {
+  return getSetMeal(id).then((res) => {
+    if (res.data.code == 200) {
+      // 存本地
+      store.commit("home/setSetMealInfo", res.data.data);
+    }
+  });
+};
+// 3.获取工具剩余次数
+const getFrequency = (userid) => {
+  return getDownloadNum(userid).then((res) => {
+    if (res.data.code == 200) {
+      // 保存次数至本地
+      store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
+    }
+  });
+};
 </script>
 
 <style lang="scss" scoped>

@@ -139,13 +139,10 @@ const getCompressTK = (suffix) => {
   return new Promise(function () {
     getCompressToken(suffix).then((res) => {
       if (res.data.code == 200) {
-        store.commit("home/setTokenData", res.data.data);
-
         // 获取tokem  上传文件 获取url
         let uploadForm = new FormData();
-        let { key, token } = store.state.home.tokenData;
-        uploadForm.append("key", key);
-        uploadForm.append("token", token);
+        uploadForm.append("key", res.data.data.key);
+        uploadForm.append("token", res.data.data.token);
         uploadForm.append("file", file.value);
         axios({
           method: "post",
