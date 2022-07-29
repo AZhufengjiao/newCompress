@@ -8,6 +8,8 @@ const home = {
       setMealInfo: [],
       // 工具剩余次数
       downloadNumber: Number,
+      // 可用会员数据
+      myCoupon: [],
     };
   },
   mutations: {
@@ -18,6 +20,10 @@ const home = {
     // 修改工具剩余次数
     setDownloadNumber(state, number) {
       state.downloadNumber = number;
+    },
+    // 修改可用会员数据
+    setMyCoupon(state, array) {
+      state.myCoupon = array;
     },
   },
   Atomics: {},

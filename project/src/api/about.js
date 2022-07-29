@@ -22,3 +22,12 @@ export function getDownloadNum(userId) {
     userId,
   });
 }
+
+/**
+ *  获取可用优惠券
+ * @param {*} memberId 优惠券id
+ * @returns
+ */
+export function getMyCoupon(memberId) {
+  return requestWithoutToken("/api/coupon/getMyCoupon", "get", { memberId });
+}

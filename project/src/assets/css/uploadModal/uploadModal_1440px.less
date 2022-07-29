@@ -1,0 +1,102 @@
+//  适配1440px
+@media screen and (max-width: 1920px) {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    margin: 0;
+  }
+
+  .uploadModal {
+    z-index: 9;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    // 遮罩层
+    .zzc {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      opacity: 0.49;
+    }
+    // 弹出框盒子部分
+    .uploadModal-box {
+      position: relative;
+      z-index: 10;
+      width: 433px;
+      height: 245px;
+      background: #ffffff;
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      // 右上角删除键
+      .cancel {
+        margin: 12px;
+        width: 14px;
+        height: 14px;
+        line-height: 14px;
+        font-size: 14px;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+      // 图片
+      .img {
+        width: 136px;
+        height: 100px;
+        margin: auto;
+        margin-top: -24px;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      p {
+        margin-top: 17px;
+        text-align: center;
+        font-size: 16px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.85);
+        line-height: 24px;
+      }
+      h1 {
+        margin-top: 12px;
+        font-size: 14px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #666666;
+        line-height: 22px;
+        span {
+          color: #fdbb3f;
+        }
+      }
+      .button {
+        margin-top: 24px;
+        .button {
+          width: 112px;
+          height: 36px;
+        }
+        button:nth-child(1) {
+          margin-right: 32px;
+          background-color: #fff;
+          border: 1px solid #0544ff;
+        }
+        button.nth-last {
+          background-color: #0544ff;
+          color: #fff;
+        }
+      }
+    }
+  }
+}

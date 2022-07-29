@@ -4,7 +4,6 @@
     <payModel
       :modalFlag="modalFlag"
       @updataVisible="updataModalFlag"
-      :setmealList="setMealList"
       :currentId="currentId"
     ></payModel>
 
@@ -66,7 +65,7 @@
             <!-- <div>立即抢购</div> -->
             <a-button
               class="myVip-setMeal-box-plan-PanicBuying"
-              v-on:click="modalShow"
+              v-on:click="modalShow(item)"
               >立即抢购</a-button
             >
 
@@ -191,11 +190,12 @@ components: {
 }
 const $router = useRouter();
 const store = useStore();
-
+// 选择套餐id
+let currentId = ref("");
 // 支付弹出框
 let modalFlag = ref(false);
 // 点击显示弹出框
-const modalShow = () => {
+const modalShow = (item) => {
   modalFlag.value = true;
 };
 // 点击弹出框确定按钮，隐藏弹出框
@@ -213,8 +213,6 @@ onMounted(() => {
   // 1.1赋值
   setMealList.value = store.state.home.setMealInfo;
 });
-// 选择套餐id
-let currentId = ref("");
 </script>
 
 <style lang="scss" scoped>

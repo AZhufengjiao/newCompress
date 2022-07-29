@@ -1,5 +1,10 @@
 <template>
   <div class="home_compressedVideo">
+    <!-- 用户身份 下载弹出框-->
+    <uploadModal
+      :UploadModal="UploadModal"
+      @updateFlag="updateStateHandle"
+    ></uploadModal>
     <div class="home_compressedVideo_top">
       <h2>HEYCUT 视频压缩</h2>
       <div>智能场景压缩 · 一步搞定所有视频需求</div>
@@ -153,6 +158,7 @@
 
 <script setup>
 import UploadModule from "@/components/home/UploadModule/index.vue";
+import uploadModal from "@/components/uploadModal/index.vue";
 import { defineComponent, onMounted, onUpdated, ref } from "vue";
 import {
   getCompressScenes,
@@ -169,8 +175,9 @@ import { saveFile } from "./download.js";
 import axios from "axios";
 import JSZip from "jszip";
 import FileSaver from "file-saver";
+
 components: {
-  UploadModule;
+  UploadModule, uploadModal;
 }
 const inputFlag = ref(true);
 const store = useStore();
@@ -288,6 +295,14 @@ let file = ref(null);
 let videoDom = ref(null);
 // 获取置视频的时长
 let videoTime = ref(null);
+let UploadModal = ref({
+  flag: false,
+  state: "",
+});
+// 子组件像父组件传递参数，修改UploadModal的状态
+const updateStateHandle = (state) => {
+  UploadModal.value.flag = state;
+};
 let handleInputV = (e) => {
   // 获取选中的视频
   const uploadFiles = e.target.files;
@@ -296,7 +311,6 @@ let handleInputV = (e) => {
   // 查看用户的身份
   let roleType = store.state.user.userData.roleType;
   if (uploadFiles.length > 0) {
-    console.log("已选");
     // 选中添加进fileList数组
     function fn() {
       for (let i = 0; i < uploadFiles.length; i++) {
@@ -304,17 +318,67 @@ let handleInputV = (e) => {
       }
     }
 
-    if (roleType === "free") {
-      // 让input不能多选
-      inputFlag.value = false;
-      // 免费，视频大小控制在10M
-      if (videoSize > 10) {
-        console.log("我是免费，视频大小控制在10M");
-      } else {
+    // 判断身份，及视频大小
+    /**
+     *
+     * @param {string} state 身份状态
+     * @param {number} num  视频大小
+     */
+    function estimateFn(state, num) {
+      // 视频大小，不超过身份限制，下载视频
+      if (videoSize <= num) {
+        console.log("我的身份是免费");
+        // 复制参数，修改弹出框信息
+        UploadModal.value = {
+          flag: false,
+          state: state,
+        };
+        // 视频大小，不超过身份限制，下载视频
         fn();
       }
+      // 视频大小， 超出身份限制
+      else {
+        console.log("视频太大啦");
+        // 复制参数，修改弹出框信息
+        UploadModal.value = {
+          flag: true,
+          state: state,
+        };
+      }
+      // 表示身份是白金或者钻石，弹出框不显示
+      if (num === null) {
+        UploadModal.value = {
+          flag: false,
+          state: state,
+        };
+      }
+
+      // 表示身份是免费，视频不能多选
+      if (state === "free") {
+        // 让input不能多选
+        inputFlag.value = false;
+      } else {
+        inputFlag.value = true;
+      }
     }
-    console.log(roleType);
+
+    // 免费
+    if (roleType === "free") {
+      estimateFn(roleType, 10);
+    }
+    // 银
+    else if (roleType === "silver") {
+      estimateFn(roleType, 50);
+    }
+    // 黄金
+    else if (roleType === "goid") {
+      estimateFn(roleType, 100);
+    }
+    // 白金或者钻石
+    else if (roleType === "platinum" || roleType === "diamond") {
+      estimateFn(roleType, null);
+    }
+    console.log(UploadModal.value);
   } else {
     console.log("没选");
   }

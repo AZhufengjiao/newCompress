@@ -227,7 +227,7 @@ import { useRouter } from "vue-router";
 import payModel from "@/components/payModal/index.vue";
 import aboutNav from "@/components/aboutNav/index.vue";
 import { userList } from "@/api/user";
-import { getSetMeal, getDownloadNum } from "@/api/about";
+import { getSetMeal, getDownloadNum, getMyCoupon } from "@/api/about";
 import { useStore } from "vuex";
 components: {
   payModel, aboutNav;
@@ -243,6 +243,8 @@ onMounted(() => {
   setMealInfo(state.value);
   // 获取工具剩余次数
   getFrequency(state.value);
+  // 获取可用优惠券信息
+  getCoupon(state.value);
 });
 // 测试路由
 const handle1 = () => {
@@ -315,6 +317,15 @@ const getFrequency = (userid) => {
     if (res.data.code == 200) {
       // 保存次数至本地
       store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
+    }
+  });
+};
+
+// 4.获取可用优惠券
+const getCoupon = (userid) => {
+  return getMyCoupon(userid).then((res) => {
+    if (res.data.code == 200) {
+      store.commit("home/setMyCoupon", res.data.data);
     }
   });
 };

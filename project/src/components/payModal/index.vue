@@ -99,7 +99,7 @@
                 ]"
               >
                 <li
-                  @click="index != 0 ? (Id = item.pId) : null"
+                  @click="clickLiHandle(item, index)"
                   v-for="(item, index) in taocanList"
                   :class="[
                     index !== 0 ? 'twoLi' : '',
@@ -112,13 +112,13 @@
                   @mousemove="handleMousemove(item.pId)"
                 >
                   <h1>钻石会员·终身 + 智能抠图100次</h1>
-                  <div class="modal-robShopping">{{ item.pId }}显示抢购</div>
+                  <div class="modal-robShopping">显示抢购</div>
                   <div class="modal-mvpTC-price">
                     <div class="modal-price">{{ item.discountPrice }}</div>
                     <div class="modal-yuan">元</div>
-                    <span v-if="index === 0">¥1437</span>
+                    <span v-if="index === 0">¥{{ item.pPrice }}</span>
                   </div>
-                  <h4 v-if="index !== 0">100.00元</h4>
+                  <h4 v-if="index !== 0">{{ item.pPrice }}.00元</h4>
                   <p>钻石会员¥1268 + 智能抠图¥169 = ¥1437</p>
                   <h2 v-if="index === 0">只能抠图100张/月</h2>
                 </li>
@@ -171,12 +171,16 @@
             </div>
             <!-- 二维码 -->
             <div class="modal-QRCode">
-              <img src="" alt="" />
+              <qrcode-vue :value="ZFBQR" :size="94"></qrcode-vue>
             </div>
             <!-- 支付金额 -->
             <div class="modePayment-price">
-              <h1>支付金额 <span>99</span> 元</h1>
-              <h2>已优惠 <span>1164</span> 元</h2>
+              <h1>
+                支付金额 <span>{{ paymentAmount.price }}</span> 元
+              </h1>
+              <h2>
+                已优惠 <span>{{ paymentAmount.discounts }}</span> 元
+              </h2>
               <h3>支付即视为同意 《SOOGIF抠图协议》</h3>
             </div>
           </div>
@@ -193,8 +197,20 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, defineEmits, onMounted } from "vue";
+import {
+  ref,
+  defineProps,
+  watch,
+  defineEmits,
+  onMounted,
+  onUpdated,
+  defineAsyncComponent,
+} from "vue";
 import { useStore } from "vuex";
+import QrcodeVue from "qrcode.vue";
+components: {
+  QrcodeVue;
+}
 const store = useStore();
 const props = defineProps({
   modalFlag: Boolean,
@@ -206,20 +222,58 @@ const StyleFlag = ref(null);
 
 // 套餐数据
 let taocanList = ref([]);
+// 获取支付金额
+let paymentAmount = ref({
+  price: null,
+  discounts: null,
+});
+// 用户id
+let userid = ref(store.state.login.userid);
+// 获取支付宝二维码需要的参数
+let ticketType = ref(null);
+// 支付宝二维码字符串
+let ZFBQR = ref("");
 // 1.从本地拿套餐数据
 onMounted(() => {
   // 1.1赋值
   taocanList.value = store.state.home.setMealInfo;
 });
 
+// Pid
 let Id = ref(Number);
-// 监听父组件传递的套餐id currentId
+// 1.监听父组件传递的套餐id currentId
 watch(
   () => props.currentId,
   (newValue) => {
+    console.log(newValue);
+    // 赋值
     Id.value = newValue;
+    // 修改支付金额
+    taocanList.value.map((item) => {
+      if (item.pId === props.currentId) {
+        ticketType.value = item.roleSearch.timeLimit;
+        // 套餐id改变时，修改支付金额
+        paymentAmount.value.price = item.discountPrice;
+        paymentAmount.value.discounts = item.pPrice - item.discountPrice;
+      }
+    });
+
+    // 获取支付宝支付二维码
+    getZfbQR(Id.value, userid.value, ticketType.value);
   }
 );
+
+// 获取支付宝支付二维码
+const getZfbQR = (productId, userId, ticketType) => {
+  return getAlipayQR(productId, userId, ticketType).then((res) => {
+    if (res.data.code == 200) {
+      console.log(res);
+      // 获取支付宝二维码赋值
+      ZFBQR.value = res.data.data.code_url;
+      console.log(ZFBQR.value);
+    }
+  });
+};
 
 // 监听父组件传递的状态 modalFlag
 watch(
@@ -229,9 +283,20 @@ watch(
     if (newValue == true) {
       // 赋值
       visible.value = newValue;
+      // 获取支付宝二维码参数的函数
+      taocanList.value.map((item) => {
+        if (item.pId === props.currentId) {
+          ticketType.value = item.roleSearch.timeLimit;
+        }
+      });
     }
   },
   { deep: true }
+);
+
+watch(
+  () => props.modalFlag,
+  (newValue) => {}
 );
 
 // 控制显示与隐藏
@@ -244,9 +309,26 @@ const handleOk = (e) => {
   emit("updataVisible", false);
 };
 
+// 存储鼠标经过的id
 let MousemoveNum = ref(Number);
+// 鼠标经过li的时候
 const handleMousemove = (id) => {
   MousemoveNum.value = id;
+};
+// 鼠标点击li的时候
+const clickLiHandle = (item, index) => {
+  index != 0 ? (Id.value = item.pId) : null;
+
+  // 更新支付金额
+  paymentAmount.value.price = item.discountPrice;
+  paymentAmount.value.discounts = item.pPrice - item.discountPrice;
+
+  // 重新赋值发起请求
+  ticketType.value = item.roleSearch.timeLimit;
+
+  console.log(Id.value, userid.value, ticketType.value);
+  // 获取支付宝支付二维码
+  getZfbQR(Id.value, userid.value, ticketType.value);
 };
 </script>
 
