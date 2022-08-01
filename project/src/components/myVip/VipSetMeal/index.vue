@@ -191,7 +191,7 @@ components: {
 const $router = useRouter();
 const store = useStore();
 // 选择套餐id
-let currentId = ref("");
+let currentId = ref(null);
 // 支付弹出框
 let modalFlag = ref(false);
 // 点击显示弹出框

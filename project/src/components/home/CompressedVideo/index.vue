@@ -89,6 +89,7 @@
               <UploadModule
                 :item="item"
                 :payload="params1"
+                :num="fatherNum"
                 @getFileItemParams="getFileItem"
               >
               </UploadModule>
@@ -303,9 +304,12 @@ let UploadModal = ref({
 const updateStateHandle = (state) => {
   UploadModal.value.flag = state;
 };
+// 传给父组件个数
+let fatherNum = ref(0);
 let handleInputV = (e) => {
   // 获取选中的视频
   const uploadFiles = e.target.files;
+  fatherNum.value = uploadFiles.length;
   // 获取视频大小
   let videoSize = parseInt(uploadFiles[0].size / 1024 / 1024);
   // 查看用户的身份
@@ -326,8 +330,8 @@ let handleInputV = (e) => {
      */
     function estimateFn(state, num) {
       // 视频大小，不超过身份限制，下载视频
-      if (videoSize <= num) {
-        console.log("我的身份是免费");
+      if (videoSize <= num || num === null) {
+        console.log("我的身份是" + state);
         // 复制参数，修改弹出框信息
         UploadModal.value = {
           flag: false,

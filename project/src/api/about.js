@@ -22,6 +22,18 @@ export function getDownloadNum(userId) {
     userId,
   });
 }
+/**
+ *  扣除下载点数
+ * @param {*} picNumber
+ * @param {*} userId
+ * @returns
+ */
+export function getKillDownloadNum(picNumber, userId) {
+  return requestWithoutToken("/api/vip/killDownloadNumber", "get", {
+    picNumber,
+    userId,
+  });
+}
 
 /**
  *  获取可用优惠券

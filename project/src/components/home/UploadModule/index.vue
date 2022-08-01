@@ -1,6 +1,6 @@
 <template>
   <div class="home_fileCompression_box_box">
-    <span class="home_fileCompression_box_name">{{ fileName }}}</span>
+    <span class="home_fileCompression_box_name">{{ fileName }} </span>
     <div class="home_fileCompression_box_center">
       <span class="home_fileCompression_box_memory">{{ fileSize + "MB" }}</span>
       <video
@@ -52,7 +52,7 @@ import {
   homeTemplateList,
 } from "@/api/home";
 import { useStore } from "vuex";
-import { ref, onMounted, onUpdated, watch } from "vue";
+import { ref, onMounted, onUpdated, watch, toRefs } from "vue";
 import { defineEmits } from "vue";
 import { message } from "ant-design-vue";
 import { object } from "vue-types";
@@ -73,8 +73,10 @@ let subVideoDom = ref(null);
 const props = defineProps({
   item: File,
   payload: Object,
+  num: Number,
+  // fileList: Array,
 });
-
+let { num } = toRefs(props);
 // 获取上传文件
 let file = ref(props.item);
 // 获取上传文件类型  "video/mp4"
@@ -88,9 +90,12 @@ let fileURL = ref(props.item);
 let uploadProcess = ref(0);
 
 watch(
-  () => props.file,
+  () => props.item,
   (newValue, oldValue) => {
-    console.log(newValue);
+    // console.log(newValue);
+  },
+  {
+    immediate: true,
   }
 );
 
@@ -257,6 +262,7 @@ const setSchedule = (pid) => {
 
 // 用户点击下载
 const downloadBtn = () => {
+  console.log(file.value);
   if (state.value == "zh" && completeWih.value == 100) {
     downloadFn();
   }

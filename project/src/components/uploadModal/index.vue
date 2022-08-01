@@ -4,7 +4,7 @@
     <payModel
       :modalFlag="modalFlag"
       @updataVisible="updataModalFlag"
-      :currentId="currentId"
+      @close="closeHandle"
     ></payModel>
 
     <!-- 遮罩层 -->
@@ -35,7 +35,7 @@
       <div class="button">
         <a-button>我先试试</a-button>
         <a-button class="nth-last" type="primary" @click="payModalShow"
-          >立即升级</a-button
+          >立即升级{{ currentState }}</a-button
         >
       </div>
     </div>
@@ -65,13 +65,19 @@ watch(
   }
 );
 
+// 支付成功，关闭自己
+const closeHandle = (state) => {
+  modalShow.value=state
+};
+
 // 点击删除键，关闭弹出框
 const cancelHandle = () => {
   modalShow.value = false;
   emit("updateFlag", false);
 };
 
-let currentId = ref(82);
+let currentId = ref(83);
+
 // 支付弹出框
 let modalFlag = ref(false);
 // 点击显示弹出框
