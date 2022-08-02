@@ -79,3 +79,10 @@ export function getSchedule(pid) {
     persistentId: pid,
   });
 }
+
+// 查询压缩文件大小
+export function getOperationStatusAvinfo(infoPid) {
+  return requestWithoutToken("/api/transcoder/operationStatusAvinfo", "get", {
+    infoPid,
+  });
+}

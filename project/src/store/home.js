@@ -10,6 +10,8 @@ const home = {
       downloadNumber: Number,
       // 可用会员数据
       myCoupon: [],
+      // 转化之后的数组
+      conversionList: [],
     };
   },
   mutations: {
@@ -25,8 +27,11 @@ const home = {
     setMyCoupon(state, array) {
       state.myCoupon = array;
     },
+    // 修改转化之后的数组
+    setConversionList(state, array) {
+      state.conversionList = array;
+    },
   },
-  Atomics: {},
 };
 
 export default home;

@@ -7,7 +7,10 @@
         </template>
       </HomeNav>
 
-      <CompressedVideo v-show="routerNum == 1"></CompressedVideo>
+      <CompressedVideo
+        v-show="routerNum == 1"
+        :routerNum="query"
+      ></CompressedVideo>
       <CustomCompressed v-show="routerNum == 2"></CustomCompressed>
     </div>
     <a-layout>
@@ -18,7 +21,7 @@
           </div>
           <div class="home_content_right">
             <div class="home_content_right_top">
-              <h1>如何使用</h1>
+              <h1>如何使用{{ routerNum }}}</h1>
               <h3>录制屏幕种一切活动</h3>
             </div>
             <div class="home_content_right_bottom">

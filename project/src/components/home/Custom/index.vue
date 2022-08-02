@@ -1,159 +1,96 @@
 <template>
-  <div class="home_compressedVideo">
-    <!-- 用户身份 下载弹出框-->
-    <uploadModal
-      :UploadModal="UploadModal"
-      @updateFlag="updateStateHandle"
-    ></uploadModal>
-    <div class="home_compressedVideo_top">
-      <h2>HEYCUT 视频压缩</h2>
-      <div>智能场景压缩 · 一步搞定所有视频需求</div>
-    </div>
-
-    <Custom></Custom>
-
-    <div class="home_compressedVideo_bottom">
-      <div class="home_compressedVideo_bottom_box">
-        <div class="home_compressedVideo_bottom_top">
-          <div
-            v-for="item in compressList"
-            :key="item"
-            @click="compressHandle(item.id)"
-            :class="[activeKey == item.id ? 'border_col' : '']"
-          >
-            {{ item.name }}
-          </div>
-        </div>
-        <!-- 压缩场景 -->
-        <div class="home_compressedVideo_bottom_bottom">
-          <div class="home_compressedVideo_bottom_bottom_one">
-            <div
-              v-for="item in compressSceneItem"
-              :key="item"
-              @click="compressSceneClick(item)"
-              :class="[activeKeySon === item.tmpId ? 'border_cor' : '']"
-            >
-              {{ item.title }}
-            </div>
-          </div>
+  <div class="home_compressedVideo_bottom">
+    <div class="home_compressedVideo_bottom_box">
+      <div class="home_compressedVideo_bottom_top">
+        <div
+          v-for="item in compressList"
+          :key="item"
+          @click="compressHandle(item.id)"
+          :class="[activeKey == item.id ? 'border_col' : '']"
+        >
+          {{ item.name }}
         </div>
       </div>
-    </div>
+      <!-- 压缩场景 -->
+      <div class="home_compressedVideo_bottom_bottom">
+        <div class="home_compressedVideo_bottom_bottom_one" id="qw">
+          <div class="zhuanhuan">转换</div>
+          <a-select
+            id="select"
+            v-model:value="selectVal1"
+            :style="{ width: '170px', size: '16px' }"
+            :options="options1"
+            @change="selectChange1"
+            size="large"
+          >
+            <template #suffixIcon>
+              <caret-down-outlined />
+            </template>
+          </a-select>
+          <div class="zhuanhuan zhi">至</div>
+          <a-select
+            v-model:value="selectVal2"
+            style="width: 170px"
+            :options="options2"
+            @change="selectChange2"
+            size="large"
+          >
+            <template #suffixIcon>
+              <caret-down-outlined />
+            </template>
+          </a-select>
 
-    <p class="home_compressedVideo_hanzi">
-      1·解决抖音上传视频被压缩、不清晰问题
-    </p>
+          <div class="home_compressedVideo-icon">
+            <a-popconfirm
+              placement="rightBottom"
+              ok-text="确定"
+              cancel-text="取消"
+            >
+              <template #icon>
+                <div class="popconfirm-box">
+                  <h1>尺寸</h1>
+                  <a-checkbox v-model:checked="checked">
+                    保持原尺寸
+                  </a-checkbox>
+                  <br />
+                  <a-checkbox v-model:checked="checked">
+                    <a-input
+                      style="width: 77px; height: 33px"
+                      v-model:value="sizeIpt1"
+                      placeholder="1080"
+                    />
 
-    <!-- 上传视频 -->
-    <div class="home_uploadingVideo_box">
-      <div class="">
-        <div
-          class="home_uploadingVideo"
-          v-on:dragover="HandleDragover"
-          v-on:drop="HandleDrag"
-        >
-          <div class="home_uploadingVideo_bottom">
-            <div class="home_uploadingVideo_bottom_img">
-              <img src="" alt="" />
-            </div>
-            <div
-              v-on:click="handleUploading"
-              class="home_uploadingVideo_bottom_span"
-            >
-              上传视频
-            </div>
-            <input
-              ref="upload"
-              type="file"
-              name="upload"
-              id="upload"
-              style="display: none"
-              v-on:change="handleInputV"
-              accept="video/*"
-              :multiple="inputFlag"
-            />
-          </div>
-          <p>直接拖拽视频 到此，或者点击上传按钮</p>
-          <video
-            style="display: none"
-            src=""
-            ref="videoDom"
-            @canplaythrough="myFunction"
-          ></video>
-          <h1>最大支持400M以内视频压缩，<span>升级会员</span>享受无限大小</h1>
-        </div>
-        <div v-if="fileList.length > 0" class="home_fileCompression">
-          <div class="home_fileCompression_flex">
-            <div
-              v-for="item in fileList"
-              :key="item"
-              class="home_fileCompression_box"
-            >
-              <UploadModule
-                :item="item"
-                :payload="params1"
-                @getFileItemParams="FileItemParams"
-              >
-              </UploadModule>
-            </div>
-
-            <!-- <div
-              v-for="item in fileList"
-              :key="item"
-              class="home_fileCompression_box"
-            >
-              <div class="home_fileCompression_box_box">
-                <span class="home_fileCompression_box_name">
-                  {{ item }}
-                </span>
-                <div class="home_fileCompression_box_center">
-                  <span class="home_fileCompression_box_memory">256M</span>
-                  <div id="a" class="home_fileCompression_box_center_box">
-                    <div
-                      v-if="flag"
-                      :class="[
-                        'home_fileCompression_box_center_box_style',
-                        // { scStyle: state == 'sc' ? 'scStyle' : 'zhtyle' },
-                        {
-                          scStyle: state == 'sc',
-                        },
-                        {
-                          zhtyle: state == 'zh',
-                        },
-                      ]"
-                      :style="[
-                        { width: succeed == true ? completeWih + '%' : 0 },
-                      ]"
-                    >
-                      <span v-if="state == 'sc'">{{
-                        completeWih == 100 ? "上传成功" : "上传中"
-                      }}</span>
-                      <span v-if="state == 'zh'">{{
-                        completeWih == 100 ? "转换成功" : "转换中"
-                      }}</span>
-                    </div>
-                  </div>
-                  <span class="home_fileCompression_box_memory">256M</span>
+                    <caret-up-outlined
+                      v-on:click="handleC"
+                      class="sizeIpt1-icon-top"
+                    />
+                    <caret-down-outlined
+                      v-on:click="handleC"
+                      class="sizeIpt1-icon-bottom"
+                    />
+                    <caret-down-outlined
+                      v-on:click="handleC"
+                      class="sizeIpt2-icon-bottom"
+                    />
+                    <caret-up-outlined
+                      v-on:click="handleC"
+                      class="sizeIpt2-icon-top"
+                    />
+                    <a-input
+                      style="width: 77px; height: 33px"
+                      v-model:value="sizeIpt2"
+                      placeholder="1080"
+                    ></a-input>
+                  </a-checkbox>
                 </div>
-                <div class="home_fileCompression_box_zh">
-                  <span v-if="state == 'sc'">{{
-                    completeWih == 100 ? "上传成功" : "开始转换"
-                  }}</span>
-                  <span v-if="state == 'zh'" v-on:click="downloadBtn">{{
-                    completeWih == 100 ? "下载" : "开始转换"
-                  }}</span>
-                </div>
-              </div>
-            </div> -->
+              </template>
+              <!-- <template #title>
+                  <h1>尺寸</h1>
+                </template> -->
+              <setting-outlined :style="{ fontSize: '18px' }" />
+            </a-popconfirm>
           </div>
         </div>
-        <a-button
-          v-if="SonList.length > 0"
-          type="primary"
-          class="download"
-          v-on:click="downloadHandle"
-          >下载全部</a-button
-        >
       </div>
     </div>
   </div>
@@ -161,17 +98,14 @@
 
 <script setup>
 import UploadModule from "@/components/home/UploadModule/index.vue";
-import uploadModal from "@/components/uploadModal/index.vue";
-import Custom from "@/components/home/Custom/index.vue";
+import { onMounted, onUpdated, ref } from "vue";
 import {
-  defineComponent,
-  onMounted,
-  onUpdated,
-  ref,
-  watch,
-  toRefs,
-  defineProps,
-} from "vue";
+  SmileOutlined,
+  MehOutlined,
+  CaretDownOutlined,
+  SettingOutlined,
+  CaretUpOutlined,
+} from "@ant-design/icons-vue";
 import {
   getCompressScenes,
   getCompressToken,
@@ -179,24 +113,18 @@ import {
   getTranscoding,
   homeTemplateList,
 } from "@/api/home";
-import { getKillDownloadNum } from "@/api/about";
+
 import { useStore } from "vuex";
 import { message } from "ant-design-vue";
 import { httpcode } from "@/utils/httpCode";
 import { http } from "@/utils/http";
-import { saveFile } from "./download.js";
+import { saveFile } from "@/components/home/CompressedVideo/download.js";
 import axios from "axios";
 import JSZip from "jszip";
 import FileSaver from "file-saver";
-
 components: {
-  UploadModule, uploadModal, Custom;
+  UploadModule, SmileOutlined, MehOutlined, CaretDownOutlined;
 }
-const props = defineProps({ routerNum: Number });
-const { routerNum } = toRefs(props);
-console.log(routerNum.value);
-
-const inputFlag = ref(true);
 const store = useStore();
 const activeKey = ref(1);
 const activeKeySon = ref(1);
@@ -204,8 +132,6 @@ const activeKeySon = ref(1);
 let fileList = ref([]);
 // 转码要的参数
 let params1 = ref(null);
-// 获取用户id
-let userid = ref(store.state.login.userid);
 
 // 动画状态
 let flag = ref(false);
@@ -213,6 +139,47 @@ let state = ref("sc");
 let time = ref(null);
 let succeedtime = ref(null);
 let succeed = ref(false);
+
+// 选择器
+const selectVal1 = ref("mov");
+const selectVal2 = ref("mp4");
+const options1 = ref([
+  {
+    value: "mov1",
+    label: "mov1",
+  },
+  {
+    value: "mov2",
+    label: "mov2",
+  },
+]);
+const options2 = ref([
+  {
+    value: "mp2",
+    label: "mp2",
+  },
+  {
+    value: "mp1",
+    label: "mp1",
+  },
+]);
+
+const selectChange1 = (value) => {
+  selectVal1.value = value;
+};
+const selectChange2 = (value) => {
+  selectVal2.value = value;
+};
+
+// 设置尺寸 input值
+const sizeIpt1 = ref(1080);
+const sizeIpt2 = ref(1080);
+// 复选框
+const checked = ref(false);
+
+const handleC = () => {
+  checked.value = false;
+};
 
 onMounted(() => {
   // 发起请求, 获取压缩切换所有数据
@@ -229,17 +196,12 @@ let compressList = ref([
   {
     id: 1,
     type: "format",
-    name: "场景压缩",
+    name: "场景转换",
   },
   {
     id: 2,
     type: "compress",
-    name: "大小压缩",
-  },
-  {
-    id: 3,
-    type: "upload",
-    name: "无损压缩",
+    name: "自定义转换",
   },
 ]);
 // 压缩类型场景所有数组
@@ -303,6 +265,7 @@ const compressSceneClick = (item) => {
   activeKeySon.value = item.tmpId;
   // getCompressScene(item.tmpId);
 };
+
 let upload = ref(null);
 //  添加按钮，触发input，让文件夹弹出  3.
 const handleUploading = (e) => {
@@ -314,95 +277,14 @@ let file = ref(null);
 let videoDom = ref(null);
 // 获取置视频的时长
 let videoTime = ref(null);
-let UploadModal = ref({
-  flag: false,
-  state: "",
-});
-// 子组件像父组件传递参数，修改UploadModal的状态
-const updateStateHandle = (state) => {
-  UploadModal.value.flag = state;
-};
-
 let handleInputV = (e) => {
   // 获取选中的视频
   const uploadFiles = e.target.files;
-  // 获取视频大小
-  let videoSize = parseInt(uploadFiles[0].size / 1024 / 1024);
-  // 获取该用户下载次数
-  let downloadNumber = ref(store.state.home.downloadNumber);
-  // 查看用户的身份
-  let roleType = store.state.user.userData.roleType;
   if (uploadFiles.length > 0) {
     // 选中添加进fileList数组
-    function fn() {
-      for (let i = 0; i < uploadFiles.length; i++) {
-        fileList.value.push(uploadFiles[i]);
-      }
+    for (let i = 0; i < uploadFiles.length; i++) {
+      fileList.value.push(uploadFiles[i]);
     }
-
-    // 判断身份，及视频大小
-    /**
-     *
-     * @param {string} state 身份状态
-     * @param {number} num  视频大小
-     */
-    function estimateFn(state, num) {
-      // 视频大小，不超过身份限制，下载视频
-      if (videoSize <= num || num === null) {
-        console.log("我的身份是" + state);
-        // 复制参数，修改弹出框信息
-        UploadModal.value = {
-          flag: false,
-          state: state,
-        };
-        // 视频大小，不超过身份限制，下载视频
-        fn();
-      }
-      // 视频大小， 超出身份限制
-      else {
-        console.log("视频太大啦");
-        // 复制参数，修改弹出框信息
-        UploadModal.value = {
-          flag: true,
-          state: state,
-        };
-      }
-      // 表示身份是白金或者钻石，弹出框不显示
-      if (num === null) {
-        UploadModal.value = {
-          flag: false,
-          state: state,
-        };
-      }
-
-      // 表示身份是免费，视频不能多选
-      if (state === "free") {
-        // 让input不能多选
-        inputFlag.value = false;
-      } else {
-        inputFlag.value = true;
-      }
-    }
-
-    // 免费
-    if (roleType === "free") {
-      estimateFn(roleType, 10);
-    }
-    // 银
-    else if (roleType === "silver") {
-      estimateFn(roleType, 50);
-    }
-    // 黄金
-    else if (roleType === "goid") {
-      estimateFn(roleType, 100);
-    }
-    // 白金或者钻石
-    else if (roleType === "platinum" || roleType === "diamond") {
-      estimateFn(roleType, null);
-    }
-    console.log(UploadModal.value);
-  } else {
-    console.log("没选");
   }
 };
 //  获取videotime
@@ -423,13 +305,14 @@ const HandleDrag = (e) => {
 };
 
 // 创建一个可以下载的url数组
-let fileUrlList = ref(store.state.home.conversionList);
+let fileUrlList = ref([]);
+// 当转换成功，获取url和file
+const getFileItem = (obj) => {
+  fileUrlList.value.push(obj);
+};
 
 // 点击下载全部
 const downloadHandle = () => {
-  // 设置一个记录下载为false的变量
-  let FalseNum = 0;
-  console.log(fileUrlList.value);
   let blogTitle = "下载文件的名字";
   let zip = new JSZip();
   let promiseArr = [];
@@ -437,19 +320,12 @@ const downloadHandle = () => {
   // 要下载图片的url
   let arrImg = [];
   for (let i = 0; i < fileUrlList.value.length; i++) {
-    if (fileUrlList.value[i].xz === false) {
-      FalseNum++;
-      // 下载
-      arrImg.push({
-        path: fileUrlList.value[i].videoUrl,
-        name: fileUrlList.value[i].file.name,
-      });
-      fileUrlList.value[i].xz = true;
-      store.commit("home/setConversionList", fileUrlList.value);
-    }
+    arrImg.push({
+      path: fileUrlList.value[i].videoUrl,
+      name: fileUrlList.value[i].file.name,
+    });
   }
-  // 扣除本地下载次数
-  killDownLoadNumber(FalseNum, userid.value);
+
   for (let item of arrImg) {
     const promise = getImgArrayBuffer(item.path).then((data) => {
       // 下载文件，并存成ArrayBuffer对象（blob）
@@ -467,7 +343,7 @@ const downloadHandle = () => {
         this.btnLoading = false;
       })
       .catch((res) => {
-        // message.warning("文件压缩失败");
+        message.warning("文件压缩失败");
       });
   });
 };
@@ -485,30 +361,12 @@ const getImgArrayBuffer = (url) => {
     xmlHttp.onload = function () {
       if (this.status == 200) {
         resolve(this.response);
-        console.log(this.response);
-        // window.URL.createObjectURL();
       } else {
         reject(this.status);
       }
     };
     xmlHttp.send();
   });
-};
-
-// 点击下载扣除次数
-const killDownLoadNumber = (picNumber, userId) => {
-  return getKillDownloadNum(picNumber, userId).then((res) => {
-    if (res.data.code == 200) {
-      // 修改本地下载次数
-      store.commit("home/setDownloadNumber", res.data.data.newDownloadNumber);
-    }
-  });
-};
-
-let SonList = ref([]);
-// 获取子组件转化好的视频
-const FileItemParams = (item) => {
-  SonList.value.push(item);
 };
 </script>
 
@@ -525,6 +383,29 @@ const FileItemParams = (item) => {
   height: 46px;
   background: #0544ff;
   border-radius: 6px;
+}
+// 新添加下拉框iconyangshi
+.home #qw .ant-select {
+  display: flex;
+  align-items: center;
+  #select {
+    height: 68px !important;
+    font-size: 16px;
+  }
+}
+
+:deep .ant-select-selector {
+  height: 50px !important;
+}
+:deep .ant-select-selection-item {
+  line-height: 47px;
+}
+
+.home
+  #qw
+  .ant-select-single.ant-select-lg:not(.ant-select-customize-input)
+  .ant-select-selector {
+  height: 80px !important;
 }
 
 //
@@ -645,6 +526,7 @@ const FileItemParams = (item) => {
     line-height: 16px;
   }
   .home_uploadingVideo_box {
+    margin-top: 23px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -763,15 +645,30 @@ const FileItemParams = (item) => {
         border-radius: 0 11px 0 0;
       }
     }
+    // 修改 新加
     .home_compressedVideo_bottom_bottom {
-      padding: 0 0 0 89px;
+      padding: 0 0 0 29px;
       height: 88px;
       background: #e1e9ff;
+      div {
+        font-size: 16px !important;
+      }
       .home_compressedVideo_bottom_bottom_one {
         display: flex;
+        align-content: center !important;
+        line-height: 88px;
+        .zhuanhuan {
+          width: 102px;
+          height: 88px;
+          line-height: 88px;
+          font-size: 16px;
+        }
+        .zhi {
+          width: 53px;
+        }
         div {
           background: #e1e9ff;
-          margin-right: 108px;
+          // margin-right: 108px;
           height: 88px;
           line-height: 88px;
           backdrop-filter: blur(7.321131447587355px);
@@ -785,7 +682,6 @@ const FileItemParams = (item) => {
     }
   }
 }
-
 .fenjxian {
   width: 1px;
   height: 23px;
@@ -801,7 +697,7 @@ const FileItemParams = (item) => {
   background: #e1e9ff !important;
 }
 
-@import "@/assets/css/home/homeNav/CompressedVideo/CompressedVideo_media1440px.scss";
-@import "@/assets/css/home/homeNav/CompressedVideo/CompressedVideo_media1280px.scss";
+@import "@/assets/css/home/homeNav/CustomCompressed/CustomCompressed1440px.scss";
+@import "@/assets/css/home/homeNav/CustomCompressed/CustomCompressed1280px.scss";
 // @import "@/assrts/styles/animation/home/CompressedVideo/index.scss";
 </style>

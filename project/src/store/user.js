@@ -14,7 +14,7 @@ const user = {
       state.userData = obj;
     },
   },
-  Atomics: {},
+  actions: {},
 };
 
 export default user;

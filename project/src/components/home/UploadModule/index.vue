@@ -30,13 +30,15 @@
           }}</span>
         </div>
       </div>
-      <span class="home_fileCompression_box_memory">256M</span>
+      <span class="home_fileCompression_box_memory" v-if="compressSize">{{
+        compressSize + "M"
+      }}</span>
     </div>
     <div class="home_fileCompression_box_zh">
       <span v-if="state == 'sc'">{{
         completeWih == 100 ? "上传成功" : "开始转换"
       }}</span>
-      <span v-if="state == 'zh'" v-on:click="downloadBtn">{{
+      <span v-if="state == 'zh'" @click="downloadBtn">{{
         completeWih == 100 ? "下载" : "转换中"
       }}</span>
     </div>
@@ -50,16 +52,21 @@ import {
   getSchedule,
   getTranscoding,
   homeTemplateList,
+  getOperationStatusAvinfo,
 } from "@/api/home";
+import { getKillDownloadNum } from "@/api/about";
 import { useStore } from "vuex";
 import { ref, onMounted, onUpdated, watch, toRefs } from "vue";
 import { defineEmits } from "vue";
 import { message } from "ant-design-vue";
-import { object } from "vue-types";
 import { saveFile } from "@/components/home/CompressedVideo/download.js";
 import axios from "axios";
 const store = useStore();
 const emit = defineEmits(["getFileItemParams"]);
+// 获取用户id
+let userid = ref(store.state.login.userid);
+// 获取压缩文件大小需要的参数
+let compressVideoSize = ref(null);
 let flag = ref(false);
 let state = ref("sc");
 let time = ref(null);
@@ -73,18 +80,19 @@ let subVideoDom = ref(null);
 const props = defineProps({
   item: File,
   payload: Object,
-  num: Number,
   // fileList: Array,
 });
-let { num } = toRefs(props);
 // 获取上传文件
 let file = ref(props.item);
+// console.log(file.value);
 // 获取上传文件类型  "video/mp4"
 let fileType = ref(props.item.type);
 // 获取上传视频名字
 let fileName = ref(props.item.name);
 // 获取文件 大小
 let fileSize = ref(parseInt(props.item.size / 1024 / 1024));
+// 获取压缩文件大小
+let compressSize = ref(null);
 // 视频src
 let fileURL = ref(props.item);
 let uploadProcess = ref(0);
@@ -104,10 +112,14 @@ onMounted(() => {
   fileURL.value = URL.createObjectURL(file.value); // https://blog.csdn.net/qq_21479345/article/details/108550762
   subVideoDom.value.src = fileURL.value;
 
-  let suffix = fileName.value;
+  // API：上传文件后缀
   // 判断上传的格式是否是视频
   if (fileType.value.indexOf("video/") > -1) {
     // 发起请求获取上传token
+    // video/ replace .
+    // video/mp4 .mp4 xxxx.mp4
+    // video/mov .mov xxxx.mov
+    let suffix = fileType.value.replace("video/", ".");
     getCompressTK(suffix);
   } else {
     message.warning("您上传的视频格式有误，请重新上传");
@@ -143,10 +155,11 @@ const getCompressTK = (suffix) => {
   state.value = "sc";
   return new Promise(function () {
     getCompressToken(suffix).then((res) => {
+      let key = res.data.data.key;
       if (res.data.code == 200) {
         // 获取tokem  上传文件 获取url
         let uploadForm = new FormData();
-        uploadForm.append("key", res.data.data.key);
+        uploadForm.append("key", key);
         uploadForm.append("token", res.data.data.token);
         uploadForm.append("file", file.value);
         axios({
@@ -237,49 +250,98 @@ const setTranscoding = () => {
   });
 };
 
+// 生成一个对象，好push到本地
+let obj = ref(null);
+// 创建一个可以下载的url数组
+let fileUrlList = ref(store.state.home.conversionList);
+// 加一个定时器，获取文件压缩大小需要轮询
+let compressSizeTime = ref(null);
+
 // 获取异步处理进度  进入轮训
 // 获取用户下载url
 let videoUrl = ref(null);
 const setSchedule = (pid) => {
   return getSchedule(pid).then((res) => {
-    console.log(res.data);
-
     if (res.data.code == 200) {
+      // 获取压缩文件大小需要的参数
+      compressVideoSize.value = res.data.data.infoPid;
       completeWih.value = 100;
       clearInterval(lxTime.value);
+
       // 用户下载url
       videoUrl.value = res.data.data.url;
 
       // 转化成功，返回给父组件，准备一键下载
-      let obj = {
+      obj.value = {
         videoUrl: videoUrl.value,
         file: file.value,
+        zh: true, // 转化
+        xz: false, // 下载
       };
-      emit("getFileItemParams", obj);
+
+      // 获取转换成功存储数组
+      let arr = store.state.home.conversionList;
+      arr.push(obj.value);
+      store.commit("home/setConversionList", arr);
+      emit("getFileItemParams", arr);
+
+      // 获取压缩文件大小
+      compressSizeTime.value = window.setInterval(() => {
+        // 发起请求，获取压缩文件大小
+        operationStatusAvinfo(compressVideoSize.value);
+      }, 1000);
+    }
+  });
+};
+
+// 获取压缩文件大小
+const operationStatusAvinfo = (infoPid) => {
+  return getOperationStatusAvinfo(infoPid).then((res) => {
+    // 轮训成功，获取到压缩之后的大小
+    if (res.data.code == 200) {
+      compressSize.value = parseInt(res.data.data.newSize / 1024 / 1024);
+      // 关闭定时器
+      clearInterval(compressSizeTime.value);
+      compressSizeTime.value = true;
     }
   });
 };
 
 // 用户点击下载
 const downloadBtn = () => {
-  console.log(file.value);
   if (state.value == "zh" && completeWih.value == 100) {
     downloadFn();
   }
+  console.log(obj.value);
+  fileUrlList.value.forEach((element) => {
+    if (element.videoUrl === obj.value.videoUrl) {
+      element.xz = true;
+      store.commit("home/setConversionList", fileUrlList.value);
+      // 扣除本地下载次数
+      killDownLoadNumber(1, userid.value);
+    }
+  });
+};
+
+// 点击下载扣除次数
+const killDownLoadNumber = (picNumber, userId) => {
+  return getKillDownloadNum(picNumber, userId).then((res) => {
+    if (res.data.code == 200) {
+      // 修改本地下载次数
+      store.commit("home/setDownloadNumber", res.data.data.newDownloadNumber);
+    }
+  });
 };
 
 // 保存文件视频到本地
 const downloadFn = () => {
-  console.log(videoUrl.value);
   return axios({
     method: "post",
     url: videoUrl.value,
     responseType: "blob",
   })
     .then((res) => {
-      console.log(res);
       saveFile(res.data, fileName.value); // 名字
-      console.log(res.data);
     })
     .catch((err) => {
       console.log(err);

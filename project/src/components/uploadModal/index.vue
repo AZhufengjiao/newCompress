@@ -35,7 +35,7 @@
       <div class="button">
         <a-button>我先试试</a-button>
         <a-button class="nth-last" type="primary" @click="payModalShow"
-          >立即升级{{ currentState }}</a-button
+          >立即升级 </a-button
         >
       </div>
     </div>

@@ -14,7 +14,7 @@ const login = {
       state.userid = str;
     },
   },
-  Atomics: {},
+  actions: {},
 };
 
 export default login;
