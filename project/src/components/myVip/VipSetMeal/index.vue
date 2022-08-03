@@ -65,6 +65,7 @@
             <!-- <div>立即抢购</div> -->
             <a-button
               class="myVip-setMeal-box-plan-PanicBuying"
+              id="PanicBuying"
               v-on:click="modalShow(item)"
               >立即抢购</a-button
             >

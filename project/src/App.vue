@@ -63,4 +63,8 @@ ul {
   text-decoration: none;
   list-style: none;
 }
+
+img {
+  cursor: pointer;
+}
 </style>

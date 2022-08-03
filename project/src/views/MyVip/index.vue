@@ -1,11 +1,12 @@
 <template>
   <div class="myVip">
     <!-- nav -->
-    <HomeNav>
+    <!-- <HomeNav>
       <template v-slot:header_logo>
         <img class="header_logo" src="" alt="" />
       </template>
-    </HomeNav>
+    </HomeNav> -->
+    <aboutNav :white="white"></aboutNav>
 
     <div class="myVip-soogif">
       <div class="myVip-soogif-top">
@@ -294,10 +295,11 @@
 <script setup>
 import HomeNav from "@/components/home/Nav/index.vue";
 import VipSetMeal from "@/components/myVip/VipSetMeal/index.vue";
+import aboutNav from "@/components/aboutNav/index.vue";
 import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 components: {
-  HomeNav, VipSetMeal;
+  aboutNav, VipSetMeal;
 }
 const store = useStore();
 // vip会员特权数组
@@ -310,6 +312,9 @@ let privilege = ref(null);
 // 获取会员特权组件距离页面顶部的高度
 let privilegeTop = null;
 let quanyiFlag = ref(false);
+
+// 设置nav背景颜色
+const white = ref("white");
 
 onMounted(() => {
   privilegeTop = privilege.value.offsetTop;

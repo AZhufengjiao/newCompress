@@ -109,6 +109,7 @@
           flex-wrap: wrap;
           padding: 0 80px 0 144px;
           li {
+            cursor: pointer;
             position: relative;
             width: 283px;
             height: 175px;
@@ -208,6 +209,7 @@
           }
         }
         button {
+          cursor: pointer;
           width: 189px;
           height: 60px;
           background: #0544ff;
@@ -254,6 +256,7 @@
         flex-wrap: wrap;
         margin-bottom: 40px;
         li {
+          cursor: pointer;
           display: flex;
           align-items: center;
           margin: 0 12px 40px 12px;
@@ -463,6 +466,7 @@
                 color: #ffffff;
               }
               li {
+                cursor: pointer;
                 margin-bottom: 15px;
                 width: 100px;
                 height: 16px;

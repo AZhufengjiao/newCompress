@@ -12,6 +12,8 @@ const home = {
       myCoupon: [],
       // 转化之后的数组
       conversionList: [],
+      // homeYsAction 1.压缩样式类名
+      YsSctiveKey: "format",
     };
   },
   mutations: {
@@ -30,6 +32,10 @@ const home = {
     // 修改转化之后的数组
     setConversionList(state, array) {
       state.conversionList = array;
+    },
+    // 修改压缩样式类名
+    setYsSctiveKey(state, string) {
+      state.YsSctiveKey = string;
     },
   },
 };

@@ -307,14 +307,37 @@ const operationStatusAvinfo = (infoPid) => {
   });
 };
 
+// 查看用户的身份
+let roleType = store.state.user.userData.roleType;
+// 获取该用户下载次数
+let downloadNumber = ref(store.state.home.downloadNumber);
+// 传给付款组件参数，显示与隐藏
+let UploadModal = ref({
+  flag: false,
+  state: "",
+});
+// 子组件像父组件传递参数，修改UploadModal的状态
+const updateStateHandle = (state) => {
+  UploadModal.value.flag = state;
+};
 // 用户点击下载
 const downloadBtn = () => {
+  // 判断下载次数是否小于用户准备下载视频的个数
+  if (downloadNumber.value < 1) {
+    message.warning("下载次数不够");
+    // 复制参数，修改弹出框信息
+    return (UploadModal.value = {
+      flag: true,
+      state: roleType,
+    });
+  }
   if (state.value == "zh" && completeWih.value == 100) {
     downloadFn();
   }
   console.log(obj.value);
+  // 判断本地是否有这个
   fileUrlList.value.forEach((element) => {
-    if (element.videoUrl === obj.value.videoUrl) {
+    if (element.videoUrl === obj.value.videoUrl && element.xz == false) {
       element.xz = true;
       store.commit("home/setConversionList", fileUrlList.value);
       // 扣除本地下载次数

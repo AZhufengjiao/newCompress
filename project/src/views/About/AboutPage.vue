@@ -248,16 +248,17 @@ onMounted(() => {
 });
 // 测试路由
 const handle1 = () => {
-  $router.push({ path: "home", query: { id: 1 } });
+  $router.push({ path: "/video-converter" });
 };
 const handle2 = () => {
-  $router.push({ path: "home", query: { id: 2 } });
+  $router.push({ path: "/video-custom-converter" });
 };
 
 // 支付弹出框
 let modalFlag = ref(false);
 // 点击显示弹出框
 const modalShow = () => {
+  s;
   modalFlag.value = true;
 };
 // 点击弹出框确定按钮，隐藏弹出框
@@ -315,7 +316,7 @@ const setMealInfo = (id) => {
 // 3.获取工具剩余次数
 const getFrequency = (userid) => {
   return getDownloadNum(userid).then((res) => {
-    // console.log(res.data);
+    console.log(res.data);
     if (res.data.code == 200) {
       // 保存次数至本地
       store.commit("home/setDownloadNumber", res.data.data.downloadNumber);

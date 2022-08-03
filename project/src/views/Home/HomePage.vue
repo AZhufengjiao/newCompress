@@ -1,17 +1,14 @@
 <template>
   <div class="home">
     <div class="header">
-      <HomeNav>
+      <!-- <HomeNav>
         <template v-slot:header_logo>
           <img class="header_logo" src="" alt="" />
         </template>
-      </HomeNav>
+      </HomeNav> -->
+      <aboutNav></aboutNav>
 
-      <CompressedVideo
-        v-show="routerNum == 1"
-        :routerNum="query"
-      ></CompressedVideo>
-      <CustomCompressed v-show="routerNum == 2"></CustomCompressed>
+      <CompressedVideo></CompressedVideo>
     </div>
     <a-layout>
       <a-layout-content>
@@ -21,7 +18,7 @@
           </div>
           <div class="home_content_right">
             <div class="home_content_right_top">
-              <h1>如何使用{{ routerNum }}}</h1>
+              <h1>如何使用</h1>
               <h3>录制屏幕种一切活动</h3>
             </div>
             <div class="home_content_right_bottom">
@@ -60,7 +57,7 @@
 <script setup>
 import HomeNav from "@/components/home/Nav/index.vue";
 import CompressedVideo from "@/components/home/CompressedVideo/index.vue";
-import CustomCompressed from "@/components/home/CustomCompressed/index.vue";
+import aboutNav from "@/components/aboutNav/index.vue";
 import { useStore } from "vuex";
 import { onMounted, onUpdated, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -68,18 +65,13 @@ import axios from "axios";
 const store = useStore();
 const $router = useRoute();
 components: {
-  HomeNav, CompressedVideo, CustomCompressed;
+  aboutNav, CompressedVideo;
 }
 // 2 是自定义压缩视频
 let routerNum = ref(1);
 
 onMounted(() => {
-  routerNum.value = $router.query.id;
-  if ($router.query.id) {
-    routerNum.value = $router.query.id;
-  } else {
-    routerNum.value = 1;
-  }
+  // routerNum.value = parseInt($router.params.id);
   // console.log(store.state.home.name);
   // console.log(store.state.home.params1);
   // console.log(store.state.home.tokenData);
@@ -138,6 +130,7 @@ onUpdated(() => {});
     padding: 25px 21px 0;
     box-sizing: border-box;
     img {
+      cursor: pointer;
       width: 100%;
       height: 100%;
     }
@@ -198,6 +191,7 @@ onUpdated(() => {});
     flex-wrap: wrap;
     margin-bottom: 195px;
     .home_footer_smallBox {
+      cursor: pointer;
       width: 683px;
       height: 196px;
       background: #e1e9ff;

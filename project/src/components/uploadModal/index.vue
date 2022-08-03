@@ -33,10 +33,10 @@
         <h1>成为白金会员立享<span>无限制</span>视频上传</h1>
       </div>
       <div class="button">
-        <a-button>我先试试</a-button>
+        <a-button @click="payModalShow">我先试试</a-button>
         <a-button class="nth-last" type="primary" @click="payModalShow"
-          >立即升级 </a-button
-        >
+          >立即升级
+        </a-button>
       </div>
     </div>
   </div>
@@ -65,9 +65,14 @@ watch(
   }
 );
 
+// 点击我先试试
+const handleTry = () => {
+  emit("");
+};
+
 // 支付成功，关闭自己
 const closeHandle = (state) => {
-  modalShow.value=state
+  modalShow.value = state;
 };
 
 // 点击删除键，关闭弹出框

@@ -1,5 +1,8 @@
 //  适配1440px
 @media screen and (max-width: 1920px) {
+  .white {
+    background-color: #fff !important;
+  }
   .container {
     width: 1200px;
     margin: auto;
@@ -14,6 +17,7 @@
     .header-box {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       width: 100%;
       padding: 24px 0;
       .header-logo {
@@ -43,6 +47,7 @@
           }
         }
         .header-logo-right {
+          cursor: pointer;
           width: 91px;
           height: 30px;
           font-size: 30px;
@@ -52,6 +57,22 @@
         }
       }
       .header-login-box {
+        display: flex;
+        align-items: center;
+        .home_vip {
+          cursor: pointer;
+          width: 115px;
+          height: 33px;
+          background: #0544ff;
+          border-radius: 100px;
+          font-size: 18px;
+          font-family: PingFangSC-Semibold, PingFang SC;
+          font-weight: 600;
+          color: #ffffff;
+          line-height: 33px;
+          text-align: center;
+          margin-right: 47px;
+        }
         // 未登录显示
         .notLogin {
           display: flex;
@@ -74,6 +95,7 @@
         }
         // 已登录显示
         .haveLogged {
+          cursor: pointer;
           position: relative;
           width: 48px;
           height: 48px;

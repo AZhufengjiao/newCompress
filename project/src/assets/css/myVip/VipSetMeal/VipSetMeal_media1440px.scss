@@ -134,7 +134,7 @@
           font-size: 26px;
           font-family: HarmonyOS_Sans_SC;
           color: #0544ff;
-          line-height: 50px;
+          line-height: 42px !important;
         }
         .myVip-setMeal-box-plan-xz {
           margin: 0 auto 21px;
@@ -227,6 +227,7 @@
         text-align: center;
 
         span {
+          cursor: pointer;
           width: 160px;
           height: 20px;
           font-size: 20px;
@@ -266,6 +267,7 @@
             color: #ad5703;
           }
           span {
+            cursor: pointer;
             text-decoration: underline;
             font-size: 16px;
             font-family: PingFangSC-Medium, PingFang SC;
@@ -314,84 +316,90 @@
   }
 
   //  会员套餐不一样的样式
-  #myVip-setMeal-pattern {
-    background: #fff7e8;
-    color: black !important;
-    box-shadow: 0px 6px 12px 0px rgba(112, 124, 159, 0.21);
-    p,
-    h1,
-    h2,
-    div,
-    span {
-      color: black;
-    }
-    .myVip-setMeal-box-col {
-      width: 280px;
-      height: 26px;
-      background: linear-gradient(
-        180deg,
-        #a8b1ff 0%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      opacity: 0.17;
-    }
-    .myVip-setMeal-box-plan {
-      background: linear-gradient(
-        180deg,
-        #ffd1a5 0%,
-        rgba(253, 236, 212, 0) 100%
-      );
+  .myVip-setMeal {
+    #myVip-setMeal-pattern {
+      background: #fff7e8;
       color: black !important;
-      .myVip-setMeal-box-plan-preference {
-        background: #ff5353;
-        color: white;
+      box-shadow: 0px 6px 12px 0px rgba(112, 124, 159, 0.21);
+      p,
+      h1,
+      h2,
+      div,
+      span {
+        color: black;
       }
-      .myVip-setMeal-box-plan-PanicBuying {
-        border: none;
-        background: #ff8405;
-        color: white;
+      .myVip-setMeal-box-col {
+        width: 280px;
+        height: 26px;
+        background: linear-gradient(
+          180deg,
+          #a8b1ff 0%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        opacity: 0.17;
       }
-      .myVip-setMeal-box-plan-xz span {
-        color: #eb3434;
-      }
-    }
-    .myVip-setMeal-box-explain {
-      background-color: #f3e8d6;
-      color: #563d20;
-    }
-    .myVip-setMeal-box-finally {
-      .myVip-setMeal-box-finally-box {
-        background-color: white;
-        h1 {
-          color: #ad5703;
+      .myVip-setMeal-box-plan {
+        button {
+          line-height: 42px !important;
         }
-        span {
-          color: #3d56d5;
+        background: linear-gradient(
+          180deg,
+          #ffd1a5 0%,
+          rgba(253, 236, 212, 0) 100%
+        );
+        color: black !important;
+        .myVip-setMeal-box-plan-preference {
+          background: #ff5353;
+          color: white;
+        }
+        #PanicBuying {
+          border: none;
+          background: #ff8405;
+          color: white;
+          line-height: 42px !important;
+        }
+        .myVip-setMeal-box-plan-xz span {
+          color: #eb3434;
         }
       }
-    }
-    .myVip-setMeal-box-qy-btmBox span {
-      border: 1px solid #000;
-    }
+      .myVip-setMeal-box-explain {
+        background-color: #f3e8d6;
+        color: #563d20;
+      }
+      .myVip-setMeal-box-finally {
+        .myVip-setMeal-box-finally-box {
+          background-color: white;
+          h1 {
+            color: #ad5703;
+          }
+          span {
+            color: #3d56d5;
+          }
+        }
+      }
+      .myVip-setMeal-box-qy-btmBox span {
+        border: 1px solid #000;
+      }
 
-    // 添加样式
-    .myVip-setMeal-box-plan-quan {
-      margin-top: 33px;
-      font-size: 18px;
-      font-family: HarmonyOS_Sans_SC;
-      color: #0b030a;
-    }
-    .myVip-setMeal-box-plan-yuan {
-      background-color: black;
-      color: white;
-    }
-    .myVip-setMeal-box-plan-yj {
-      margin-top: 22px;
-      text-decoration: line-through;
-      font-size: 18px;
-      font-family: HarmonyOS_Sans_SC;
-      color: #010101;
-      line-height: 18px;
+      // 添加样式
+      .myVip-setMeal-box-plan-quan {
+        margin-top: 33px;
+        font-size: 18px;
+        font-family: HarmonyOS_Sans_SC;
+        color: #0b030a;
+      }
+      .myVip-setMeal-box-plan-yuan {
+        background-color: black;
+        color: white;
+      }
+      .myVip-setMeal-box-plan-yj {
+        margin-top: 22px;
+        text-decoration: line-through;
+        font-size: 18px;
+        font-family: HarmonyOS_Sans_SC;
+        color: #010101;
+        line-height: 18px;
+      }
     }
   }
 

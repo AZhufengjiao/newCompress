@@ -10,15 +10,18 @@
       <div>智能场景压缩 · 一步搞定所有视频需求</div>
     </div>
 
-    <Custom></Custom>
+    <router-view></router-view>
 
-    <div class="home_compressedVideo_bottom">
+    <!-- <Custom v-if="defaultMum == 2"></Custom> -->
+    <!-- <defaultYS></defaultYS> -->
+
+    <div v-show="!inputFlag" class="home_compressedVideo_bottom">
       <div class="home_compressedVideo_bottom_box">
         <div class="home_compressedVideo_bottom_top">
           <div
             v-for="item in compressList"
             :key="item"
-            @click="compressHandle(item.id)"
+            @click="compressHandle(item)"
             :class="[activeKey == item.id ? 'border_col' : '']"
           >
             {{ item.name }}
@@ -96,55 +99,6 @@
               >
               </UploadModule>
             </div>
-
-            <!-- <div
-              v-for="item in fileList"
-              :key="item"
-              class="home_fileCompression_box"
-            >
-              <div class="home_fileCompression_box_box">
-                <span class="home_fileCompression_box_name">
-                  {{ item }}
-                </span>
-                <div class="home_fileCompression_box_center">
-                  <span class="home_fileCompression_box_memory">256M</span>
-                  <div id="a" class="home_fileCompression_box_center_box">
-                    <div
-                      v-if="flag"
-                      :class="[
-                        'home_fileCompression_box_center_box_style',
-                        // { scStyle: state == 'sc' ? 'scStyle' : 'zhtyle' },
-                        {
-                          scStyle: state == 'sc',
-                        },
-                        {
-                          zhtyle: state == 'zh',
-                        },
-                      ]"
-                      :style="[
-                        { width: succeed == true ? completeWih + '%' : 0 },
-                      ]"
-                    >
-                      <span v-if="state == 'sc'">{{
-                        completeWih == 100 ? "上传成功" : "上传中"
-                      }}</span>
-                      <span v-if="state == 'zh'">{{
-                        completeWih == 100 ? "转换成功" : "转换中"
-                      }}</span>
-                    </div>
-                  </div>
-                  <span class="home_fileCompression_box_memory">256M</span>
-                </div>
-                <div class="home_fileCompression_box_zh">
-                  <span v-if="state == 'sc'">{{
-                    completeWih == 100 ? "上传成功" : "开始转换"
-                  }}</span>
-                  <span v-if="state == 'zh'" v-on:click="downloadBtn">{{
-                    completeWih == 100 ? "下载" : "开始转换"
-                  }}</span>
-                </div>
-              </div>
-            </div> -->
           </div>
         </div>
         <a-button
@@ -163,22 +117,9 @@
 import UploadModule from "@/components/home/UploadModule/index.vue";
 import uploadModal from "@/components/uploadModal/index.vue";
 import Custom from "@/components/home/Custom/index.vue";
-import {
-  defineComponent,
-  onMounted,
-  onUpdated,
-  ref,
-  watch,
-  toRefs,
-  defineProps,
-} from "vue";
-import {
-  getCompressScenes,
-  getCompressToken,
-  getSchedule,
-  getTranscoding,
-  homeTemplateList,
-} from "@/api/home";
+import defaultYS from "@/components/home/defaultYS/index.vue";
+import { onMounted, onUpdated, ref } from "vue";
+import { getCompressScenes, homeTemplateList } from "@/api/home";
 import { getKillDownloadNum } from "@/api/about";
 import { useStore } from "vuex";
 import { message } from "ant-design-vue";
@@ -188,17 +129,16 @@ import { saveFile } from "./download.js";
 import axios from "axios";
 import JSZip from "jszip";
 import FileSaver from "file-saver";
+import { useRouter } from "vue-router";
 
 components: {
-  UploadModule, uploadModal, Custom;
+  UploadModule, uploadModal, Custom, defaultYS;
 }
-const props = defineProps({ routerNum: Number });
-const { routerNum } = toRefs(props);
-console.log(routerNum.value);
+const $router = useRouter();
+const store = useStore();
 
 const inputFlag = ref(true);
-const store = useStore();
-const activeKey = ref(1);
+
 const activeKeySon = ref(1);
 // 定义选择的压缩类型数组
 let fileList = ref([]);
@@ -206,6 +146,8 @@ let fileList = ref([]);
 let params1 = ref(null);
 // 获取用户id
 let userid = ref(store.state.login.userid);
+// 获取该用户下载次数
+let downloadNumber = ref(store.state.home.downloadNumber);
 
 // 动画状态
 let flag = ref(false);
@@ -224,30 +166,14 @@ onUpdated(() => {
   // console.log(fileList.value);
 });
 
-// 压缩类型数组
-let compressList = ref([
-  {
-    id: 1,
-    type: "format",
-    name: "场景压缩",
-  },
-  {
-    id: 2,
-    type: "compress",
-    name: "大小压缩",
-  },
-  {
-    id: 3,
-    type: "upload",
-    name: "无损压缩",
-  },
-]);
 // 压缩类型场景所有数组
 let compressSceneList = ref([]);
 let compressSceneItem = ref([]);
 
 // 点击压缩类型切换转换压缩场景  1.
-const compressHandle = (num) => {
+const compressHandle = (item) => {
+  let num = item.id;
+  // $router.push({ path: item.router });
   // 切换类名
   activeKey.value = num;
   // 切换压缩场景数据
@@ -261,7 +187,7 @@ const compressHandle = (num) => {
   });
 };
 
-// 发起请求，获取压缩场景
+// 发起请求，获取压缩场景  ---------------------------------------------------
 const getCompressList = (state) => {
   return homeTemplateList(state, 1, 10).then((res) => {
     let arr = [];
@@ -328,8 +254,7 @@ let handleInputV = (e) => {
   const uploadFiles = e.target.files;
   // 获取视频大小
   let videoSize = parseInt(uploadFiles[0].size / 1024 / 1024);
-  // 获取该用户下载次数
-  let downloadNumber = ref(store.state.home.downloadNumber);
+
   // 查看用户的身份
   let roleType = store.state.user.userData.roleType;
   if (uploadFiles.length > 0) {
@@ -427,6 +352,19 @@ let fileUrlList = ref(store.state.home.conversionList);
 
 // 点击下载全部
 const downloadHandle = () => {
+  // 查看用户的身份
+  let roleType = store.state.user.userData.roleType;
+
+  // 判断下载次数是否小于用户准备下载视频的个数
+  if (downloadNumber.value < fileUrlList.value.length) {
+    message.warning("下载次数不够");
+    // 复制参数，修改弹出框信息
+    return (UploadModal.value = {
+      flag: true,
+      state: roleType,
+    });
+  }
+
   // 设置一个记录下载为false的变量
   let FalseNum = 0;
   console.log(fileUrlList.value);
@@ -658,6 +596,7 @@ const FileItemParams = (item) => {
     // margin-left: 292px;
     text-align: center;
     .home_uploadingVideo_bottom {
+      cursor: pointer;
       width: 252px;
       height: 80px;
       background: #0544ff;
@@ -704,6 +643,7 @@ const FileItemParams = (item) => {
       letter-spacing: 1px;
     }
     span {
+      cursor: pointer;
       font-size: 21px;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
@@ -750,6 +690,7 @@ const FileItemParams = (item) => {
 
       border-radius: 11px 11px 0px 0px;
       div {
+        cursor: pointer;
         background: #ffffff;
         width: 33.33%;
         font-size: 24px;
@@ -770,6 +711,7 @@ const FileItemParams = (item) => {
       .home_compressedVideo_bottom_bottom_one {
         display: flex;
         div {
+          cursor: pointer;
           background: #e1e9ff;
           margin-right: 108px;
           height: 88px;

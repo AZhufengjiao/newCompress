@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" id="header" :class="white === 'white' ? 'white' : ''">
     <div class="container">
       <div class="header-box">
         <!-- 左 -->
@@ -8,10 +8,15 @@
             <div class="wathet"></div>
             <div class="blue"></div>
           </div>
-          <div class="header-logo-right">HEYCUT</div>
+          <div class="header-logo-right" v-on:click="$router.push('/')">
+            HEYCUT
+          </div>
         </div>
         <!-- 右 -->
         <div class="header-login-box">
+          <div class="home_vip" v-on:click="$router.push('/pricing')">
+            会员vip
+          </div>
           <!--  未登录显示 -->
           <div v-if="userid == null || userid.length <= 0" class="notLogin">
             <div class="header-login" v-on:click="loginFlag = true">登录</div>
@@ -42,11 +47,15 @@
 <script setup>
 import loginModel from "@/components/loginModal/index.vue";
 import { userLogOut } from "@/api/login";
-import { ref, watch } from "vue";
+import { ref, toRefs, watch } from "vue";
 import { useStore } from "vuex";
 components: {
   loginModel;
 }
+const props = defineProps({
+  white: String,
+});
+const { white } = toRefs(props);
 const store = useStore();
 let visible = ref(true);
 
