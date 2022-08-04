@@ -15,15 +15,18 @@
       <div class="home_compressedVideo_bottom_bottom">
         <div class="home_compressedVideo_bottom_bottom_one">
           <!-- 子组件 -->
-          <Size> <template v-slot:YsSon> 12 </template> </Size>
-          <!-- <div
-            v-for="item in compressSceneItem"
-            :key="item"
-            @click="compressSceneClick(item)"
-            :class="[activeKeySon === item.tmpId ? 'border_cor' : '']"
-          >
-            {{ item.title }}
-          </div> -->
+          <Size style="display: flex">
+            <template v-slot:YsSon style="display: flex">
+              <div
+                v-for="item in SonList.data"
+                :key="item.state"
+                @click="compressSceneClick(item)"
+                :class="[activeKeySon === item.tmpId ? 'border_cor' : '']"
+              >
+                {{ item.title }}
+              </div>
+            </template>
+          </Size>
         </div>
       </div>
     </div>
@@ -32,24 +35,22 @@
 
 <script setup>
 import Size from "@/components/home/defaultYS/component/Size/index.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
-import {
-  getCompressScenes,
-  getCompressToken,
-  getSchedule,
-  getTranscoding,
-  homeTemplateList,
-} from "@/api/home";
+import { getCompressScenes, homeTemplateList } from "@/api/home";
 components: {
   Size;
 }
+const emit = defineEmits(["paramsObj"]);
 const $router = useRouter();
 const store = useStore();
-// 样式类名变化
-const activeKey = ref(store.state.home.YsSctiveKey);
+//压缩类型 样式类名变化
+const activeKey = ref("format");
+const activeKeySon = ref(1);
+// 转码要的参数
+let params1 = ref(null);
 
 // 压缩类型数组
 let compressList = ref([
@@ -73,52 +74,103 @@ let compressList = ref([
   },
 ]);
 
+onMounted(() => {
+  // 发起请求，获取默认数据
+  getCompressList(activeKey.value);
+});
+
+// 定义一个装压缩类型的数组，存储起来
+let CompressFaList = ref([]);
+// 传给子组件的数组
+let SonList = ref([]);
 // 1.点击压缩类型切换转换压缩场景
 const compressHandle = (item) => {
-  console.log();
   let state = item.type;
   // 存储到本地，刷新保存
-  store.commit("home/setYsSctiveKey", state);
+  // store.commit("home/setYsSctiveKey", state);
   // 跳转页面
   $router.push({ path: item.router });
   // 切换类名
   activeKey.value = state;
-  // // 切换压缩场景数据
-  // compressSceneItem.value = compressSceneList.value[num - 1];
-  // compressSceneItem.value.map((item) => {
-  //   if (item.compressState) {
-  //     activeKeySon.value = item.compressState;
-  //   } else {
-  //     activeKeySon.value = compressSceneItem.value[0].tmpId;
-  //   }
-  // });
+  // 发起请求，获取该类型数据
+  getCompressList(state);
+};
+// 1.1.发起请求，获取压缩场景
+const getCompressList = (state) => {
+  // 判断CompressFaList数组中可有传入的状态，没有才可发请求
+  if (!CompressFaList.value.some((item) => item.state === state)) {
+    return homeTemplateList(state, 1, 10).then((res) => {
+      let obj = {};
+      let arr = [];
+      if (res.data.code == 200) {
+        // 自定义对象
+        obj = {
+          state: state,
+          data: res.data.data.list,
+        };
+        arr.push(obj);
+        SonList.value = arr[0];
+        // 存储
+        CompressFaList.value.push(obj);
+
+        // 判断 compressState是否为true，是的话activeKeySon保持点击的那个
+        SonList.value.data.map((item) => {
+          if (item.compressState) {
+            activeKeySon.value = item.compressState;
+          } else {
+            // 让activeKeySon类名样式保持在第一个
+            activeKeySon.value = SonList.value.data[0].tmpId;
+          }
+        });
+      }
+
+      // 场景是什么，对应的类型发起qqiu
+      CompressScenes(activeKeySon.value);
+    });
+  } // 如果有，直接获取子组件需要的数组
+  else {
+    SonList.value = CompressFaList.value.filter(
+      (item) => item.state === state
+    )[0];
+
+    // 判断 compressState是否为true，是的话activeKeySon保持点击的那个
+    SonList.value.data.map((item) => {
+      if (item.compressState) {
+        activeKeySon.value = item.compressState;
+      } else {
+        // 让activeKeySon类名样式保持在第一个
+        activeKeySon.value = SonList.value.data[0].tmpId;
+      }
+    });
+
+    // 场景是什么，对应的类型发起请求
+    CompressScenes(activeKeySon.value);
+  }
 };
 
-// 2.发起请求，获取压缩场景
-const getCompressList = (state) => {
-  return homeTemplateList(state, 1, 10).then((res) => {
-    let arr = [];
+// 2.点击切换压缩场景获取压缩场景
+const compressSceneClick = (item) => {
+  // 点击切换类名
+  activeKeySon.value = item.tmpId;
+  // 场景是什么，对应的类型发起请求
+  CompressScenes(activeKeySon.value);
+
+  SonList.value.data.map((data) => {
+    // 先排他设置每个为空
+    data.compressState = null;
+    if (data.tmpId === item.tmpId) {
+      // 赋值
+      data.compressState = item.tmpId;
+    }
+  });
+};
+
+// 根据压缩场景切换获取转码要用的参数
+const CompressScenes = (tmpId) => {
+  return getCompressScenes(tmpId).then((res) => {
     if (res.data.code == 200) {
-      // 获取所有压缩场景内容
-      compressSceneList.value.push(res.data.data.list);
-      compressSceneList.value.map((item) => {
-        item.map((i) => {
-          getCompressScenes(item[0].tmpId).then((res) => {
-            if (res.data.code == 200) {
-              // 获取固定的params1
-              arr.push(res.data.data);
-              params1.value = arr[0];
-              //  保存
-              i.params = res.data.data;
-            }
-          });
-        });
-      });
-      if (compressSceneItem.value.length === 0) {
-        // 压缩场景默认显示第一个
-        compressSceneItem.value = compressSceneList.value[0];
-        activeKeySon.value = compressSceneItem.value[0].tmpId;
-      }
+      params1.value = res.data.data;
+      emit('paramsObj',params1.value)
     }
   });
 };

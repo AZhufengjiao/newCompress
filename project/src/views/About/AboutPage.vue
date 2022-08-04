@@ -316,7 +316,7 @@ const setMealInfo = (id) => {
 // 3.获取工具剩余次数
 const getFrequency = (userid) => {
   return getDownloadNum(userid).then((res) => {
-    console.log(res.data);
+    // console.log(res.data);
     if (res.data.code == 200) {
       // 保存次数至本地
       store.commit("home/setDownloadNumber", res.data.data.downloadNumber);

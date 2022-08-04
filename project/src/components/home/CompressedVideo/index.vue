@@ -10,38 +10,7 @@
       <div>智能场景压缩 · 一步搞定所有视频需求</div>
     </div>
 
-    <router-view></router-view>
-
-    <!-- <Custom v-if="defaultMum == 2"></Custom> -->
-    <!-- <defaultYS></defaultYS> -->
-
-    <div v-show="!inputFlag" class="home_compressedVideo_bottom">
-      <div class="home_compressedVideo_bottom_box">
-        <div class="home_compressedVideo_bottom_top">
-          <div
-            v-for="item in compressList"
-            :key="item"
-            @click="compressHandle(item)"
-            :class="[activeKey == item.id ? 'border_col' : '']"
-          >
-            {{ item.name }}
-          </div>
-        </div>
-        <!-- 压缩场景 -->
-        <div class="home_compressedVideo_bottom_bottom">
-          <div class="home_compressedVideo_bottom_bottom_one">
-            <div
-              v-for="item in compressSceneItem"
-              :key="item"
-              @click="compressSceneClick(item)"
-              :class="[activeKeySon === item.tmpId ? 'border_cor' : '']"
-            >
-              {{ item.title }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <router-view @paramsObj="handleParamsObj"></router-view>
 
     <p class="home_compressedVideo_hanzi">
       1·解决抖音上传视频被压缩、不清晰问题
@@ -156,79 +125,11 @@ let time = ref(null);
 let succeedtime = ref(null);
 let succeed = ref(false);
 
-onMounted(() => {
-  // 发起请求, 获取压缩切换所有数据
-  getCompressList("format");
-  getCompressList("compress");
-  getCompressList("upload");
-});
-onUpdated(() => {
-  // console.log(fileList.value);
-});
-
-// 压缩类型场景所有数组
-let compressSceneList = ref([]);
-let compressSceneItem = ref([]);
-
-// 点击压缩类型切换转换压缩场景  1.
-const compressHandle = (item) => {
-  let num = item.id;
-  // $router.push({ path: item.router });
-  // 切换类名
-  activeKey.value = num;
-  // 切换压缩场景数据
-  compressSceneItem.value = compressSceneList.value[num - 1];
-  compressSceneItem.value.map((item) => {
-    if (item.compressState) {
-      activeKeySon.value = item.compressState;
-    } else {
-      activeKeySon.value = compressSceneItem.value[0].tmpId;
-    }
-  });
+// 子组件传参给父组件，item是转码要用的参数
+const handleParamsObj = (item) => {
+  params1.value = item;
 };
 
-// 发起请求，获取压缩场景  ---------------------------------------------------
-const getCompressList = (state) => {
-  return homeTemplateList(state, 1, 10).then((res) => {
-    let arr = [];
-    if (res.data.code == 200) {
-      // 获取所有压缩场景内容
-      compressSceneList.value.push(res.data.data.list);
-      compressSceneList.value.map((item) => {
-        item.map((i) => {
-          getCompressScenes(item[0].tmpId).then((res) => {
-            if (res.data.code == 200) {
-              // 获取固定的params1
-              arr.push(res.data.data);
-              params1.value = arr[0];
-              //  保存
-              i.params = res.data.data;
-            }
-          });
-        });
-      });
-      if (compressSceneItem.value.length === 0) {
-        // 压缩场景默认显示第一个
-        compressSceneItem.value = compressSceneList.value[0];
-        activeKeySon.value = compressSceneItem.value[0].tmpId;
-      }
-    }
-  });
-};
-
-// 点击切换压缩场景获取压缩场景  2.
-const compressSceneClick = (item) => {
-  // 每次切换赋值给params1
-  params1.value = item.params;
-  compressSceneItem.value.map((data) => {
-    data.compressState = null;
-    if (item.tmpId === data.tmpId) {
-      data.compressState = item.tmpId;
-    }
-  });
-  activeKeySon.value = item.tmpId;
-  // getCompressScene(item.tmpId);
-};
 let upload = ref(null);
 //  添加按钮，触发input，让文件夹弹出  3.
 const handleUploading = (e) => {
