@@ -83,6 +83,8 @@ onMounted(() => {
 let CompressFaList = ref([]);
 // 传给子组件的数组
 let SonList = ref([]);
+// 子组件全部数据
+let SonTmpIdList = ref([]);
 // 1.点击压缩类型切换转换压缩场景
 const compressHandle = (item) => {
   let state = item.type;
@@ -150,10 +152,10 @@ const getCompressList = (state) => {
 
 // 2.点击切换压缩场景获取压缩场景
 const compressSceneClick = (item) => {
+  // 场景是什么，对应的类型发起qqiu
+  CompressScenes(item.tmpId);
   // 点击切换类名
   activeKeySon.value = item.tmpId;
-  // 场景是什么，对应的类型发起请求
-  CompressScenes(activeKeySon.value);
 
   SonList.value.data.map((data) => {
     // 先排他设置每个为空
@@ -165,14 +167,33 @@ const compressSceneClick = (item) => {
   });
 };
 
-// 根据压缩场景切换获取转码要用的参数
+// 2.1。根据压缩场景切换获取转码要用的参数
 const CompressScenes = (tmpId) => {
-  return getCompressScenes(tmpId).then((res) => {
-    if (res.data.code == 200) {
-      params1.value = res.data.data;
-      emit('paramsObj',params1.value)
-    }
-  });
+  let arr = {};
+  // 如果没有，就发请求
+  if (!SonTmpIdList.value.some((item) => item.id === tmpId)) {
+    // 场景是什么，对应的类型发起请求
+    return getCompressScenes(tmpId).then((res) => {
+      if (res.data.code == 200) {
+        params1.value = res.data.data;
+        emit("paramsObj", params1.value);
+
+        arr = {
+          id: tmpId,
+          obj: res.data.data,
+        };
+        SonTmpIdList.value.push(arr);
+      }
+    });
+  } // 如果有就不发请求
+  else {
+    SonTmpIdList.value.map((item) => {
+      if (item.id == tmpId) {
+        params1.value = item.obj;
+      }
+      emit("paramsObj", params1.value);
+    });
+  }
 };
 </script>
 

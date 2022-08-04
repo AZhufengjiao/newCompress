@@ -281,7 +281,7 @@ const getCompressList = (state) => {
   height: 50px !important;
 }
 :deep .ant-select-selection-item {
-  line-height: 47px;
+  line-height: 48px !important;
 }
 
 .home

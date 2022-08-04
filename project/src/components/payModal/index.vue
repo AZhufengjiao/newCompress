@@ -301,7 +301,6 @@ onMounted(() => {
 
 // 用户是否已支付
 const getPayStatus = (userId) => {
-  console.log(userId);
   let formData = new FormData();
   formData.append("userId", userId);
   return getPayState(formData).then((res) => {
