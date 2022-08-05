@@ -7,6 +7,9 @@
       :currentId="currentId"
     ></payModel>
 
+    <!-- 登录弹出框 -->
+    <loginModel :loginFlag="loginFlag" @cancelChild="CancelChild"></loginModel>
+
     <div class="myVip-setMeal">
       <div
         :class="[
@@ -183,25 +186,50 @@
 <script setup>
 import { useRouter } from "vue-router";
 import payModel from "@/components/payModal/index.vue";
+import loginModel from "@/components/loginModal/index.vue";
 import { getSetMeal } from "@/api/about";
 import { onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 components: {
-  payModel;
+  payModel, loginModel;
 }
 const $router = useRouter();
 const store = useStore();
+// 用户id
+let userid = ref(null);
 // 选择套餐id
 let currentId = ref(null);
-// 支付弹出框
+// 支付弹出框 -----------------支付弹出框
 let modalFlag = ref(false);
-// 点击显示弹出框
-const modalShow = (item) => {
-  modalFlag.value = true;
-};
 // 点击弹出框确定按钮，隐藏弹出框
 const updataModalFlag = (bol) => {
   modalFlag.value = bol;
+};
+
+watch(
+  () => store.state.login.userid,
+  (newValue) => {
+    userid.value = newValue;
+  },
+  { immediate: true }
+);
+
+// 登录弹出框  -----------------录弹出框
+const loginFlag = ref(false);
+// 获取子组件传值复制
+const CancelChild = (val) => {
+  loginFlag.value = val;
+};
+
+// 点击立即弹出框，判断有无登录，支付弹出框
+const modalShow = (item) => {
+  // 登录显示支付弹窗
+  if (userid.value !== null) {
+    modalFlag.value = true;
+  } // 未登录显示登录弹窗
+  else {
+    loginFlag.value = true;
+  }
 };
 
 const btnToggle = ref(null);

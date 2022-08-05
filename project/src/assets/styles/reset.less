@@ -51,12 +51,16 @@
       display: flex;
       justify-content: space-between;
       padding: 10px 8px 10px 23px;
+
+      width: 970px;
+      height: 58px;
       background: linear-gradient(270deg, #3d3a78 0%, #353e59 100%);
       border-radius: 8px 8px 0px 0px;
       .modal-header-left {
         display: flex;
         align-items: center;
         .modal-header-img {
+          margin-right: 10px;
           width: 38px;
           height: 38px;
           border-radius: 50%;
@@ -67,11 +71,34 @@
           }
         }
         .modal-header-span {
-          margin-left: 11px;
-          font-size: 14px;
-          font-family: HarmonyOS_Sans_SC_Black;
-          color: #ffffff;
-          line-height: 19px;
+          .modal-header-name {
+            margin-top: 2px;
+            margin-bottom: 1px;
+            display: flex;
+            font-size: 14px;
+            font-family: HarmonyOS_Sans_SC_Black;
+            color: #ffffff;
+            line-height: 14px;
+            .modal-header-identity {
+              text-align: center;
+              margin-left: 6px;
+              width: 32px;
+              height: 16px;
+              background: linear-gradient(270deg, #ffc105 0%, #ffe571 100%);
+              border-radius: 4px;
+              font-size: 11px;
+              font-family: PingFangSC-Regular, PingFang SC;
+              font-weight: 400;
+              color: #373d61;
+              line-height: 15px;
+            }
+          }
+          span {
+            font-size: 12px;
+            font-family: HarmonyOS_Sans_SC;
+            color: #ccced5;
+            line-height: 12px;
+          }
         }
       }
       .modal-header-right {
@@ -118,18 +145,17 @@
           line-height: 18px;
         }
         h4 {
-          margin-top: 23px;
           margin-bottom: 30px;
-          text-align: center;
-          font-size: 14px;
+          font-size: 13px;
           font-family: PingFangSC-Medium, PingFang SC;
           font-weight: 500;
-          color: #0040ff;
+          color: #86521e;
           line-height: 14px;
+          text-decoration: underline;
         }
         // 权益
         .modal-equity {
-          padding: 0 11px 88px 12px;
+          padding: 0 11px;
           margin-top: 20px;
           h2 {
             margin-bottom: 14px;
@@ -149,19 +175,65 @@
             line-height: 12px;
           }
 
-          li {
-            margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            div {
-              font-size: 0;
-              width: 12px;
-              height: 12px;
-              img {
-                display: block;
+          .equityUl {
+            margin: 0;
+            margin-bottom: 170px;
+            li {
+              margin-top: 10px;
+              display: flex;
+              justify-content: space-between;
+              width: 100%;
+              div {
+                font-size: 0;
+                width: 12px;
+                height: 12px;
+                img {
+                  display: block;
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+            }
+          }
+          .limit-roll {
+            ul {
+              margin-bottom: 12px;
+              height: 104px;
+              overflow: hidden;
+              border-radius: 5px;
+              li {
+                margin-top: 5px;
+                display: flex;
+                align-items: center;
                 width: 100%;
-                height: 100%;
+                height: 24px;
+                background: rgba(201, 169, 106, 0.15);
+                border-radius: 5px;
+                // size
+                font-size: 12px;
+                font-family: PingFangSC-Regular, PingFang SC;
+                font-weight: 400;
+                color: #333333;
+                line-height: 24px;
+                div:nth-child(1) {
+                  margin: 0 8px 0 10px;
+                  width: 20px;
+                  height: 10px;
+                  background: linear-gradient(180deg, #ff8100 0%, #ff3d00 100%);
+                  color: #fff;
+                  line-height: 10px;
+                  text-align: center;
+                  border-radius: 3px !important;
+                  span {
+                    display: block;
+                    width: 20px;
+                    height: 10px;
+                    font-size: 8px;
+                    transform: scale(0.66);
+                  }
+                }
+                div:nth-child(2) {
+                }
               }
             }
           }
@@ -204,7 +276,8 @@
       }
       // 内容
       .modal-content-box {
-        width: 100%;
+        width: 760px;
+        padding: 32px 60px 0 30px;
         // tab上部分
         .modal-content-box-top {
           height: 60px;
@@ -244,39 +317,41 @@
         // 会员套餐动画部分
         .modal-mvpTC {
           width: 100%;
+          margin-bottom: 18px;
           .modal-mvpTC-box {
             overflow: hidden;
-            width: 720px;
-            height: 197px;
+            width: 100%;
+            height: 211px;
             position: relative;
-            margin: 20px 10px 25px 19px;
             ul {
+              padding-top: 14px;
               position: relative;
               display: flex;
               width: 1140px;
-              height: 197px;
+              height: 211px;
               position: absolute;
               top: 0;
               left: 0;
               li {
+                position: relative;
                 text-align: center;
-                margin-right: 10px;
-                width: 220px;
-                height: 197px;
+                margin-right: 20px;
                 background: #0544ff;
                 border-radius: 8px;
+                width: 152px;
+                height: 197px;
                 h1 {
+                  width: 101px;
+                  height: 22px;
                   overflow: hidden; /*超出部分隐藏*/
                   white-space: nowrap; /*不换行*/
                   text-overflow: ellipsis; /*超出部分文字以...显示*/
-                  margin: 10px auto 14px;
-                  width: 202px;
-                  height: 20px;
-                  font-size: 14px;
+                  margin: 10px auto 38px;
+                  font-size: 16px;
                   font-family: PingFangSC-Medium, PingFang SC;
                   font-weight: 500;
                   color: #ffffff;
-                  line-height: 20px;
+                  line-height: 22px;
                 }
                 .modal-robShopping {
                   margin: 0 auto 26px;
@@ -291,13 +366,12 @@
                   line-height: 20px;
                 }
                 .modal-mvpTC-price {
-                  margin-bottom: 9px;
+                  margin-bottom: 12px;
                   align-items: flex-end;
                   display: flex;
                   justify-content: center;
+
                   .modal-price {
-                    width: 88px;
-                    height: 38px;
                     font-size: 44px;
                     font-family: HarmonyOS_Sans_Bold;
                     color: #ffffff;
@@ -309,7 +383,7 @@
                     height: 13px;
                     font-size: 14px;
                     font-family: PingFangSC-Medium, PingFang SC;
-                    font-weight: 500;
+                    font-weight: 400;
                     color: #ffffff;
                     line-height: 13px;
                   }
@@ -328,13 +402,26 @@
                     line-height: 14px;
                   }
                 }
+                h4 {
+                  margin-bottom: 22px;
+                  text-align: center;
+                  text-decoration: line-through;
+                  width: 100%;
+                  height: 14px;
+                  font-size: 10px;
+                  font-family: PingFangSC-Regular, PingFang SC;
+                  font-weight: 400;
+                  line-height: 14px;
+                  letter-spacing: 1px;
+                }
                 p {
                   margin: 0 auto 16px;
                   overflow: hidden; /*超出部分隐藏*/
                   // white-space: nowrap; /*不换行*/
                   // text-overflow: ellipsis; /*超出部分文字以...显示*/
-                  width: 183px;
-                  height: 14px;
+                  width: 140px;
+                  height: 28px;
+                  padding: 0 28px;
                   font-size: 10px;
                   font-family: PingFangSC-Regular, PingFang SC;
                   font-weight: 400;
@@ -363,7 +450,7 @@
           .mvpTC-left {
             position: absolute;
             left: 0;
-            bottom: 19px;
+            bottom: 36px;
             width: 26px;
             height: 26px;
             background: #ffffff;
@@ -398,35 +485,196 @@
             z-index: 55;
           }
           .mvpTC-right {
+            z-index: 999;
+            // pointer-events: auto;
             position: absolute;
             right: 0px;
-            bottom: 19px;
+            bottom: 36px;
             width: 26px;
             height: 26px;
             background: #03030340;
             border-radius: 8px 0 0 8px;
           }
+          .mvpTC-right:hover .StyleaLeft li {
+            pointer-events: none;
+          }
+          .mvpTC-right:hover {
+            pointer-events: auto;
+          }
         }
+
+        // 优惠下拉框
+        .discountCoupon {
+          margin-bottom: 18px;
+          cursor: pointer;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          height: 40px;
+          background: rgba(255, 255, 255, 0.7);
+          border-radius: 4px;
+          border: 1px solid #d5c2b2;
+          //  左
+          .discountCoupon-left {
+            display: flex;
+
+            font-size: 14px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #744618;
+            .discountCoupon-left-quan {
+              margin: 0 9px 0 12px;
+              text-align: center;
+              width: 27px;
+              height: 22px;
+              background: linear-gradient(180deg, #ff8100 0%, #ff3d00 100%);
+              border-radius: 4px;
+              font-size: 12px;
+              font-family: PingFangSC-Semibold, PingFang SC;
+              font-weight: 600;
+              color: #ffffff;
+              line-height: 22px;
+            }
+            .discountCoupon-left-jian {
+              margin-left: 10px;
+              font-size: 14px;
+              font-family: PingFangSC-Medium, PingFang SC;
+              font-weight: 500;
+              color: #ff5b00;
+            }
+          }
+          //  右
+          .discountCoupon-right {
+            display: flex;
+            font-size: 12px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #d5c2b2;
+            line-height: 12px;
+            span {
+              margin-right: 10px;
+            }
+            .discountCoupon-right-box {
+              margin-right: 18px;
+              width: 14px;
+              height: 10px;
+              overflow: hidden;
+              .top-sj {
+                width: 0;
+                height: 0;
+                border-left: 7px solid transparent;
+                border-right: 7px solid transparent;
+                border-top: 10px solid #d5c2b2;
+                border-radius: 3px;
+              }
+              .bottom-sj {
+                width: 0;
+                height: 0;
+                border-left: 7px solid transparent;
+                border-right: 7px solid transparent;
+                border-bottom: 10px solid #d5c2b2;
+                border-radius: 3px;
+              }
+            }
+          }
+        }
+        .discountCoupon:hover .top-sj {
+          display: none;
+        }
+
+        .discountCoupon:hover .xialakuang {
+          display: block;
+        }
+        // 下拉框
+        .xialakuang {
+          z-index: 9;
+          position: absolute;
+          left: 0;
+          top: 42px;
+          display: flex;
+          display: none;
+          width: 100%;
+          ul {
+            width: 100%;
+            li {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              height: 40px;
+              background: #fff;
+              border-radius: 4px 4px 0px 0px;
+              //  左
+              .xialakuang-left {
+                display: flex;
+                font-size: 14px;
+                font-family: PingFangSC-Medium, PingFang SC;
+                font-weight: 500;
+                color: #744618;
+                line-height: 14px;
+                span {
+                  margin-left: 13px;
+                }
+                div {
+                  margin-left: 5px;
+                  font-size: 14px;
+                  font-family: PingFangSC-Medium, PingFang SC;
+                  font-weight: 500;
+                  color: #ff5b00;
+                  line-height: 14px;
+                }
+              }
+              // 右
+              .xialakuang-right {
+                margin-right: 40px;
+                font-size: 12px;
+                font-family: PingFangSC-Regular, PingFang SC;
+                font-weight: 400;
+                color: #b67e4e;
+                line-height: 12px;
+              }
+            }
+            li:first-child {
+              border-radius: 4px 4px 0px 0px;
+            }
+            li:last-child {
+              border-radius: 0px 0px 4px 4px;
+            }
+            li:hover {
+              cursor: pointer;
+              background: #ffeee5 !important;
+            }
+            // .styleLi {
+            //   z-index: -1;
+            //   background: #ffeee5;
+            // }
+          }
+        }
+
         // 支付方式
         .modePayment {
-          width: 720px;
-          padding-top: 28px;
+          padding-top: 18px;
           height: 149px;
           margin: auto;
+          margin-bottom: 14px;
           background: #eaeaea;
           border-radius: 8px;
           display: flex;
           // <!-- 支付 -->
           .modal-payment {
-            margin-left: 126px;
+            margin-top: 10px;
+            margin-left: 26px;
+
             // 微信 -->
             .modal-payment-wx {
+              text-align: center;
               margin-bottom: 10px;
               padding: 0;
-              margin-right: 25px;
+              margin-right: 22px;
               display: flex;
               align-items: center;
-              width: 160px;
+              width: 100px;
               height: 42px;
               background: #0040ff;
               border-radius: 25px;
@@ -442,7 +690,7 @@
                 }
               }
               span {
-                margin-left: 8px;
+                margin: auto;
                 font-size: 16px;
                 font-family: PingFangSC-Medium, PingFang SC;
                 font-weight: 500;
@@ -461,6 +709,7 @@
 
           // 二维码 -->
           .modal-QRCode {
+            margin-top: 10px;
             margin-right: 19px;
             width: 94px;
             height: 94px;
@@ -487,8 +736,15 @@
                 line-height: 37px;
                 letter-spacing: 1px;
               }
+              .red-span {
+                color: red;
+              }
             }
             h2 {
+              width: 215px;
+              height: 20px;
+              background: rgba(201, 169, 106, 0.15);
+              border-radius: 4px;
               margin-bottom: 11px;
               font-size: 11px;
               transform: scale(0.83333);
@@ -512,7 +768,61 @@
               line-height: 14px;
             }
           }
+
+          // 动画
+          .modePayment-dh {
+            ul {
+              li {
+                display: flex;
+                align-items: center;
+                margin-top: 10px;
+                width: 161px;
+                height: 32px;
+                background: #f3f3f3;
+                border-radius: 18px;
+                .modePayment-dh-img {
+                  font-size: 0;
+                  margin: 7px 4px 7px 12px;
+                  width: 18px;
+                  height: 18px;
+                  background: linear-gradient(180deg, #b1b1b1 0%, #919191 100%);
+                  img {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                  }
+                }
+                p {
+                  width: 100%;
+                  margin: 0;
+                  margin-left: -12px;
+                  font-size: 12px;
+                  font-family: PingFangSC-Regular, PingFang SC;
+                  font-weight: 400;
+                  color: #956637;
+                  line-height: 14px;
+                  span {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    transform: scale(0.83);
+                  }
+                }
+              }
+              li:first-child {
+                margin: 0;
+              }
+            }
+          }
         }
+      }
+
+      p {
+        font-size: 10px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #956637;
+        line-height: 14px;
       }
     }
   }
@@ -523,83 +833,114 @@
     .modal-content-box
     .modal-mvpTC
     .modal-mvpTC-box
-    ul
+    ul {
     .twoLi {
-    z-index: 99;
-    width: 140px;
-    height: 197px;
-    background: rgba(201, 169, 106, 0.15);
-    border-radius: 8px;
+      z-index: 99;
+      width: 140px;
+      height: 197px;
+      background: rgba(201, 169, 106, 0.15);
+      border-radius: 8px;
 
-    h1 {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      margin: 8px auto 14px;
-      width: 101px;
-      height: 22px;
-      font-size: 16px;
-      font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
-      color: #684323;
-      line-height: 22px;
-    }
-    .modal-robShopping {
-      margin-bottom: 25px;
-      width: 75px;
-      height: 20px;
-      background: #a2622a;
-      border-radius: 4px;
-      color: #fff;
-      font-size: 12px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
-      line-height: 20px;
-    }
-    .modal-mvpTC-price {
-      margin-bottom: 4px;
-      .modal-price {
-        height: 38px;
-        font-size: 44px;
-        font-family: HarmonyOS_Sans_Bold;
-        color: #da7218;
-        line-height: 38px;
+      h1 {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        margin: 10px auto 38px;
+        width: 101px;
+        height: 22px;
+        font-size: 16px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: #684323;
+        line-height: 22px;
       }
-      .modal-yuan {
-        width: 18px;
-        height: 13px;
-        font-size: 14px;
+      .modal-robShopping {
+        margin-bottom: 25px;
+        width: 75px;
+        height: 20px;
+        background: #a2622a;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 12px;
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
-        color: #956637;
-        line-height: 13px;
+        line-height: 20px;
+      }
+      .modal-mvpTC-price {
+        margin-bottom: 12px;
+        .modal-price {
+          height: 38px;
+          font-size: 44px;
+          font-family: HarmonyOS_Sans_Bold;
+          color: #da7218;
+          line-height: 38px;
+        }
+        .modal-yuan {
+          width: 18px;
+          height: 13px;
+          font-size: 14px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: #956637;
+          line-height: 13px;
+        }
+      }
+      h4 {
+        margin-bottom: 22px;
+        text-align: center;
+        text-decoration: line-through;
+        width: 100%;
+        height: 14px;
+        font-size: 10px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #bf834d;
+        line-height: 14px;
+        letter-spacing: 1px;
+      }
+      p {
+        text-align: left;
+        white-space: none !important; /*不换行*/
+        margin: 0;
+        padding: 0 33px;
+        width: 100%;
+        height: 28px;
+        font-size: 12px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #bf834d;
+        line-height: 14px;
       }
     }
-    h4 {
-      margin-bottom: 11px;
-      text-align: center;
-      text-decoration: line-through;
-      width: 100%;
-      height: 14px;
-      font-size: 10px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
-      color: #bf834d;
-      line-height: 14px;
-      letter-spacing: 1px;
-    }
-    p {
-      text-align: left;
-      white-space: none !important; /*不换行*/
-      margin: 0;
-      padding: 0 33px;
-      width: 100%;
-      height: 28px;
-      font-size: 12px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
-      color: #bf834d;
-      line-height: 14px;
+  }
+
+  // 立减
+  .subtract {
+    position: absolute;
+    top: -16px;
+    left: -2px;
+    width: 60px;
+    height: 20px;
+    background: linear-gradient(270deg, #ec71ff 0%, #6805ff 100%);
+    border-radius: 16px 2px 16px 2px;
+    font-size: 11px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 20px;
+  }
+  // 券
+  .quan {
+    position: absolute;
+    left: -1px;
+    bottom: -1px;
+    width: 36px;
+    height: 36px;
+    img {
+      display: block;
+      width: 36px;
+      height: 36px;
+      border-radius: 0 0 0 10px;
     }
   }
 }

@@ -164,7 +164,6 @@ const cancelHandle = () => {
 // 轮训调用来确定扫码是否成功
 const scanQRcodes = (ticket) => {
   return getScanQRcodes(ticket).then((res) => {
-    console.log(res.data);
     // console.log(res.data.data.entity.id);
     if (res.data.code === 200) {
       // 存储用户id到本地

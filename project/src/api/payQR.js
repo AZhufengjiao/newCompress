@@ -36,5 +36,5 @@ export function getWxQR(productId, userId, ticketType) {
  * @returns
  */
 export function getPayState(formData) {
-  return requestWithoutToken("/api/wechat/pay/payStatus", "post",formData);
+  return requestWithoutToken("/api/wechat/pay/payStatus", "post", formData);
 }

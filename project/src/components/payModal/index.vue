@@ -24,7 +24,13 @@
           <div class="modal-header-img">
             <img src="" alt="" />
           </div>
-          <div class="modal-header-span">SOOGIF</div>
+          <div class="modal-header-span">
+            <div class="modal-header-name">
+              <div>SOOGIF_d436190</div>
+              <div class="modal-header-identity">黄金</div>
+            </div>
+            <span>2028.09.23到期</span>
+          </div>
         </div>
         <!-- 右边 -->
         <div class="modal-header-right">SOOGIF</div>
@@ -35,7 +41,7 @@
           <!-- // 权益 -->
           <div class="modal-equity">
             <h2>工具权益</h2>
-            <ul>
+            <ul class="equityUl">
               <li>
                 <h3>下载提升50张/天</h3>
                 <div><img src="" alt="" /></div>
@@ -53,10 +59,34 @@
                 <div><img src="" alt="" /></div>
               </li>
             </ul>
+
+            <h2 style="margin-bottom: 8px">限时好礼</h2>
+
+            <div class="limit-roll">
+              <ul>
+                <li>
+                  <div><span>VIP</span></div>
+                  <div>赠 135编辑器月VIP</div>
+                </li>
+                <li>
+                  <div><span>VIP</span></div>
+                  <div>赠 135编辑器月VIP</div>
+                </li>
+                <li>
+                  <div><span>VIP</span></div>
+                  <div>赠 135编辑器月VIP</div>
+                </li>
+                <li>
+                  <div><span>VIP</span></div>
+                  <div>赠 135编辑器月VIP</div>
+                </li>
+              </ul>
+            </div>
+            <h4>查看钻石会员全部权益 》</h4>
           </div>
-          <h1>SOOGIF·钻石会员</h1>
+
           <!-- // 会员 -->
-          <div class="modal-member">
+          <!-- <div class="modal-member">
             <ul>
               <li>
                 <div class="modal-member-img"><img src="" alt="" /></div>
@@ -75,12 +105,11 @@
                 <p>228+高级功能</p>
               </li>
             </ul>
-          </div>
-          <h4>查看钻石会员全部权益 》</h4>
+          </div> -->
         </div>
         <div class="modal-content-box">
           <!-- tab -->
-          <div class="modal-content-box-top">
+          <!-- <div class="modal-content-box-top">
             <div class="modal-tc modal-tc-active">
               <h1>包月套餐</h1>
               <div class="modal-markDown">李健20%</div>
@@ -88,7 +117,7 @@
             <div class="modal-tc">
               <h1>按次购买</h1>
             </div>
-          </div>
+          </div> -->
           <!-- 动画 -->
           <div class="modal-mvpTC">
             <div class="modal-mvpTC-box">
@@ -103,24 +132,32 @@
                   v-for="(item, index) in taocanList"
                   :class="[
                     index !== 0 ? 'twoLi' : '',
-                    Id + '' == item.pId && index != 0 ? 'styleLi' : '',
-                    MousemoveNum + '' == item.pId && index != 0
-                      ? 'styleLi'
-                      : '',
+                    Id + '' == item.pId ? 'styleLi' : '',
+                    MousemoveNum + '' == item.pId ? 'styleLi' : '',
                   ]"
                   :key="item"
-                  @mousemove="handleMousemove(item.pId)"
+                  @mousemove="handleMousemove(item.pId, index)"
                 >
-                  <h1>钻石会员·终身 + 智能抠图100次</h1>
-                  <div class="modal-robShopping">显示抢购</div>
+                  <!-- 立减 -->
+                  <div v-show="index === 1" class="subtract">立减20%</div>
+                  <!-- 左下角-卷 -->
+                  <div v-show="index === 0" class="quan">
+                    <img
+                      src=" https://www.soogif.com/images/vip/tool-coupon.png"
+                      alt=""
+                    />
+                  </div>
+
+                  <h1>终身会员</h1>
+                  <!-- <div class="modal-robShopping">显示抢购</div> -->
                   <div class="modal-mvpTC-price">
                     <div class="modal-price">{{ item.discountPrice }}</div>
                     <div class="modal-yuan">元</div>
-                    <span v-if="index === 0">¥{{ item.pPrice }}</span>
+                    <!-- <span v-if="index === 0">¥{{ item.pPrice }}</span> -->
                   </div>
-                  <h4 v-if="index !== 0">{{ item.pPrice }}.00元</h4>
-                  <p>钻石会员¥1268 + 智能抠图¥169 = ¥1437</p>
-                  <h2 v-if="index === 0">只能抠图100张/月</h2>
+                  <h4>{{ item.pPrice }}.00元</h4>
+                  <p>全站编辑器内10张/天下载</p>
+                  <!-- <h2 v-if="index === 0">只能抠图100张/月</h2> -->
                 </li>
                 <!-- <li class="twoLi">
                   <h1>终身会员</h1>
@@ -147,6 +184,48 @@
             </div>
           </div>
 
+          <!-- 优惠下拉框 -->
+          <div class="discountCoupon">
+            <!-- 左 -->
+            <div class="discountCoupon-left">
+              <div class="discountCoupon-left-quan">券</div>
+              <span>优惠折扣:</span>
+              <div class="discountCoupon-left-jian">-¥0.00</div>
+            </div>
+            <!-- 右 -->
+            <div class="discountCoupon-right">
+              <span>不使用优惠券</span>
+              <div class="discountCoupon-right-box">
+                <div class="top-sj"></div>
+                <div class="bottom-sj"></div>
+              </div>
+            </div>
+
+            <!-- 下拉框 -->
+            <div class="xialakuang">
+              <ul>
+                <li>
+                  <div class="xialakuang-left">
+                    <span>优惠券</span>
+                    <div>¥150.00</div>
+                  </div>
+                  <div class="xialakuang-right">
+                    仅限购买钻石终身卡使用 07月28号前有效
+                  </div>
+                </li>
+                <li>
+                  <div class="xialakuang-left">
+                    <span>优惠券</span>
+                    <div>¥150.00</div>
+                  </div>
+                  <div class="xialakuang-right">
+                    仅限购买钻石终身卡使用 07月28号前有效
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
           <!-- 支付方式 -->
           <div class="modePayment">
             <!-- 支付 -->
@@ -160,9 +239,9 @@
                 }"
                 @click="payToggleHandle('wx')"
               >
-                <div class="modal-payment-img">
+                <!-- <div class="modal-payment-img">
                   <img src="" alt="" />
-                </div>
+                </div> -->
                 <span>微信支付</span>
               </a-button>
               <!-- 支付宝 -->
@@ -174,9 +253,9 @@
                 }"
                 @click="payToggleHandle('zfb')"
               >
-                <div class="modal-payment-img">
+                <!-- <div class="modal-payment-img">
                   <img src="" alt="" />
-                </div>
+                </div> -->
                 <span>支付宝</span>
               </a-button>
             </div>
@@ -187,14 +266,42 @@
             <!-- 支付金额 -->
             <div class="modePayment-price">
               <h1>
-                支付金额 <span>{{ paymentAmount.price }}</span> 元
+                支付金额 <span>{{ paymentAmount.price }}</span> 元/12个月
               </h1>
               <h2>
-                已优惠 <span>{{ paymentAmount.discounts }}</span> 元
+                已优惠 <span>{{ paymentAmount.discounts }}</span> 元,优惠仅剩 :
+                &nbsp;
+                <span class="red-span">09:08:03,6</span>
               </h2>
               <h3>支付即视为同意 《SOOGIF抠图协议》</h3>
             </div>
+
+            <!-- 动画 -->
+            <div class="modePayment-dh">
+              <ul>
+                <li>
+                  <div class="modePayment-dh-img">
+                    <img src="" alt="" />
+                  </div>
+                  <p><span>S*****1，购买了白金会员</span></p>
+                </li>
+                <li>
+                  <div class="modePayment-dh-img">
+                    <img src="" alt="" />
+                  </div>
+                  <p><span>S*****1，购买了白金会员</span></p>
+                </li>
+                <li>
+                  <div class="modePayment-dh-img">
+                    <img src="" alt="" />
+                  </div>
+                  <p><span>S*****1，购买了白金会员</span></p>
+                </li>
+              </ul>
+            </div>
           </div>
+
+          <p>支付即视为同意 《SOOGIF抠图协议》</p>
         </div>
       </div>
     </a-modal>
@@ -287,7 +394,7 @@ onMounted(() => {
     }
 
     // console.log(taocanList.value[0].roleSearch.timeLimit);
-    if (item.pId === Id.value) {
+    if (item.pId == Id.value) {
       ticketType.value = item.roleSearch.timeLimit;
       // 套餐id改变时，修改支付金额
       paymentAmount.value.price = item.discountPrice;
@@ -304,7 +411,6 @@ const getPayStatus = (userId) => {
   let formData = new FormData();
   formData.append("userId", userId);
   return getPayState(formData).then((res) => {
-    console.log(res.data);
     // 支付成功
     if (res.data.code == 200) {
       // 清除定时器
@@ -461,13 +567,12 @@ const handleOk = (e) => {
 // 存储鼠标经过的id
 let MousemoveNum = ref(Number);
 // 鼠标经过li的时候
-const handleMousemove = (id) => {
-  MousemoveNum.value = id;
+const handleMousemove = (id, index) => {
+  index !== 0 ? (MousemoveNum.value = id) : "";
 };
 // 鼠标点击li的时候
 const clickLiHandle = (item, index) => {
-  index != 0 ? (Id.value = item.pId) : null;
-
+  index !== 0 ? (Id.value = item.pId) : "";
   // 更新支付金额
   paymentAmount.value.price = item.discountPrice;
   paymentAmount.value.discounts = item.pPrice - item.discountPrice;
