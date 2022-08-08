@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import loginModel from "@/components/loginModal/index.vue";
+import loginModel from "@/components/modal/loginModal/index.vue";
 import { userLogOut } from "@/api/login";
 import { ref, toRefs, watch } from "vue";
 import { useStore } from "vuex";

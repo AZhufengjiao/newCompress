@@ -84,7 +84,7 @@
 
 <script setup>
 import UploadModule from "@/components/home/UploadModule/index.vue";
-import uploadModal from "@/components/uploadModal/index.vue";
+import uploadModal from "@/components/modal/uploadModal/index.vue";
 import Custom from "@/components/home/Custom/index.vue";
 import defaultYS from "@/components/home/defaultYS/index.vue";
 import { onMounted, onUpdated, ref } from "vue";

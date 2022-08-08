@@ -1,92 +1,89 @@
 <template>
-  <div class="paymodal">
-    <a-modal
-      v-model:visible="visible"
-      title="Basic Modal"
-      :get-container="false"
-      :afterClose="handleOk"
-      class="aaamodal"
-    >
-      <template #header>
-        <a-button key="back" @click="handleCancel">Return</a-button>
-        <a-button
-          key="submit"
-          type="primary"
-          :loading="loading"
-          @click="handleOk"
-          >Submit
-        </a-button>
-      </template>
-      <!-- 顶部 -->
-      <div class="modal-header">
-        <!-- 左边 -->
-        <div class="modal-header-left">
-          <div class="modal-header-img">
-            <img src="" alt="" />
-          </div>
-          <div class="modal-header-span">
-            <div class="modal-header-name">
-              <div>SOOGIF_d436190</div>
-              <div class="modal-header-identity">黄金</div>
+  <div>
+    <!-- 支付成功弹出框 -->
+    <paySucceedModal
+      :flag="paySuccessF"
+      @updateFlag="updateFlagHandle"
+    ></paySucceedModal>
+
+    <div v-show="visible" class="modal">
+      <!-- 遮罩层 -->
+      <div class="masLayer"></div>
+      <!-- 盒子 -->
+      <div class="modal-box">
+        <!-- 顶部 -->
+        <div class="modal-header">
+          <!-- 删除按钮 -->
+          <div class="ant-modal-close-x" @click="handleOk">x</div>
+          <!-- 左边 -->
+          <div class="modal-header-left">
+            <div class="modal-header-img">
+              <img src="" alt="" />
             </div>
-            <span>2028.09.23到期</span>
+            <div class="modal-header-span">
+              <div class="modal-header-name">
+                <div>SOOGIF_d436190</div>
+                <div class="modal-header-identity">黄金</div>
+              </div>
+              <span>2028.09.23到期</span>
+            </div>
           </div>
+          <!-- 右边 -->
+          <div class="modal-header-right">SOOGIF</div>
         </div>
-        <!-- 右边 -->
-        <div class="modal-header-right">SOOGIF</div>
-      </div>
-      <div class="modal-contents">
-        <div class="modal-content-side">
-          <h1>智能抠图·权益</h1>
-          <!-- // 权益 -->
-          <div class="modal-equity">
-            <h2>工具权益</h2>
-            <ul class="equityUl">
-              <li>
-                <h3>下载提升50张/天</h3>
-                <div><img src="" alt="" /></div>
-              </li>
-              <li>
-                <h3>下载提升50张/天</h3>
-                <div><img src="" alt="" /></div>
-              </li>
-              <li>
-                <h3>下载提升50张/天</h3>
-                <div><img src="" alt="" /></div>
-              </li>
-              <li>
-                <h3>下载提升50张/天</h3>
-                <div><img src="" alt="" /></div>
-              </li>
-            </ul>
-
-            <h2 style="margin-bottom: 8px">限时好礼</h2>
-
-            <div class="limit-roll">
-              <ul>
+        <!-- 盒子 -->
+        <div class="modal-contents">
+          <div class="modal-content-side">
+            <h1>智能抠图·权益</h1>
+            <!-- // 权益 -->
+            <div class="modal-equity">
+              <h2>工具权益</h2>
+              <ul class="equityUl">
                 <li>
-                  <div><span>VIP</span></div>
-                  <div>赠 135编辑器月VIP</div>
+                  <h3>下载提升50张/天</h3>
+                  <div><img src="" alt="" /></div>
                 </li>
                 <li>
-                  <div><span>VIP</span></div>
-                  <div>赠 135编辑器月VIP</div>
+                  <h3>下载提升50张/天</h3>
+                  <div><img src="" alt="" /></div>
                 </li>
                 <li>
-                  <div><span>VIP</span></div>
-                  <div>赠 135编辑器月VIP</div>
+                  <h3>下载提升50张/天</h3>
+                  <div><img src="" alt="" /></div>
                 </li>
                 <li>
-                  <div><span>VIP</span></div>
-                  <div>赠 135编辑器月VIP</div>
+                  <h3>下载提升50张/天</h3>
+                  <div><img src="" alt="" /></div>
                 </li>
               </ul>
-            </div>
-            <h4>查看钻石会员全部权益 》</h4>
-          </div>
 
-          <!-- // 会员 -->
-          <!-- <div class="modal-member">
+              <h2 style="margin-bottom: 8px">限时好礼</h2>
+
+              <div class="limit-roll">
+                <ul>
+                  <li>
+                    <div><span>VIP</span></div>
+                    <div>赠 135编辑器月VIP</div>
+                  </li>
+                  <li>
+                    <div><span>VIP</span></div>
+                    <div>赠 135编辑器月VIP</div>
+                  </li>
+                  <li>
+                    <div><span>VIP</span></div>
+                    <div>赠 135编辑器月VIP</div>
+                  </li>
+                  <li>
+                    <div><span>VIP</span></div>
+                    <div>赠 135编辑器月VIP</div>
+                  </li>
+                </ul>
+              </div>
+              <h4>查看钻石会员全部权益 》</h4>
+            </div>
+
+            <!-- // 会员 -->
+            <!-- <div class="modal-member">
             <ul>
               <li>
                 <div class="modal-member-img"><img src="" alt="" /></div>
@@ -106,10 +103,10 @@
               </li>
             </ul>
           </div> -->
-        </div>
-        <div class="modal-content-box">
-          <!-- tab -->
-          <!-- <div class="modal-content-box-top">
+          </div>
+          <div class="modal-content-box">
+            <!-- tab -->
+            <!-- <div class="modal-content-box-top">
             <div class="modal-tc modal-tc-active">
               <h1>包月套餐</h1>
               <div class="modal-markDown">李健20%</div>
@@ -118,48 +115,48 @@
               <h1>按次购买</h1>
             </div>
           </div> -->
-          <!-- 动画 -->
-          <div class="modal-mvpTC">
-            <div class="modal-mvpTC-box">
-              <ul
-                :class="[
-                  !StyleFlag && StyleFlag != null ? 'StyleaLeft' : '',
-                  StyleFlag && StyleFlag != null ? 'StyleaRight' : '',
-                ]"
-              >
-                <li
-                  @click="clickLiHandle(item, index)"
-                  v-for="(item, index) in taocanList"
+            <!-- 动画 -->
+            <div class="modal-mvpTC">
+              <div class="modal-mvpTC-box">
+                <ul
                   :class="[
-                    index !== 0 ? 'twoLi' : '',
-                    Id + '' == item.pId ? 'styleLi' : '',
-                    MousemoveNum + '' == item.pId ? 'styleLi' : '',
+                    !StyleFlag && StyleFlag != null ? 'StyleaLeft' : '',
+                    StyleFlag && StyleFlag != null ? 'StyleaRight' : '',
                   ]"
-                  :key="item"
-                  @mousemove="handleMousemove(item.pId, index)"
                 >
-                  <!-- 立减 -->
-                  <div v-show="index === 1" class="subtract">立减20%</div>
-                  <!-- 左下角-卷 -->
-                  <div v-show="index === 0" class="quan">
-                    <img
-                      src=" https://www.soogif.com/images/vip/tool-coupon.png"
-                      alt=""
-                    />
-                  </div>
+                  <li
+                    @click="clickLiHandle(item, index)"
+                    v-for="(item, index) in taocanList"
+                    :class="[
+                      index !== 0 ? 'twoLi' : '',
+                      Id + '' == item.pId ? 'styleLi' : '',
+                      MousemoveNum + '' == item.pId ? 'styleLi' : '',
+                    ]"
+                    :key="item"
+                    @mousemove="handleMousemove(item.pId, index)"
+                  >
+                    <!-- 立减 -->
+                    <div v-show="index === 1" class="subtract">立减20%</div>
+                    <!-- 左下角-卷 -->
+                    <div v-show="index === 0" class="quan">
+                      <img
+                        src=" https://www.soogif.com/images/vip/tool-coupon.png"
+                        alt=""
+                      />
+                    </div>
 
-                  <h1>终身会员</h1>
-                  <!-- <div class="modal-robShopping">显示抢购</div> -->
-                  <div class="modal-mvpTC-price">
-                    <div class="modal-price">{{ item.discountPrice }}</div>
-                    <div class="modal-yuan">元</div>
-                    <!-- <span v-if="index === 0">¥{{ item.pPrice }}</span> -->
-                  </div>
-                  <h4>{{ item.pPrice }}.00元</h4>
-                  <p>全站编辑器内10张/天下载</p>
-                  <!-- <h2 v-if="index === 0">只能抠图100张/月</h2> -->
-                </li>
-                <!-- <li class="twoLi">
+                    <h1>终身会员</h1>
+                    <!-- <div class="modal-robShopping">显示抢购</div> -->
+                    <div class="modal-mvpTC-price">
+                      <div class="modal-price">{{ item.discountPrice }}</div>
+                      <div class="modal-yuan">元</div>
+                      <!-- <span v-if="index === 0">¥{{ item.pPrice }}</span> -->
+                    </div>
+                    <h4>{{ item.pPrice }}.00元</h4>
+                    <p>全站编辑器内10张/天下载</p>
+                    <!-- <h2 v-if="index === 0">只能抠图100张/月</h2> -->
+                  </li>
+                  <!-- <li class="twoLi">
                   <h1>终身会员</h1>
                   <div class="modal-robShopping">显示抢购</div>
                   <div class="modal-mvpTC-price">
@@ -169,142 +166,138 @@
                   <h4 v-if="index !== 0">100.00元</h4>
                   <p>全站编辑器内10张/天下载</p>
                 </li> -->
-              </ul>
+                </ul>
 
-              <div
-                class="mvpTC-left"
-                v-show="
-                  (StyleFlag || StyleFlag == null) && taocanList.length > 4
-                "
-                v-on:click="StyleFlag = false"
-              ></div>
-              <div
-                class="mvpTC-right"
-                v-show="StyleFlag === false"
-                v-on:click="StyleFlag = true"
-              ></div>
-            </div>
-          </div>
-
-          <!-- 优惠下拉框 -->
-          <div class="discountCoupon">
-            <!-- 左 -->
-            <div class="discountCoupon-left">
-              <div class="discountCoupon-left-quan">券</div>
-              <span>优惠折扣:</span>
-              <div class="discountCoupon-left-jian">-¥0.00</div>
-            </div>
-            <!-- 右 -->
-            <div class="discountCoupon-right">
-              <span>不使用优惠券</span>
-              <div class="discountCoupon-right-box">
-                <div class="top-sj"></div>
-                <div class="bottom-sj"></div>
+                <div
+                  class="mvpTC-left"
+                  v-show="
+                    (StyleFlag || StyleFlag == null) && taocanList.length > 4
+                  "
+                  v-on:click="StyleFlag = false"
+                ></div>
+                <div
+                  class="mvpTC-right"
+                  v-show="StyleFlag === false"
+                  v-on:click="StyleFlag = true"
+                ></div>
               </div>
             </div>
 
-            <!-- 下拉框 -->
-            <div class="xialakuang">
-              <ul>
-                <li>
-                  <div class="xialakuang-left">
-                    <span>优惠券</span>
-                    <div>¥150.00</div>
-                  </div>
-                  <div class="xialakuang-right">
-                    仅限购买钻石终身卡使用 07月28号前有效
-                  </div>
-                </li>
-                <li>
-                  <div class="xialakuang-left">
-                    <span>优惠券</span>
-                    <div>¥150.00</div>
-                  </div>
-                  <div class="xialakuang-right">
-                    仅限购买钻石终身卡使用 07月28号前有效
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
+            <!-- 优惠下拉框 -->
+            <div class="discountCoupon">
+              <!-- 左 -->
+              <div class="discountCoupon-left">
+                <div class="discountCoupon-left-quan">券</div>
+                <span>优惠折扣:</span>
+                <div class="discountCoupon-left-jian">-¥0.00</div>
+              </div>
+              <!-- 右 -->
+              <div class="discountCoupon-right">
+                <span>不使用优惠券</span>
+                <div class="discountCoupon-right-box">
+                  <div class="top-sj"></div>
+                  <div class="bottom-sj"></div>
+                </div>
+              </div>
 
-          <!-- 支付方式 -->
-          <div class="modePayment">
-            <!-- 支付 -->
-            <div class="modal-payment">
-              <!-- 微信 -->
-              <a-button
-                type="primary"
-                :class="{
-                  'modal-payment-wx': true,
-                  'modal-payment-zf': !payToggle,
-                }"
-                @click="payToggleHandle('wx')"
-              >
-                <!-- <div class="modal-payment-img">
+              <!-- 下拉框 -->
+              <div class="xialakuang">
+                <ul>
+                  <li>
+                    <div class="xialakuang-left">
+                      <span>优惠券</span>
+                      <div>¥150.00</div>
+                    </div>
+                    <div class="xialakuang-right">
+                      仅限购买钻石终身卡使用 07月28号前有效
+                    </div>
+                  </li>
+                  <li>
+                    <div class="xialakuang-left">
+                      <span>优惠券</span>
+                      <div>¥150.00</div>
+                    </div>
+                    <div class="xialakuang-right">
+                      仅限购买钻石终身卡使用 07月28号前有效
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 支付方式 -->
+            <div class="modePayment">
+              <!-- 支付 -->
+              <div class="modal-payment">
+                <!-- 微信 -->
+                <a-button
+                  type="primary"
+                  :class="{
+                    'modal-payment-wx': true,
+                    'modal-payment-zf': !payToggle,
+                  }"
+                  @click="payToggleHandle('wx')"
+                >
+                  <!-- <div class="modal-payment-img">
                   <img src="" alt="" />
                 </div> -->
-                <span>微信支付</span>
-              </a-button>
-              <!-- 支付宝 -->
-              <a-button
-                type="primary"
-                :class="{
-                  'modal-payment-wx': true,
-                  'modal-payment-zf': payToggle,
-                }"
-                @click="payToggleHandle('zfb')"
-              >
-                <!-- <div class="modal-payment-img">
+                  <span>微信支付</span>
+                </a-button>
+                <!-- 支付宝 -->
+                <a-button
+                  type="primary"
+                  :class="{
+                    'modal-payment-wx': true,
+                    'modal-payment-zf': payToggle,
+                  }"
+                  @click="payToggleHandle('zfb')"
+                >
+                  <!-- <div class="modal-payment-img">
                   <img src="" alt="" />
                 </div> -->
-                <span>支付宝</span>
-              </a-button>
-            </div>
-            <!-- 二维码 -->
-            <div class="modal-QRCode">
-              <qrcode-vue :value="ZFBQR" :size="94"></qrcode-vue>
-            </div>
-            <!-- 支付金额 -->
-            <div class="modePayment-price">
-              <h1>
-                支付金额 <span>{{ paymentAmount.price }}</span> 元/12个月
-              </h1>
-              <h2>
-                已优惠 <span>{{ paymentAmount.discounts }}</span> 元,优惠仅剩 :
-                &nbsp;
-                <span class="red-span">09:08:03,6</span>
-              </h2>
-              <h3>支付即视为同意 《SOOGIF抠图协议》</h3>
+                  <span>支付宝</span>
+                </a-button>
+              </div>
+              <!-- 二维码 -->
+              <div class="modal-QRCode">
+                <qrcode-vue :value="ZFBQR" :size="94"></qrcode-vue>
+              </div>
+              <!-- 支付金额 -->
+              <div class="modePayment-price">
+                <h1>
+                  支付金额 <span>{{ paymentAmount.price }}</span> 元/12个月
+                </h1>
+                <h2>
+                  已优惠 <span>{{ paymentAmount.discounts }}</span> 元,优惠仅剩
+                  : &nbsp;
+                  <span class="red-span">09:08:03,6</span>
+                </h2>
+                <h3>支付即视为同意 《SOOGIF抠图协议》</h3>
+              </div>
+
+              <!-- 动画 -->
+              <div class="modePayment-dh">
+                <ul ref="carouselDom" :style="{ top: -carouselNum + 'px' }">
+                  <li v-for="item in carouselList" :key="item">
+                    <div class="modePayment-dh-img">
+                      <img src="" alt="" />
+                    </div>
+                    <p><span>S*****1，购买了白金会员</span></p>
+                  </li>
+                </ul>
+              </div>
             </div>
 
-            <!-- 动画 -->
-            <div class="modePayment-dh">
-              <ul ref="carouselDom" :style="{ top: -carouselNum + 'px' }">
-                <li v-for="item in carouselList" :key="item">
-                  <div class="modePayment-dh-img">
-                    <img src="" alt="" />
-                  </div>
-                  <p><span>S*****1，购买了白金会员</span></p>
-                </li>
-              </ul>
-            </div>
+            <p>支付即视为同意 《SOOGIF抠图协议》</p>
           </div>
-
-          <p>支付即视为同意 《SOOGIF抠图协议》</p>
         </div>
       </div>
-    </a-modal>
-     
+    </div>
   </div>
-
-  <!-- <div  v-show="visible" class="modal">
-    <div class="maskLayer"></div>
-    <div class="modal-content"></div>
-  </div> -->
 </template>
 
 <script setup>
+import paySucceedModal from "@/components/modal/paySucceedModal/index.vue";
 import {
   ref,
   defineProps,
@@ -313,6 +306,7 @@ import {
   onMounted,
   onUpdated,
   onUnmounted,
+  onBeforeUnmount,
   toRefs,
 } from "vue";
 import { useStore } from "vuex";
@@ -321,7 +315,7 @@ import { getAlipayQR, getWxQR, getPayState } from "@/api/payQR";
 import { getDownloadNum, getSetMeal } from "@/api/about";
 import { userList } from "@/api/user";
 components: {
-  QrcodeVue;
+  QrcodeVue, paySucceedModal;
 }
 const store = useStore();
 const props = defineProps({
@@ -361,7 +355,12 @@ let payTimer = ref(null);
 // Pid
 let Id = ref(Number);
 
-// 支付信息轮播
+// 支付成功弹出框
+const paySuccessF = ref(false);
+// 子组件传值，修改父组件
+const updateFlagHandle = (res) => {
+  paySuccessF.value = res;
+};
 
 // 1.从本地拿套餐数据
 onMounted(() => {
@@ -417,6 +416,9 @@ const getPayStatus = (userId) => {
   return getPayState(formData).then((res) => {
     // 支付成功
     if (res.data.code == 200) {
+      // 支付成功，弹出支付成功弹出框
+      paySuccessF.value = true;
+
       // 清除定时器
       clearInterval(payTimer.value);
       payTimer.value = null;
@@ -426,8 +428,10 @@ const getPayStatus = (userId) => {
       getUserInfo(userId);
       // 工具剩余次数
       getFrequency(userId);
+
       // 关闭弹窗
       visible.value = false;
+      emit("close", false);
     }
   });
 };
@@ -437,7 +441,6 @@ const getUserInfo = (userid) => {
   return userList(userid).then((res) => {
     // 没有过期 保存用户状态信息
     if (res.data.code == 200) {
-      console.log(res.data.data);
       // 存本地
       store.commit("user/setUserData", res.data.data);
     }
@@ -447,7 +450,6 @@ const getUserInfo = (userid) => {
 // 3.获取工具剩余次数
 const getFrequency = (userid) => {
   return getDownloadNum(userid).then((res) => {
-    console.log(res.data);
     if (res.data.code == 200) {
       // 保存次数至本地
       store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
@@ -544,8 +546,11 @@ watch(
   },
   {
     deep: true,
+    immediate: true,
   }
 );
+
+onBeforeUnmount(() => {});
 
 // 点击确定弹出框隐藏
 const handleOk = (e) => {
@@ -640,21 +645,7 @@ onUnmounted(() => {
 </script>
 
 <style lang="less" scoped>
-@import "@/assets/styles/animation/payModel/index.scss";
-@import "ant-design-vue/dist/antd.less";
-
-.paymodal {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 0;
-}
+// @import "@/assets/styles/animation/payModel/index.scss";
+// @import "ant-design-vue/dist/antd.less";
+@import "@/assets/css/modal/payModal/payModal_1440px.less";
 </style>

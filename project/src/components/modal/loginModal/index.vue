@@ -188,5 +188,5 @@ onUnmounted(() => {
 </script>
 
 <style lang="less" scoped>
-@import "@/assets/css/loginModal/loginModal_1440px.less";
+@import "@/assets/css/modal/loginModal/loginModal_1440px.less";
 </style>

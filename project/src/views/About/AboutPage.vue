@@ -224,7 +224,8 @@
 <script setup>
 import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import payModel from "@/components/payModal/index.vue";
+import payModel from "@/components/modal/payModal/index.vue";
+
 import aboutNav from "@/components/aboutNav/index.vue";
 import { userList } from "@/api/user";
 import { getSetMeal, getDownloadNum, getMyCoupon } from "@/api/about";
@@ -254,9 +255,9 @@ const handle2 = () => {
 
 // 支付弹出框
 let modalFlag = ref(false);
+
 // 点击显示弹出框
 const modalShow = () => {
-  s;
   modalFlag.value = true;
 };
 // 点击弹出框确定按钮，隐藏弹出框

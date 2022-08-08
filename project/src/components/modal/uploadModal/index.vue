@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import payModel from "@/components/payModal/index.vue";
+import payModel from "@/components/modal/payModal/index.vue";
 import { onUpdated, ref, toRefs, watch } from "vue";
 components: {
   payModel;
@@ -96,5 +96,5 @@ const updataModalFlag = (bol) => {
 </script>
 
 <style lang="less" scoped>
-@import "@/assets/css/uploadModal/uploadModal_1440px.less";
+@import "@/assets/css/modal/uploadModal/uploadModal_1440px.less";
 </style>

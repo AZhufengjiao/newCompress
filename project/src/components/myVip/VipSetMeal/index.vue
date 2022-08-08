@@ -164,7 +164,7 @@
 
         <!-- 左右两边的点击按钮 -->
         <div
-          v-show="btnToggle || btnToggle == null"
+          v-show="!setMealList.length > 4 && (btnToggle || btnToggle == null)"
           v-on:click="btnToggle = false"
           class="myVip-setMeal-clickBtn myVip-setMeal-clickBtn-left"
         >
@@ -185,8 +185,8 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import payModel from "@/components/payModal/index.vue";
-import loginModel from "@/components/loginModal/index.vue";
+import payModel from "@/components/modal/payModal/index.vue";
+import loginModel from "@/components/modal/loginModal/index.vue";
 import { getSetMeal } from "@/api/about";
 import { onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
