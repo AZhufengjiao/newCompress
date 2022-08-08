@@ -239,9 +239,21 @@ let setMealList = ref([]);
 
 // 1.从本地拿套餐数据
 onMounted(() => {
-  // 1.1赋值
-  setMealList.value = store.state.home.setMealInfo;
+  // 获取套餐数据
+  setMealInfo(userid.value);
 });
+
+// 2. 获取套餐信息列表存储本地
+const setMealInfo = (id) => {
+  return getSetMeal(id).then((res) => {
+    if (res.data.code == 200) {
+      // 1.1赋值
+      setMealList.value = res.data.data;
+      // 存本地
+      // store.commit("home/setSetMealInfo", res.data.data);
+    }
+  });
+};
 </script>
 
 <style lang="scss" scoped>

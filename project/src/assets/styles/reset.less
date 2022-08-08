@@ -591,7 +591,8 @@
           z-index: 9;
           position: absolute;
           left: 0;
-          top: 42px;
+          padding-top: 17px;
+          top: 26px;
           display: flex;
           display: none;
           width: 100%;
@@ -770,12 +771,18 @@
 
           // 动画
           .modePayment-dh {
+            position: relative;
+            width: 161px;
+            height: 116px;
+            overflow: hidden;
             ul {
+              position: absolute;
+              top: 0;
+              left: 0;
               li {
                 display: flex;
                 align-items: center;
                 margin-top: 10px;
-                width: 161px;
                 height: 32px;
                 background: #f3f3f3;
                 border-radius: 18px;

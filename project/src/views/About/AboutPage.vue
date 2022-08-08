@@ -239,8 +239,6 @@ const store = useStore();
 let state = ref("");
 state.value = store.state.login.userid;
 onMounted(() => {
-  // 获取套餐信息
-  setMealInfo(state.value);
   // 获取工具剩余次数
   getFrequency(state.value);
   // 获取可用优惠券信息
@@ -304,15 +302,6 @@ watch(
   }
 );
 
-// 2.进入首页，获取套餐信息列表存储本地
-const setMealInfo = (id) => {
-  return getSetMeal(id).then((res) => {
-    if (res.data.code == 200) {
-      // 存本地
-      store.commit("home/setSetMealInfo", res.data.data);
-    }
-  });
-};
 // 3.获取工具剩余次数
 const getFrequency = (userid) => {
   return getDownloadNum(userid).then((res) => {

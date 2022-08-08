@@ -173,7 +173,9 @@
 
               <div
                 class="mvpTC-left"
-                v-show="StyleFlag || StyleFlag == null"
+                v-show="
+                  (StyleFlag || StyleFlag == null) && taocanList.length > 4
+                "
                 v-on:click="StyleFlag = false"
               ></div>
               <div
@@ -278,20 +280,8 @@
 
             <!-- 动画 -->
             <div class="modePayment-dh">
-              <ul>
-                <li>
-                  <div class="modePayment-dh-img">
-                    <img src="" alt="" />
-                  </div>
-                  <p><span>S*****1，购买了白金会员</span></p>
-                </li>
-                <li>
-                  <div class="modePayment-dh-img">
-                    <img src="" alt="" />
-                  </div>
-                  <p><span>S*****1，购买了白金会员</span></p>
-                </li>
-                <li>
+              <ul ref="carouselDom" :style="{ top: -carouselNum + 'px' }">
+                <li v-for="item in carouselList" :key="item">
                   <div class="modePayment-dh-img">
                     <img src="" alt="" />
                   </div>
@@ -322,14 +312,13 @@ import {
   defineEmits,
   onMounted,
   onUpdated,
-  defineAsyncComponent,
   onUnmounted,
   toRefs,
 } from "vue";
 import { useStore } from "vuex";
 import QrcodeVue from "qrcode.vue";
 import { getAlipayQR, getWxQR, getPayState } from "@/api/payQR";
-import { getDownloadNum } from "@/api/about";
+import { getDownloadNum, getSetMeal } from "@/api/about";
 import { userList } from "@/api/user";
 components: {
   QrcodeVue;
@@ -371,11 +360,14 @@ let payNum = ref(0);
 let payTimer = ref(null);
 // Pid
 let Id = ref(Number);
+
+// 支付信息轮播
+
 // 1.从本地拿套餐数据
 onMounted(() => {
   roleType.value = store.state.user.userData;
   // 1.1赋值
-  taocanList.value = store.state.home.setMealInfo;
+  setMealInfo(userid.value);
 
   // 修改支付金额
   taocanList.value.map((item) => {
@@ -405,6 +397,18 @@ onMounted(() => {
     }
   });
 });
+
+// 1. 获取套餐信息列表存储本地
+const setMealInfo = (id) => {
+  return getSetMeal(id).then((res) => {
+    if (res.data.code == 200) {
+      // 1.1赋值
+      taocanList.value = res.data.data;
+      // 存本地
+      // store.commit("home/setSetMealInfo", res.data.data);
+    }
+  });
+};
 
 // 用户是否已支付
 const getPayStatus = (userId) => {
@@ -474,13 +478,6 @@ const payTimerHandle = () => {
     }
   }, 1000);
 };
-
-// 卸载组件清除定时器
-onUnmounted(() => {
-  clearInterval(payTimer.value);
-  payTimer.value = null;
-  payNum.value = 0;
-});
 
 // 获取支付宝支付二维码
 const getZfbQR = (productId, userId, ticketType) => {
@@ -597,6 +594,49 @@ let payToggleHandle = (state) => {
     getWxQRHandle(Id.value, userid.value, ticketType.value);
   }
 };
+
+// 轮播图定时器
+let carouselTimer = ref(null);
+// 轮播ulDom
+let carouselDom = ref(null);
+let carouselNum = ref(0);
+//轮播数据
+let carouselList = ref([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+// 支付信息轮播 获取ulDom
+watch(
+  () => carouselDom.value,
+  (newValue) => {
+    if (newValue != null) {
+      // console.log(carouselList.value.length * 42);
+      carouselDom.value = newValue;
+      // 轮播自转
+      carouselRotation();
+    }
+  }
+);
+// 轮播图自转
+const carouselRotation = () => {
+  // 滚动限制
+  let num = carouselList.value.length * 42 - 10 - 116; // ul的高减去一个外边距减去一个ul可见的高就是能滚送的数字
+  // 轮播定位高度
+  carouselTimer.value = setInterval(() => {
+    carouselNum.value += 1;
+    if (carouselNum.value >= num) {
+      carouselNum.value = 0;
+    }
+  }, 250);
+};
+
+// 卸载组件清除定时器
+onUnmounted(() => {
+  // 二维码支付
+  clearInterval(payTimer.value);
+  payTimer.value = null;
+  payNum.value = 0;
+  // 轮播图 去除定时器
+  clearInterval(carouselTimer.value);
+  carouselTimer.value = null;
+});
 </script>
 
 <style lang="less" scoped>
