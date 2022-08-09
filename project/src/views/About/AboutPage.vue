@@ -1,11 +1,5 @@
 <template>
   <div class="about">
-    <!-- 支付弹出层 -->
-    <payModel
-      :modalFlag="modalFlag"
-      @updataVisible="updataModalFlag"
-    ></payModel>
-
     <!-- 上部分 -->
     <div class="about-top">
       <!-- 头部 -->
@@ -25,7 +19,7 @@
             <div class="hot">HOT</div>
           </li>
           <li v-on:click="handle2"><h1>已打包！2G 免费商用字体</h1></li>
-          <li v-on:click="modalShow"><h1>已打包2！2G 免费商用字体</h1></li>
+          <li><h1>已打包2！2G 免费商用字体</h1></li>
           <li><h1>已打包！2G 免费商用字体</h1></li>
           <li>
             <h1>已打包！2G 免费商用字体</h1>
@@ -253,18 +247,6 @@ const handle2 = () => {
   $router.push({ path: "/video-custom-converter" });
 };
 
-// 支付弹出框
-let modalFlag = ref(false);
-
-// 点击显示弹出框
-const modalShow = () => {
-  modalFlag.value = true;
-};
-// 点击弹出框确定按钮，隐藏弹出框
-const updataModalFlag = (bol) => {
-  modalFlag.value = bol;
-};
-
 // 1.2 调用接口，获取用户登录是否过期
 const getUserInfo = (userid) => {
   return userList(userid).then((res) => {
@@ -318,6 +300,7 @@ const getFrequency = (userid) => {
 const getCoupon = (userid) => {
   return getMyCoupon(userid).then((res) => {
     if (res.data.code == 200) {
+      console.log(res.data.data);
       store.commit("home/setMyCoupon", res.data.data);
     }
   });

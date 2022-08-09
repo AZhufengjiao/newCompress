@@ -329,6 +329,7 @@
             top: 0;
             left: 0;
             li {
+              cursor: pointer;
               position: relative;
               text-align: center;
               margin-right: 20px;
@@ -411,18 +412,18 @@
                 letter-spacing: 1px;
               }
               p {
+                line-height: 14px;
                 margin: 0 auto 16px;
                 overflow: hidden; /*超出部分隐藏*/
                 // white-space: nowrap; /*不换行*/
                 // text-overflow: ellipsis; /*超出部分文字以...显示*/
                 width: 140px;
                 height: 28px;
-                padding: 0 28px;
+                padding: 0 35px;
                 font-size: 10px;
                 font-family: PingFangSC-Regular, PingFang SC;
                 font-weight: 400;
                 color: #ffffff;
-                line-height: 14px;
               }
               h2 {
                 margin-bottom: 16px;
@@ -933,11 +934,11 @@
   }
 
   // 立减
-  .subtract {
+  .subtract1 {
     position: absolute;
     top: -16px;
     left: -2px;
-    width: 60px;
+    padding: 0 10px;
     height: 20px;
     background: linear-gradient(270deg, #ec71ff 0%, #6805ff 100%);
     border-radius: 16px 2px 16px 2px;

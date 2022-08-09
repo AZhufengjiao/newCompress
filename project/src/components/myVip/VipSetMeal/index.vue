@@ -13,7 +13,9 @@
     <div class="myVip-setMeal">
       <div
         :class="[
-          'myVip-setMeal-layout',
+          setMealList.length > 4
+            ? 'myVip-setMeal-layout'
+            : 'myVip-setMeal-layout2',
           !btnToggle && btnToggle != null ? 'cliStyle' : '',
           btnToggle && btnToggle != null ? 'clitogglestyle' : '',
         ]"
@@ -31,7 +33,7 @@
             'myVip-setMealboxSi': index === 3,
             'myVip-setMealboxWu': index === 4,
           }"
-          :id="index !== 0 ? 'myVip-setMeal-pattern' : ''"
+          :id="index !== 0 && item.scene === '' ? 'myVip-setMeal-pattern' : ''"
           v-on:click="currentId = item.pId"
         >
           <!--    class="myVip-setMeal-box myVip-setMealboxOne"   -->
@@ -39,17 +41,19 @@
           <div class="myVip-setMeal-box-plan">
             <!-- 右上角定位 -->
             <div
-              v-if="item.tag.length !== 0"
+              v-if="item.tag.length !== ''"
               class="myVip-setMeal-box-plan-preference"
             >
               {{ item.tag }}
             </div>
-            <p>钻石会员·终身</p>
+            <p>{{ item.huiYuanType }}会员·{{ item.newTimeLimit }}</p>
             <div class="myVip-setMeal-box-plan-price-box">
               <div v-if="index !== 0" class="myVip-setMeal-box-plan-quan">
                 券后
               </div>
-              <div class="myVip-setMeal-box-plan-price">199</div>
+              <div class="myVip-setMeal-box-plan-price">
+                {{ item.discountPrice }}
+              </div>
               <div class="myVip-setMeal-box-plan-yuan">元</div>
             </div>
 
@@ -74,7 +78,12 @@
             >
 
             <div class="myVip-setMeal-box-plan-xz">
-              全站编辑器内<span>无限</span>下载
+              全站编辑器内<span>{{
+                item.downloadTimes === "无限"
+                  ? item.downloadTimes
+                  : item.downloadTimes + "张/天"
+              }}</span
+              >下载
             </div>
             <div class="myVip-setMeal-box-col"></div>
           </div>
@@ -185,10 +194,11 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import payModel from "@/components/modal/payModal/index.vue";
-import loginModel from "@/components/modal/loginModal/index.vue";
+import payModel from "@/components/modal/payModal/index.vue"; // 支付弹出框
+import loginModel from "@/components/modal/loginModal/index.vue"; // 支付弹出框
 import { getSetMeal } from "@/api/about";
 import { onMounted, ref, watch } from "vue";
+import taoCanFn from "@/assets/js/taoCanFn.js";
 import { useStore } from "vuex";
 components: {
   payModel, loginModel;
@@ -247,8 +257,11 @@ onMounted(() => {
 const setMealInfo = (id) => {
   return getSetMeal(id).then((res) => {
     if (res.data.code == 200) {
+      console.log(res.data.data);
       // 1.1赋值
-      setMealList.value = res.data.data;
+      setMealList.value = taoCanFn(res.data.data);
+
+      console.log(setMealList.value);
       // 存本地
       // store.commit("home/setSetMealInfo", res.data.data);
     }

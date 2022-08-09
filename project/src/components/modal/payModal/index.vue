@@ -136,7 +136,9 @@
                     @mousemove="handleMousemove(item.pId, index)"
                   >
                     <!-- 立减 -->
-                    <div v-show="index === 1" class="subtract">立减20%</div>
+                    <div v-if="item.tag.length !== ''" class="subtract1">
+                      {{ item.tag }}
+                    </div>
                     <!-- 左下角-卷 -->
                     <div v-show="index === 0" class="quan">
                       <img
@@ -145,7 +147,7 @@
                       />
                     </div>
 
-                    <h1>终身会员</h1>
+                    <h1>{{ item.huiYuanType }}会员</h1>
                     <!-- <div class="modal-robShopping">显示抢购</div> -->
                     <div class="modal-mvpTC-price">
                       <div class="modal-price">{{ item.discountPrice }}</div>
@@ -153,7 +155,13 @@
                       <!-- <span v-if="index === 0">¥{{ item.pPrice }}</span> -->
                     </div>
                     <h4>{{ item.pPrice }}.00元</h4>
-                    <p>全站编辑器内10张/天下载</p>
+                    <p>
+                      全站编辑器内{{
+                        item.downloadTimes === "无限"
+                          ? item.downloadTimes
+                          : item.downloadTimes + "张/天"
+                      }}下载
+                    </p>
                     <!-- <h2 v-if="index === 0">只能抠图100张/月</h2> -->
                   </li>
                   <!-- <li class="twoLi">
@@ -313,6 +321,7 @@ import { useStore } from "vuex";
 import QrcodeVue from "qrcode.vue";
 import { getAlipayQR, getWxQR, getPayState } from "@/api/payQR";
 import { getDownloadNum, getSetMeal } from "@/api/about";
+import taoCanFn from "@/assets/js/taoCanFn.js"; //封装套餐数据
 import { userList } from "@/api/user";
 components: {
   QrcodeVue, paySucceedModal;
@@ -372,21 +381,20 @@ onMounted(() => {
   taocanList.value.map((item) => {
     //  修改最开始的pid
     if (roleType.value.roleType == "free") {
-      item.roleSearch.roleType;
+      item.roleType;
       Id.value = taocanList.value.filter(
-        (item) => item.roleSearch.roleType === "gold"
+        (item) => item.roleType === "gold"
       )[0].pId;
     }
     if (roleType.value.roleType == "gold") {
-      item.roleSearch.roleType;
+      item.roleType;
       Id.value = taocanList.value.filter(
-        (item) => item.roleSearch.roleType === "platinum"
+        (item) => item.roleType === "platinum"
       )[0].pId;
     }
 
-    // console.log(taocanList.value[0].roleSearch.timeLimit);
     if (item.pId == Id.value) {
-      ticketType.value = item.roleSearch.timeLimit;
+      ticketType.value = item.timeLimit;
       // 套餐id改变时，修改支付金额
       paymentAmount.value.price = item.discountPrice;
       paymentAmount.value.discounts = item.pPrice - item.discountPrice;
@@ -402,7 +410,8 @@ const setMealInfo = (id) => {
   return getSetMeal(id).then((res) => {
     if (res.data.code == 200) {
       // 1.1赋值
-      taocanList.value = res.data.data;
+      // taocanList.value = res.data.data;
+      taocanList.value = taoCanFn(res.data.data);
       // 存本地
       // store.commit("home/setSetMealInfo", res.data.data);
     }
@@ -509,9 +518,8 @@ watch(
     if (newValue !== 0) {
       // 修改支付金额
       taocanList.value.map((item) => {
-        // console.log(taocanList.value[0].roleSearch.timeLimit);
         if (item.pId === currentId.value) {
-          ticketType.value = item.roleSearch.timeLimit;
+          ticketType.value = item.timeLimit;
           // 套餐id改变时，修改支付金额
           paymentAmount.value.price = item.discountPrice;
           paymentAmount.value.discounts = item.pPrice - item.discountPrice;
@@ -539,7 +547,7 @@ watch(
       // 获取支付宝二维码参数的函数
       taocanList.value.map((item) => {
         if (item.pId == props.currentId) {
-          ticketType.value = item.roleSearch.timeLimit;
+          ticketType.value = item.timeLimit;
         }
       });
     }
@@ -580,7 +588,7 @@ const clickLiHandle = (item, index) => {
   paymentAmount.value.discounts = item.pPrice - item.discountPrice;
 
   // 重新赋值发起请求
-  ticketType.value = item.roleSearch.timeLimit;
+  ticketType.value = item.timeLimit;
 
   // 获取支付宝支付二维码
   getZfbQR(Id.value, userid.value, ticketType.value);

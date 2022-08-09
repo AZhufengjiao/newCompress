@@ -14,9 +14,13 @@
     .myVip-setMeal-layout {
       position: absolute;
       left: 0;
-      //   width: 1342px;
       display: flex;
     }
+    .myVip-setMeal-layout2 {
+      display: flex;
+      justify-content: center;
+    }
+
     .myVip-setMeal-box {
       margin-right: 27px;
       position: relative;
@@ -26,6 +30,7 @@
       box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.5);
       border-radius: 20px;
       opacity: 0;
+      margin: 0 13px;
       // 盒子上部分
       .myVip-setMeal-box-plan {
         width: 280px;
@@ -55,7 +60,6 @@
           line-height: 34px;
         }
         p {
-          width: 208px;
           height: 46px;
           font-size: 32px;
           font-family: HarmonyOS_Sans_SC_Bold;
@@ -69,7 +73,6 @@
           display: flex;
           justify-content: center;
           .myVip-setMeal-box-plan-price {
-            width: 118px;
             height: 72px;
             font-size: 72px;
             font-family: HarmonyOS_Sans_SC_Bold;
@@ -259,7 +262,6 @@
           border-radius: 7px;
           line-height: 58px;
           h1 {
-            width: 64px;
             font-size: 16px;
             font-family: PingFangSC-Medium, PingFang SC;
             font-weight: 500;
