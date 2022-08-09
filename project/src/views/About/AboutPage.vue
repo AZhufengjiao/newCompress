@@ -1,5 +1,7 @@
 <template>
   <div class="about">
+    <download1 :downloadModal="flag" @updateFlag="updateFlag"></download1>
+
     <!-- 上部分 -->
     <div class="about-top">
       <!-- 头部 -->
@@ -19,7 +21,7 @@
             <div class="hot">HOT</div>
           </li>
           <li v-on:click="handle2"><h1>已打包！2G 免费商用字体</h1></li>
-          <li><h1>已打包2！2G 免费商用字体</h1></li>
+          <li @click="flag = true"><h1>已打包2！2G 免费商用字体</h1></li>
           <li><h1>已打包！2G 免费商用字体</h1></li>
           <li>
             <h1>已打包！2G 免费商用字体</h1>
@@ -219,13 +221,13 @@
 import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import payModel from "@/components/modal/payModal/index.vue";
-
+import download1 from "@/components/modal/download/download1.vue";
 import aboutNav from "@/components/aboutNav/index.vue";
 import { userList } from "@/api/user";
 import { getSetMeal, getDownloadNum, getMyCoupon } from "@/api/about";
 import { useStore } from "vuex";
 components: {
-  payModel, aboutNav;
+  payModel, aboutNav, download1;
 }
 const $router = useRouter();
 const store = useStore();
@@ -304,6 +306,12 @@ const getCoupon = (userid) => {
       store.commit("home/setMyCoupon", res.data.data);
     }
   });
+};
+
+// 弹出框
+let flag = ref(false);
+const updateFlag = (res) => {
+  flag.value = res;
 };
 </script>
 

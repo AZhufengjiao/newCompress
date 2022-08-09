@@ -48,7 +48,10 @@
             </div>
             <p>{{ item.huiYuanType }}会员·{{ item.newTimeLimit }}</p>
             <div class="myVip-setMeal-box-plan-price-box">
-              <div v-if="index !== 0" class="myVip-setMeal-box-plan-quan">
+              <div
+                v-if="index !== 0 && item.yhq[0]"
+                class="myVip-setMeal-box-plan-quan"
+              >
                 券后
               </div>
               <div class="myVip-setMeal-box-plan-price">
@@ -198,7 +201,7 @@ import payModel from "@/components/modal/payModal/index.vue"; // 支付弹出框
 import loginModel from "@/components/modal/loginModal/index.vue"; // 支付弹出框
 import { getSetMeal } from "@/api/about";
 import { onMounted, ref, watch } from "vue";
-import taoCanFn from "@/assets/js/taoCanFn.js";
+import taoCanFn from "@/assets/js/taoCanFn.js"; // 封装套餐数据
 import { useStore } from "vuex";
 components: {
   payModel, loginModel;
@@ -259,7 +262,7 @@ const setMealInfo = (id) => {
     if (res.data.code == 200) {
       console.log(res.data.data);
       // 1.1赋值
-      setMealList.value = taoCanFn(res.data.data);
+      setMealList.value = taoCanFn(res.data.data, store.state.home.myCoupon);
 
       console.log(setMealList.value);
       // 存本地

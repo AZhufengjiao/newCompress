@@ -2,7 +2,11 @@
   <div class="home_fileCompression_box_box">
     <span class="home_fileCompression_box_name">{{ fileName }} </span>
     <div class="home_fileCompression_box_center">
-      <span class="home_fileCompression_box_memory">{{ fileSize + "MB" }}</span>
+      <span
+        class="home_fileCompression_box_memory"
+        style="opacity: 1 !important"
+        >{{ fileSize + "MB" }}</span
+      >
       <video
         style="display: none"
         src="fileURL"
@@ -30,9 +34,11 @@
           }}</span>
         </div>
       </div>
-      <span class="home_fileCompression_box_memory" v-if="compressSize">{{
-        compressSize + "M"
-      }}</span>
+      <span
+        class="home_fileCompression_box_memory"
+        :style="{ opacity: compressSize ? 1 : 0 }"
+        >{{ compressSize + "M" }}</span
+      >
     </div>
     <div class="home_fileCompression_box_zh">
       <span v-if="state == 'sc'">{{
@@ -440,6 +446,7 @@ const downloadFn = () => {
         display: flex;
         align-items: center;
         .home_fileCompression_box_memory {
+          opacity: 0;
           width: 65px;
           height: 29px;
           font-size: 21px;

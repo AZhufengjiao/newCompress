@@ -5,6 +5,7 @@
       :UploadModal="UploadModal"
       @updateFlag="updateStateHandle"
     ></uploadModal>
+
     <div class="home_compressedVideo_top">
       <h2>HEYCUT 视频压缩</h2>
       <div>智能场景压缩 · 一步搞定所有视频需求</div>
@@ -181,7 +182,7 @@ let handleInputV = (e) => {
           flag: false,
           state: state,
         };
-        // 视频大小，不超过身份限制，下载视频
+
         fn();
       }
       // 视频大小， 超出身份限制
@@ -226,7 +227,6 @@ let handleInputV = (e) => {
     else if (roleType === "platinum" || roleType === "diamond") {
       estimateFn(roleType, null);
     }
-    console.log(UploadModal.value);
   } else {
     console.log("没选");
   }

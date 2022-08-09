@@ -411,7 +411,7 @@ const setMealInfo = (id) => {
     if (res.data.code == 200) {
       // 1.1赋值
       // taocanList.value = res.data.data;
-      taocanList.value = taoCanFn(res.data.data);
+      taocanList.value = taoCanFn(res.data.data, store.state.home.myCoupon);
       // 存本地
       // store.commit("home/setSetMealInfo", res.data.data);
     }

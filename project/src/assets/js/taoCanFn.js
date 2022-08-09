@@ -14,11 +14,19 @@
  * trialType          套餐类型   体验会员和正式会员
  * scene              区分有没有跳转链接
  * tag                身份TAG
+ * priceNum           减了券后价格
+ *
+ * @param {array} yhq 优惠券数组
+ * couponEndTime      抢购时间
+ * couponId           couponId如果和groupId相等得话，就代表券可以用
+ * couponName         用券时间
+ * discountPrice      优惠价
+ * roleType           身份  什么身份使用
  * @returns
  */
-const taoCanFn = (res) => {
+const taoCanFn = (res, yhq) => {
   let arr = [];
-  res.map((item) => {
+  res.map((item, index) => {
     let obj = {};
     obj.discountPrice = item.discountPrice; // discountPrice 现价
     // addMonth      是否买赠，天数
@@ -70,6 +78,26 @@ const taoCanFn = (res) => {
     obj.trialType = item.roleSearch.trialType; // trialType 套餐类型   体验会员和正式会员
     obj.scene = item.scene; // scene 区分有没有跳转链接
     obj.tag = item.tag; // tag 身份TAG
+    obj.yhq = [];
+
+    // 优惠券数据处理
+    if (yhq) {
+      yhq.map((j) => {
+        // 相等代表可以使用,并且不是立即抢购的套餐
+        if (j.couponId === item.groupId && item.scene === "") {
+          console.log(11);
+          // 如果优惠券大于现价
+          if (j.discountPrice > item.discountPrice) {
+            // 让现价等于0.01
+            obj.discountPrice = 0.01;
+          } else {
+            // 优惠券小于现价的话，之间剪掉优惠券
+            obj.discountPrice = item.discountPrice - j.discountPrice;
+          }
+          obj.yhq.push(j);
+        }
+      });
+    }
 
     arr.push(obj);
   });
