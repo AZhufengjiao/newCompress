@@ -6,15 +6,17 @@
 }
 @keyframes identifier {
   0% {
-    left: 0;
+    right: 0;
   }
   100% {
-    left: -195px;
+    // left: -195px;
+    left: -232px;
   }
 }
 @keyframes succeed-in {
   0% {
-    left: -195px;
+    // left: -195px;
+    left: -232px;
   }
   100% {
     left: 0;

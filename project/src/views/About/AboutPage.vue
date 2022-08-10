@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <download1 :downloadModal="flag" @updateFlag="updateFlag"></download1>
+    <downloadWc :downloadModal="flag" @updateFlag="updateFlag"></downloadWc>
 
     <!-- 上部分 -->
     <div class="about-top">
@@ -221,16 +221,17 @@
 import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import payModel from "@/components/modal/payModal/index.vue";
-import download1 from "@/components/modal/download/download1.vue";
+import downloadWc from "@/components/modal/download/downloadWc.vue";
 import aboutNav from "@/components/aboutNav/index.vue";
 import { userList } from "@/api/user";
 import { getSetMeal, getDownloadNum, getMyCoupon } from "@/api/about";
 import { useStore } from "vuex";
 components: {
-  payModel, aboutNav, download1;
+  payModel, aboutNav, downloadWc;
 }
 const $router = useRouter();
 const store = useStore();
+
 
 // 获取本地用户id，查看是否登录
 let state = ref("");

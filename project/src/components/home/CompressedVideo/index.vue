@@ -6,6 +6,12 @@
       @updateFlag="updateStateHandle"
     ></uploadModal>
 
+    <!-- 视频下载弹出框 -->
+    <download2
+      :downloadModal="videoXzFlag"
+      @updateFlag="updateFlag"
+    ></download2>
+
     <div class="home_compressedVideo_top">
       <h2>HEYCUT 视频压缩</h2>
       <div>智能场景压缩 · 一步搞定所有视频需求</div>
@@ -86,6 +92,7 @@
 <script setup>
 import UploadModule from "@/components/home/UploadModule/index.vue";
 import uploadModal from "@/components/modal/uploadModal/index.vue";
+import download2 from "@/components/modal/download/download2.vue"; // 视频下载中弹出框
 import Custom from "@/components/home/Custom/index.vue";
 import defaultYS from "@/components/home/defaultYS/index.vue";
 import { onMounted, onUpdated, ref } from "vue";
@@ -102,7 +109,7 @@ import FileSaver from "file-saver";
 import { useRouter } from "vue-router";
 
 components: {
-  UploadModule, uploadModal, Custom, defaultYS;
+  UploadModule, uploadModal, Custom, defaultYS, download2;
 }
 const $router = useRouter();
 const store = useStore();
@@ -129,6 +136,12 @@ let succeed = ref(false);
 // 子组件传参给父组件，item是转码要用的参数
 const handleParamsObj = (item) => {
   params1.value = item;
+};
+
+// 视频下载弹出框弹出框
+let videoXzFlag = ref(false);
+const updateFlag = (res) => {
+  videoXzFlag.value = res;
 };
 
 let upload = ref(null);
@@ -162,6 +175,7 @@ let handleInputV = (e) => {
   if (uploadFiles.length > 0) {
     // 选中添加进fileList数组
     function fn() {
+      videoXzFlag.value = true;
       for (let i = 0; i < uploadFiles.length; i++) {
         fileList.value.push(uploadFiles[i]);
       }

@@ -166,6 +166,7 @@ const scanQRcodes = (ticket) => {
   return getScanQRcodes(ticket).then((res) => {
     // console.log(res.data.data.entity.id);
     if (res.data.code === 200) {
+      console.log(res.data.data);
       // 存储用户id到本地
       let id = res.data.data.entity.id;
       localStorage.setItem("userid", id);

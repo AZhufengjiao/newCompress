@@ -6,7 +6,7 @@ import { requestWithoutToken } from "@/utils/request";
  * @param {string} isIframe
  * @returns
  */
-export function userLogin(senceId = 0, isIframe = 0) {
+export function userLogin(senceId, isIframe = 0) {
   return requestWithoutToken("/api/wechat/portal/getQrcode2", "get", {
     senceId,
     isIframe,

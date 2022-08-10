@@ -174,23 +174,24 @@
         </div>
         <!-- 2 -->
 
-        <!-- 左右两边的点击按钮 -->
-        <div
-          v-show="!setMealList.length > 4 && (btnToggle || btnToggle == null)"
-          v-on:click="btnToggle = false"
-          class="myVip-setMeal-clickBtn myVip-setMeal-clickBtn-left"
-        >
-          <span class="sj"></span>
-        </div>
-        <div
-          v-show="btnToggle === false"
-          v-on:click="btnToggle = true"
-          class="myVip-setMeal-clickBtn myVip-setMeal-clickBtn-right"
-        >
-          <span class="sj"></span>
-        </div>
         <!-- <div class="myVip-setMeal-clickBtn"></div> -->
       </div>
+    </div>
+
+    <!-- 左右两边的点击按钮 -->
+    <div
+      v-show="setMealList.length > 4 && (btnToggle || btnToggle == null)"
+      v-on:click="btnToggle = false"
+      class="myVip-setMeal-clickBtn myVip-setMeal-clickBtn-left"
+    >
+      <span class="sj"></span>
+    </div>
+    <div
+      v-show="btnToggle === false"
+      v-on:click="btnToggle = true"
+      class="myVip-setMeal-clickBtn myVip-setMeal-clickBtn-right"
+    >
+      <span class="sj"></span>
     </div>
   </div>
 </template>
@@ -256,8 +257,18 @@ onMounted(() => {
   setMealInfo(userid.value);
 });
 
+// 检测用户是否重新登录
+watch(
+  () => userid.value,
+  (newValue) => {
+    // 获取套餐数据
+    setMealInfo(userid.value);
+  }
+);
+
 // 2. 获取套餐信息列表存储本地
 const setMealInfo = (id) => {
+  id = id === null ? -1 : id;
   return getSetMeal(id).then((res) => {
     if (res.data.code == 200) {
       console.log(res.data.data);
@@ -274,6 +285,6 @@ const setMealInfo = (id) => {
 
 <style lang="scss" scoped>
 @import "@/assets/styles/animation/myVip/VipSetMeal/index.scss";
-@import "@/assets/css/myVip/VipSetMeal/VipSetMeal_media1440px.scss";
 @import "@/assets/css/myVip/VipSetMeal/VipSetMeal_media1280px.scss";
+@import "@/assets/css/myVip/VipSetMeal/VipSetMeal_media1440px.scss";
 </style>
