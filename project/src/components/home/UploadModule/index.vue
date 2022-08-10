@@ -1,5 +1,13 @@
 <template>
   <div class="home_fileCompression_box_box">
+    <!-- 视频下载弹出框 -->
+    <download2 :downloadModal="videoXz" @updateFlag="updateFlag"></download2>
+    <!-- 视频下载完成弹出框 -->
+    <downloadWc
+      :downloadModal="videoDownWc"
+      @updateFlag="DownWcHandle"
+    ></downloadWc>
+
     <span class="home_fileCompression_box_name">{{ fileName }} </span>
     <div class="home_fileCompression_box_center">
       <span
@@ -61,12 +69,17 @@ import {
   getOperationStatusAvinfo,
 } from "@/api/home";
 import { getKillDownloadNum } from "@/api/about";
+import download2 from "@/components/modal/download/download2.vue"; // 视频下载中弹出框
+import downloadWc from "@/components/modal/download/downloadWc.vue"; // 视频下载完成弹出框
 import { useStore } from "vuex";
 import { ref, onMounted, onUpdated, watch, toRefs } from "vue";
 import { defineEmits } from "vue";
 import { message } from "ant-design-vue";
 import { saveFile } from "@/components/home/CompressedVideo/download.js";
 import axios from "axios";
+components: {
+  download2, downloadWc;
+}
 const store = useStore();
 const emit = defineEmits(["getFileItemParams"]);
 // 获取用户id
@@ -102,6 +115,23 @@ let compressSize = ref(null);
 // 视频src
 let fileURL = ref(props.item);
 let uploadProcess = ref(0);
+
+// 视频下载弹出框弹出框
+let videoXz = ref({
+  flag: false,
+  num: 0,
+});
+// 隐藏下载弹窗
+const updateFlag = (res) => {
+  videoXz.value.flag = res;
+};
+
+// 下载完成弹出框
+let videoDownWc = ref(false);
+// 隐藏下载完成
+const DownWcHandle = (res) => {
+  videoDownWc.value = res;
+};
 
 watch(
   () => props.item,
@@ -362,14 +392,37 @@ const killDownLoadNumber = (picNumber, userId) => {
   });
 };
 
+// 下载定时器
+const downloadTimer = ref(null);
 // 保存文件视频到本地
 const downloadFn = () => {
+  // 下载默认时间
+  let delayTime = 1800;
+  // 下载起始时间
+  let currentTime = new Date().getTime();
   return axios({
     method: "post",
     url: videoUrl.value,
     responseType: "blob",
   })
     .then((res) => {
+      // 让下载中弹窗显示
+      videoXz.value.flag = true;
+      // 下载后时间
+      let tempTime = new Date().getTime();
+      // 下载时间
+      delayTime = tempTime - currentTime < 1800 ? 1800 : tempTime - currentTime;
+      // 开启定时器
+      downloadTimer.value = window.setInterval(() => {
+        // 下载中弹出框隐藏
+        videoXz.value.flag = false;
+        // 下载完成弹出框显示
+        videoDownWc.value = true;
+        // 去除定时器
+        clearInterval(downloadTimer.value);
+        // 让定时器为空
+        downloadTimer.value = true;
+      }, delayTime);
       saveFile(res.data, fileName.value); // 名字
     })
     .catch((err) => {

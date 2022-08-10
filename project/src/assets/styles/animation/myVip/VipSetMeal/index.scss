@@ -9,14 +9,13 @@
     right: 0;
   }
   100% {
-    // left: -195px;
-    left: -232px;
+    // left: -188px;
+    left: var(--view-left, 118px);
   }
 }
 @keyframes succeed-in {
   0% {
-    // left: -195px;
-    left: -232px;
+    left: var(--view-left, 118px);
   }
   100% {
     left: 0;

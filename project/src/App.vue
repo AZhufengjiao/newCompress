@@ -50,7 +50,6 @@ p {
       padding: 0;
       margin: 0;
       width: none;
-      // display: none !important;
     }
   }
 }
@@ -62,9 +61,5 @@ ul {
   margin: auto;
   text-decoration: none;
   list-style: none;
-}
-
-img {
-  cursor: pointer;
 }
 </style>

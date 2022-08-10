@@ -232,7 +232,6 @@ components: {
 const $router = useRouter();
 const store = useStore();
 
-
 // 获取本地用户id，查看是否登录
 let state = ref("");
 state.value = store.state.login.userid;
@@ -303,7 +302,6 @@ const getFrequency = (userid) => {
 const getCoupon = (userid) => {
   return getMyCoupon(userid).then((res) => {
     if (res.data.code == 200) {
-      console.log(res.data.data);
       store.commit("home/setMyCoupon", res.data.data);
     }
   });

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="downloadModal" class="download2">
+  <div v-if="downloadModal.flag" class="download2">
     <!-- 遮罩层 -->
     <div class="zzc"></div>
     <!-- 弹出框盒子部分 -->
@@ -18,7 +18,7 @@
         <h2>请耐心等待</h2>
       </div>
       <div class="download1-bottom">
-        <img src="" alt="" />
+        <img class="cliStyle" src="" alt="" />
       </div>
     </div>
   </div>
@@ -29,7 +29,7 @@ import { onUpdated, ref, toRefs, watch } from "vue";
 components: {
 }
 // 父子通讯
-const props = defineProps({ downloadModal: Boolean });
+const props = defineProps({ downloadModal: Object });
 const emit = defineEmits(["updateFlag"]);
 let { downloadModal } = toRefs(props);
 // 退出按钮
@@ -45,6 +45,7 @@ const exitBtnHandle = () => {
 </script>
 
 <style lang="less" scoped>
+@import url("@/assets/styles/animation/download/wc.less");
 @import url("@/assets/css/modal/download/download2/download2_1440px.less");
 // h1,
 // h2,

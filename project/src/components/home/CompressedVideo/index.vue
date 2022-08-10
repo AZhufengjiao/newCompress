@@ -7,10 +7,12 @@
     ></uploadModal>
 
     <!-- 视频下载弹出框 -->
-    <download2
-      :downloadModal="videoXzFlag"
-      @updateFlag="updateFlag"
-    ></download2>
+    <download2 :downloadModal="videoXz" @updateFlag="updateFlag"></download2>
+    <!-- 视频下载完成弹出框 -->
+    <downloadWc
+      :downloadModal="videoDownWc"
+      @updateFlag="DownWcHandle"
+    ></downloadWc>
 
     <div class="home_compressedVideo_top">
       <h2>HEYCUT 视频压缩</h2>
@@ -90,12 +92,13 @@
 </template>
 
 <script setup>
-import UploadModule from "@/components/home/UploadModule/index.vue";
+import UploadModule from "@/components/home/UploadModule/index.vue"; // 下载列表
 import uploadModal from "@/components/modal/uploadModal/index.vue";
 import download2 from "@/components/modal/download/download2.vue"; // 视频下载中弹出框
-import Custom from "@/components/home/Custom/index.vue";
-import defaultYS from "@/components/home/defaultYS/index.vue";
-import { onMounted, onUpdated, ref } from "vue";
+import downloadWc from "@/components/modal/download/downloadWc.vue"; // 视频下载完成弹出框
+import Custom from "@/components/home/Custom/index.vue"; // 自定义压缩
+import defaultYS from "@/components/home/defaultYS/index.vue"; // 压缩场景
+import { onMounted, onUpdated, onUnmounted, ref } from "vue";
 import { getCompressScenes, homeTemplateList } from "@/api/home";
 import { getKillDownloadNum } from "@/api/about";
 import { useStore } from "vuex";
@@ -109,8 +112,9 @@ import FileSaver from "file-saver";
 import { useRouter } from "vue-router";
 
 components: {
-  UploadModule, uploadModal, Custom, defaultYS, download2;
+  UploadModule, uploadModal, Custom, defaultYS, download2, downloadWc;
 }
+
 const $router = useRouter();
 const store = useStore();
 
@@ -138,17 +142,32 @@ const handleParamsObj = (item) => {
   params1.value = item;
 };
 
-// 视频下载弹出框弹出框
-let videoXzFlag = ref(false);
-const updateFlag = (res) => {
-  videoXzFlag.value = res;
-};
-
 let upload = ref(null);
 //  添加按钮，触发input，让文件夹弹出  3.
 const handleUploading = (e) => {
   upload.value.click();
 };
+
+// 视频下载弹出框弹出框
+let videoXz = ref({
+  flag: false,
+  num: 0,
+});
+// 隐藏下载弹窗
+const updateFlag = (res) => {
+  videoXz.value.flag = res;
+};
+
+// 下载完成弹出框
+let videoDownWc = ref(false);
+// 隐藏下载完成
+const DownWcHandle = (res) => {
+  videoDownWc.value = res;
+};
+
+onUnmounted(() => {
+  store.commit("home/setConversionList", []);
+});
 
 /* 文件夹弹出 选择图片上传 */
 let file = ref(null);
@@ -175,7 +194,6 @@ let handleInputV = (e) => {
   if (uploadFiles.length > 0) {
     // 选中添加进fileList数组
     function fn() {
-      videoXzFlag.value = true;
       for (let i = 0; i < uploadFiles.length; i++) {
         fileList.value.push(uploadFiles[i]);
       }
@@ -265,6 +283,7 @@ const HandleDrag = (e) => {
 // 创建一个可以下载的url数组
 let fileUrlList = ref(store.state.home.conversionList);
 
+let downloadTimer = ref(null);
 // 点击下载全部
 const downloadHandle = () => {
   // 查看用户的身份
@@ -282,7 +301,6 @@ const downloadHandle = () => {
 
   // 设置一个记录下载为false的变量
   let FalseNum = 0;
-  console.log(fileUrlList.value);
   let blogTitle = "下载文件的名字";
   let zip = new JSZip();
   let promiseArr = [];
@@ -312,9 +330,32 @@ const downloadHandle = () => {
     promiseArr.push(promise);
   }
   Promise.all(promiseArr).then(() => {
+    console.log(555);
+    // 下载默认时间
+    let delayTime = 1800;
+    // 下载起始时间
+    let currentTime = new Date().getTime();
     zip
       .generateAsync({ type: "blob" })
       .then((content) => {
+        // 让下载中弹窗显示
+        videoXz.value.flag = true;
+        // 下载后时间
+        let tempTime = new Date().getTime();
+        // 下载时间
+        delayTime =
+          tempTime - currentTime < 1800 ? 1800 : tempTime - currentTime;
+        // 开启定时器
+        downloadTimer.value = window.setInterval(() => {
+          // 下载中弹出框隐藏
+          videoXz.value.flag = false;
+          // 下载完成弹出框显示
+          videoDownWc.value = true;
+          // 去除定时器
+          clearInterval(downloadTimer.value);
+          // 让定时器为空
+          downloadTimer.value = true;
+        }, delayTime);
         // 生成二进制
         FileSaver.saveAs(content, blogTitle); // 利用file-saver保存文件 自定义文件名
         this.btnLoading = false;
@@ -337,8 +378,9 @@ const getImgArrayBuffer = (url) => {
     xmlHttp.responseType = "blob";
     xmlHttp.onload = function () {
       if (this.status == 200) {
+        console.log(111111);
         resolve(this.response);
-        console.log(this.response);
+
         // window.URL.createObjectURL();
       } else {
         reject(this.status);

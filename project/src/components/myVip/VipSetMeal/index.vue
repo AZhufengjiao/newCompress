@@ -10,8 +10,9 @@
     <!-- 登录弹出框 -->
     <loginModel :loginFlag="loginFlag" @cancelChild="CancelChild"></loginModel>
 
-    <div class="myVip-setMeal">
+    <div class="myVip-setMeal" ref="MealBox">
       <div
+        ref="setMealUl"
         :class="[
           setMealList.length > 4
             ? 'myVip-setMeal-layout'
@@ -26,7 +27,7 @@
           v-for="(item, index) in setMealList"
           :key="item"
           :class="{
-            'myVip-setMeal-box ': item,
+            'myVip-setMeal-box': item,
             'myVip-setMealboxOne ': index === 0,
             'myVip-setMealboxTwo': index === 1,
             'myVip-setMealboxSan': index === 2,
@@ -201,7 +202,7 @@ import { useRouter } from "vue-router";
 import payModel from "@/components/modal/payModal/index.vue"; // 支付弹出框
 import loginModel from "@/components/modal/loginModal/index.vue"; // 支付弹出框
 import { getSetMeal } from "@/api/about";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, onUpdated, ref, watch } from "vue";
 import taoCanFn from "@/assets/js/taoCanFn.js"; // 封装套餐数据
 import { useStore } from "vuex";
 components: {
@@ -219,6 +220,50 @@ let modalFlag = ref(false);
 const updataModalFlag = (bol) => {
   modalFlag.value = bol;
 };
+
+// 获取套餐固定盒子的DOM
+const MealBox = ref(null);
+// 获取套餐盒子滚动的盒子的DOM
+const setMealUl = ref("");
+const MealUlWidth = ref(null);
+onMounted(() => {});
+onUpdated(() => {
+  // console.log(MealBox.value.scrollWidth);
+  // console.log(setMealUl.value);
+  // console.log(MealBox.value);
+  // console.log(setMealUl.value.scrollWidth, MealBox.value.scrollWidth);
+  // MealUlWidth.value =
+  //   setMealUl.value.clientWidth > MealBox.value.clientWidth
+  //     ? setMealUl.value.clientWidth - MealBox.value.clientWidth
+  //     : 0;
+  // console.log(MealUlWidth.value);
+});
+
+window.onresize = async () => {
+  watch(
+    () => MealBox.value.scrollWidth,
+    (vewValue) => {
+      console.log(vewValue);
+      ss;
+    }
+  );
+
+  console.log(MealBox.value);
+  console.log(MealBox.value.scrollWidth);
+};
+
+watch(
+  () => setMealUl.value.scrollWidth,
+  (vewValue) => {
+    console.log(111);
+    console.log(vewValue);
+
+    // console.log(vewValue.value.clientWidth);
+  },
+  {
+    immediate: true,
+  }
+);
 
 watch(
   () => store.state.login.userid,

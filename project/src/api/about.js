@@ -7,7 +7,6 @@ import { requestWithoutToken } from "@/utils/request";
  * @returns
  */
 export function getSetMeal(userId = -1, scope = -1) {
-  console.log(userId);
   return requestWithoutToken("/api/wechat/pay/getPayInfo1", "get", {
     userId,
     scope,
