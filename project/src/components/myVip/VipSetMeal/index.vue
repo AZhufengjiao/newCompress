@@ -19,6 +19,7 @@
             : 'myVip-setMeal-layout2',
           !btnToggle && btnToggle != null ? 'cliStyle' : '',
           btnToggle && btnToggle != null ? 'clitogglestyle' : '',
+          MealUlWidth == 0 ? 'UpdateStyle' : '',
         ]"
       >
         <!-- <div class="myVip-setMeal-layout"> -->
@@ -181,7 +182,11 @@
 
     <!-- 左右两边的点击按钮 -->
     <div
-      v-show="setMealList.length > 4 && (btnToggle || btnToggle == null)"
+      v-show="
+        MealUlWidth !== 0 &&
+        setMealList.length > 4 &&
+        (btnToggle || btnToggle == null)
+      "
       v-on:click="btnToggle = false"
       class="myVip-setMeal-clickBtn myVip-setMeal-clickBtn-left"
     >
@@ -198,16 +203,18 @@
 </template>
 
 <script setup>
+import elementResizeDetectorMaker from "element-resize-detector";
 import { useRouter } from "vue-router";
 import payModel from "@/components/modal/payModal/index.vue"; // 支付弹出框
 import loginModel from "@/components/modal/loginModal/index.vue"; // 支付弹出框
 import { getSetMeal } from "@/api/about";
-import { onMounted, onUpdated, ref, watch } from "vue";
+import { onMounted, onUpdated, ref, watch, onUnmounted } from "vue";
 import taoCanFn from "@/assets/js/taoCanFn.js"; // 封装套餐数据
 import { useStore } from "vuex";
 components: {
   payModel, loginModel;
 }
+var erd = elementResizeDetectorMaker(); //创建实例
 const $router = useRouter();
 const store = useStore();
 // 用户id
@@ -225,45 +232,33 @@ const updataModalFlag = (bol) => {
 const MealBox = ref(null);
 // 获取套餐盒子滚动的盒子的DOM
 const setMealUl = ref("");
-const MealUlWidth = ref(null);
+// left移动的宽度
+const MealUlWidth = ref(118);
 onMounted(() => {});
-onUpdated(() => {
-  // console.log(MealBox.value.scrollWidth);
-  // console.log(setMealUl.value);
-  // console.log(MealBox.value);
-  // console.log(setMealUl.value.scrollWidth, MealBox.value.scrollWidth);
-  // MealUlWidth.value =
-  //   setMealUl.value.clientWidth > MealBox.value.clientWidth
-  //     ? setMealUl.value.clientWidth - MealBox.value.clientWidth
-  //     : 0;
-  // console.log(MealUlWidth.value);
+// 组件卸载
+onUnmounted(() => {
+  // 离开页面删除检测器和所有侦听器
+  erd.uninstall(MealBox.value); //这里用ref是因为vue离开页面后获取不到dom
 });
-
-window.onresize = async () => {
-  watch(
-    () => MealBox.value.scrollWidth,
-    (vewValue) => {
-      console.log(vewValue);
-      ss;
+onUpdated(() => {
+  // 监听dom
+  erd.listenTo(MealBox.value, (ele) => {
+    // 获取需要的宽度
+    MealUlWidth.value =
+      ele.offsetWidth > setMealUl.value.clientWidth
+        ? 0
+        : setMealUl.value.clientWidth - ele.offsetWidth;
+    // 判断窗口大小是否大于ul大小，大的话赋值需要移动的宽度，不大就不需要移动
+    if (MealUlWidth.value !== 0) {
+      setMealUl.value.style.setProperty(
+        "--view-left",
+        -MealUlWidth.value + "px"
+      );
+    } else {
+      setMealUl.value.style.setProperty("--view-left", 0 + "px");
     }
-  );
-
-  console.log(MealBox.value);
-  console.log(MealBox.value.scrollWidth);
-};
-
-watch(
-  () => setMealUl.value.scrollWidth,
-  (vewValue) => {
-    console.log(111);
-    console.log(vewValue);
-
-    // console.log(vewValue.value.clientWidth);
-  },
-  {
-    immediate: true,
-  }
-);
+  });
+});
 
 watch(
   () => store.state.login.userid,

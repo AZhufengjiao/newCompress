@@ -6,16 +6,16 @@
 }
 @keyframes identifier {
   0% {
-    right: 0;
+    left: 0;
   }
   100% {
     // left: -188px;
-    left: var(--view-left, 118px);
+    left: var(--view-left, -217px);
   }
 }
 @keyframes succeed-in {
   0% {
-    left: var(--view-left, 118px);
+    left: var(--view-left, -217px);
   }
   100% {
     left: 0;
