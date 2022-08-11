@@ -181,76 +181,10 @@ const handleC = () => {
   checked.value = false;
 };
 
-onMounted(() => {
-  // 发起请求, 获取压缩切换所有数据
-  getCompressList("format");
-  getCompressList("compress");
-  getCompressList("upload");
-});
+onMounted(() => {});
 onUpdated(() => {
   // console.log(fileList.value);
 });
-
-// 压缩类型数组
-let compressList = ref([
-  {
-    id: 1,
-    type: "format",
-    name: "场景转换",
-  },
-  {
-    id: 2,
-    type: "compress",
-    name: "自定义转换",
-  },
-]);
-// 压缩类型场景所有数组
-let compressSceneList = ref([]);
-let compressSceneItem = ref([]);
-
-// 点击压缩类型切换转换压缩场景  1.
-const compressHandle = (num) => {
-  // 切换类名
-  activeKey.value = num;
-  // 切换压缩场景数据
-  compressSceneItem.value = compressSceneList.value[num - 1];
-  compressSceneItem.value.map((item) => {
-    if (item.compressState) {
-      activeKeySon.value = item.compressState;
-    } else {
-      activeKeySon.value = compressSceneItem.value[0].tmpId;
-    }
-  });
-};
-
-// 发起请求，获取压缩场景
-const getCompressList = (state) => {
-  return homeTemplateList(state, 1, 10).then((res) => {
-    let arr = [];
-    if (res.data.code == 200) {
-      // 获取所有压缩场景内容
-      compressSceneList.value.push(res.data.data.list);
-      compressSceneList.value.map((item) => {
-        item.map((i) => {
-          getCompressScenes(item[0].tmpId).then((res) => {
-            if (res.data.code == 200) {
-              // 获取固定的params1
-              arr.push(res.data.data);
-              params1.value = arr[0];
-              //  保存
-              i.params = res.data.data;
-            }
-          });
-        });
-      });
-      if (compressSceneItem.value.length === 0) {
-        // 压缩场景默认显示第一个
-        compressSceneItem.value = compressSceneList.value[0];
-        activeKeySon.value = compressSceneItem.value[0].tmpId;
-      }
-    }
-  });
-};
 </script>
 
 <style lang="scss" scoped>
@@ -305,7 +239,7 @@ const getCompressList = (state) => {
   margin-bottom: 17px;
 
   .home_compressedVideo_bottom_box {
-    width: 1333px;
+    width: 1333px !important;
     height: 165px;
     border: 1px solid rgba(255, 255, 255, 0.22);
     backdrop-filter: blur(7.321131447587355px);
@@ -381,7 +315,7 @@ const getCompressList = (state) => {
   background: #e1e9ff !important;
 }
 
-@import "@/assets/css/home/homeNav/CustomCompressed/CustomCompressed1440px.scss";
-@import "@/assets/css/home/homeNav/CustomCompressed/CustomCompressed1280px.scss";
+// @import "@/assets/css/home/homeNav/CustomCompressed/CustomCompressed1440px.scss";
+// @import "@/assets/css/home/homeNav/CustomCompressed/CustomCompressed1280px.scss";
 // @import "@/assrts/styles/animation/home/CompressedVideo/index.scss";
 </style>

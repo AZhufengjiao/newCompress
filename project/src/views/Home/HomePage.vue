@@ -58,8 +58,10 @@
 import HomeNav from "@/components/home/Nav/index.vue";
 import CompressedVideo from "@/components/home/CompressedVideo/index.vue";
 import aboutNav from "@/components/aboutNav/index.vue";
+import { userList } from "@/api/user";
+import { userLogOut } from "@/api/login";
 import { useStore } from "vuex";
-import { onMounted, onUpdated, ref } from "vue";
+import { onMounted, onUpdated, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
 const store = useStore();
@@ -70,13 +72,46 @@ components: {
 // 2 是自定义压缩视频
 let routerNum = ref(1);
 
-onMounted(() => {
-  // routerNum.value = parseInt($router.params.id);
-  // console.log(store.state.home.name);
-  // console.log(store.state.home.params1);
-  // console.log(store.state.home.tokenData);
-});
+onMounted(() => {});
 onUpdated(() => {});
+
+// 1.2 调用接口，获取用户登录是否过期
+const getUserInfo = (userid) => {
+  return userList(userid).then((res) => {
+    // 没有过期 保存用户状态信息
+    if (res.data.code == 200) {
+      // console.log(res.data.data);
+      // 存本地
+      store.commit("user/setUserData", res.data.data);
+    } else {
+      // 已过期 删除本地缓存
+      userLogOut().then((res) => {
+        if (res.data.code) {
+          localStorage.removeItem("userid");
+          store.commit("login/setParams", null);
+        }
+      });
+    }
+  });
+};
+
+// 1.进入首页，判断本地缓存是否存在userid，有就是已登录
+watch(
+  () => store.state.login.userid,
+  (newValue) => {
+    // 没有登录
+    if (newValue == null || newValue.length <= 0) {
+      console.log("未登录");
+    } else {
+      // 已登录，获取用户信息
+      getUserInfo(newValue);
+    }
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
 
 // onMounted(() => {
 //   axios({

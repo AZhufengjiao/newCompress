@@ -2,11 +2,14 @@
 @media screen and (max-width: 1440px) {
   // 新添加的下载按钮
   .home .home_uploadingVideo_box .download {
-    margin-top: 53px;
     width: 331px;
     height: 46px;
     background: #0544ff;
     border-radius: 6px;
+    margin: 53px auto 83px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   // 新添加下拉框iconyangshi
@@ -204,6 +207,7 @@
 
     .home_uploadingVideo_box {
       margin-top: 17px;
+      margin-bottom: 83px;
       width: 100%;
       display: flex;
       justify-content: center;

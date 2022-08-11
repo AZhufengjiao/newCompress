@@ -1,0 +1,58 @@
+// 适配1920px
+@media screen and (max-width: 1920px) {
+  .home_compressedVideo_bottom {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .home_compressedVideo_bottom_box {
+      width: 1333px;
+      height: 165px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(7.321131447587355px);
+      .home_compressedVideo_bottom_top {
+        display: flex;
+        width: 719px;
+        height: 77px;
+
+        border-radius: 11px 11px 0px 0px;
+        div {
+          cursor: pointer;
+          background: #ffffff;
+          width: 33.33%;
+          font-size: 24px;
+          height: 77px;
+          line-height: 77px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #0544ff;
+          letter-spacing: 1px;
+          line-height: 77px;
+          border-radius: 0 11px 0 0;
+        }
+      }
+      .home_compressedVideo_bottom_bottom {
+        padding: 0 0 0 89px;
+        height: 88px;
+        background: #e1e9ff;
+        .home_compressedVideo_bottom_bottom_one {
+          display: flex;
+          div {
+            cursor: pointer;
+            background: #e1e9ff;
+            margin-right: 108px;
+            height: 88px;
+            line-height: 88px;
+            backdrop-filter: blur(7.321131447587355px);
+            letter-spacing: 1px;
+            font-size: 24px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #0544ff;
+          }
+        }
+      }
+    }
+  }
+}

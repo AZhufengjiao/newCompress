@@ -320,7 +320,7 @@ import {
 import { useStore } from "vuex";
 import QrcodeVue from "qrcode.vue";
 import { getAlipayQR, getWxQR, getPayState } from "@/api/payQR";
-import { getDownloadNum, getSetMeal } from "@/api/about";
+import { getDownloadNum, getSetMeal, getMyCoupon } from "@/api/about";
 import taoCanFn from "@/assets/js/taoCanFn.js"; //封装套餐数据
 import { userList } from "@/api/user";
 components: {
@@ -373,36 +373,10 @@ const updateFlagHandle = (res) => {
 
 // 1.从本地拿套餐数据
 onMounted(() => {
+  console.log();
   roleType.value = store.state.user.userData;
-  // 1.1赋值
-  setMealInfo(userid.value);
-
-  // 修改支付金额
-  taocanList.value.map((item) => {
-    //  修改最开始的pid
-    if (roleType.value.roleType == "free") {
-      item.roleType;
-      Id.value = taocanList.value.filter(
-        (item) => item.roleType === "gold"
-      )[0].pId;
-    }
-    if (roleType.value.roleType == "gold") {
-      item.roleType;
-      Id.value = taocanList.value.filter(
-        (item) => item.roleType === "platinum"
-      )[0].pId;
-    }
-
-    if (item.pId == Id.value) {
-      ticketType.value = item.timeLimit;
-      // 套餐id改变时，修改支付金额
-      paymentAmount.value.price = item.discountPrice;
-      paymentAmount.value.discounts = item.pPrice - item.discountPrice;
-      // 赋值
-      // 获取支付宝支付二维码
-      getZfbQR(Id.value, userid.value, ticketType.value);
-    }
-  });
+  // 获取可用优惠券信息
+  getCoupon(userid.value);
 });
 
 // 1. 获取套餐信息列表存储本地
@@ -540,6 +514,36 @@ watch(
   (newValue) => {
     // 参数是true，就赋值显示弹出框
     if (newValue == true) {
+      // 1.1赋值
+      setMealInfo(userid.value);
+
+      // 修改支付金额
+      taocanList.value.map((item) => {
+        //  修改最开始的pid
+        if (roleType.value.roleType == "free") {
+          item.roleType;
+          Id.value = taocanList.value.filter(
+            (item) => item.roleType === "gold"
+          )[0].pId;
+        }
+        if (roleType.value.roleType == "gold") {
+          item.roleType;
+          Id.value = taocanList.value.filter(
+            (item) => item.roleType === "platinum"
+          )[0].pId;
+        }
+
+        if (item.pId == Id.value) {
+          ticketType.value = item.timeLimit;
+          // 套餐id改变时，修改支付金额
+          paymentAmount.value.price = item.discountPrice;
+          paymentAmount.value.discounts = item.pPrice - item.discountPrice;
+          // 赋值
+          // 获取支付宝支付二维码
+          getZfbQR(Id.value, userid.value, ticketType.value);
+        }
+      });
+
       // 弹出框显示，展示支付二维码，查看用户是否支付
       payTimerHandle();
       // 赋值
@@ -638,6 +642,15 @@ const carouselRotation = () => {
       carouselNum.value = 0;
     }
   }, 250);
+};
+
+// 4.获取可用优惠券
+const getCoupon = (userid) => {
+  return getMyCoupon(userid).then((res) => {
+    if (res.data.code == 200) {
+      store.commit("home/setMyCoupon", res.data.data);
+    }
+  });
 };
 
 // 卸载组件清除定时器

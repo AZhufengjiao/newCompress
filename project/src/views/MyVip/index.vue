@@ -298,7 +298,9 @@
 import HomeNav from "@/components/home/Nav/index.vue";
 import VipSetMeal from "@/components/myVip/VipSetMeal/index.vue";
 import aboutNav from "@/components/aboutNav/index.vue";
-import { onMounted, ref } from "vue";
+import { userList } from "@/api/user";
+import { userLogOut } from "@/api/login";
+import { onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
 components: {
   aboutNav, VipSetMeal;
@@ -329,6 +331,44 @@ const handleScroll = () => {
     ? (quanyiFlag.value = true)
     : (quanyiFlag.value = false);
 };
+
+// 1.2 调用接口，获取用户登录是否过期
+const getUserInfo = (userid) => {
+  return userList(userid).then((res) => {
+    // 没有过期 保存用户状态信息
+    if (res.data.code == 200) {
+      // console.log(res.data.data);
+      // 存本地
+      store.commit("user/setUserData", res.data.data);
+    } else {
+      // 已过期 删除本地缓存
+      userLogOut().then((res) => {
+        if (res.data.code) {
+          localStorage.removeItem("userid");
+          store.commit("login/setParams", null);
+        }
+      });
+    }
+  });
+};
+
+// 1.进入首页，判断本地缓存是否存在userid，有就是已登录
+watch(
+  () => store.state.login.userid,
+  (newValue) => {
+    // 没有登录
+    if (newValue == null || newValue.length <= 0) {
+      console.log("未登录");
+    } else {
+      // 已登录，获取用户信息
+      getUserInfo(newValue);
+    }
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
 </script>
 
 <style lang="scss" scoped>

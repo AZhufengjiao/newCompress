@@ -1,12 +1,5 @@
 <template>
   <div v-show="modalShow" class="uploadModal">
-    <!-- 支付弹出层 -->
-    <payModel
-      :modalFlag="modalFlag"
-      @updataVisible="updataModalFlag"
-      @close="closeHandle"
-    ></payModel>
-
     <!-- 遮罩层 -->
     <div class="zzc"></div>
     <!-- 弹出框盒子部分 -->
@@ -40,6 +33,12 @@
       </div>
     </div>
   </div>
+  <!-- 支付弹出层 -->
+  <payModel
+    :modalFlag="modalFlag"
+    @updataVisible="updataModalFlag"
+    @close="closeHandle"
+  ></payModel>
 </template>
 
 <script setup>
@@ -87,6 +86,7 @@ let currentId = ref(83);
 let modalFlag = ref(false);
 // 点击显示弹出框
 const payModalShow = () => {
+  emit("updateFlag", false);
   modalFlag.value = true;
 };
 // 点击弹出框确定按钮，隐藏弹出框

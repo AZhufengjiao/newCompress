@@ -119,8 +119,9 @@
       justify-content: center;
     }
     .home_uploadingVideo {
+      margin-bottom: 74px;
       text-align: center;
-      width: 1000px;
+      width: 889px;
       height: 223px;
       border-radius: 12px;
       opacity: 0.6;
@@ -183,31 +184,33 @@
     }
   }
   .home_compressedVideo_top {
+    text-align: center;
     padding-bottom: 45px;
     h2 {
-      font-size: 40px;
+      font-size: 36px;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
       color: #000000;
-      line-height: 40px;
+      line-height: 36px;
       letter-spacing: 1px;
     }
     div {
-      font-size: 24px;
+      font-size: 21px;
       font-family: PingFangSC-Thin, PingFang SC;
       font-weight: 100;
       color: #000000;
-      line-height: 40px;
+      line-height: 36px;
     }
   }
 
   .home_compressedVideo_bottom {
+    text-align: center;
     width: 100%;
     display: flex;
     justify-content: center;
 
     .home_compressedVideo_bottom_box {
-      width: 1000px;
+      width: 889px !important;
       height: 110px;
       border: 1px solid rgba(255, 255, 255, 0.22);
       backdrop-filter: blur(7.321131447587355px);

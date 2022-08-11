@@ -113,11 +113,14 @@ const emit = defineEmits(["cancelChild"]);
 const flag = ref(false);
 // 勾选复选框
 const checked = ref(false);
-onUpdated(() => {
-  if (flag.value) {
-    loginHandle();
+watch(
+  () => flag.value,
+  (newValue) => {
+    if (newValue) {
+      loginHandle();
+    }
   }
-});
+);
 // 设置定时器
 let time = ref(null);
 // 监听父组件传递的参数
@@ -159,14 +162,15 @@ const cancelHandle = () => {
   flag.value = false;
   // 传递参数状态给父组件
   emit("cancelChild", false);
+        // 清除定时器
+      clearInterval(time.value);
+      time.value = null;
 };
 
 // 轮训调用来确定扫码是否成功
 const scanQRcodes = (ticket) => {
   return getScanQRcodes(ticket).then((res) => {
-    // console.log(res.data.data.entity.id);
     if (res.data.code === 200) {
-      console.log(res.data.data);
       // 存储用户id到本地
       let id = res.data.data.entity.id;
       localStorage.setItem("userid", id);

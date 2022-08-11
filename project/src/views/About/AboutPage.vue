@@ -224,6 +224,7 @@ import payModel from "@/components/modal/payModal/index.vue";
 import downloadWc from "@/components/modal/download/downloadWc.vue";
 import aboutNav from "@/components/aboutNav/index.vue";
 import { userList } from "@/api/user";
+import { userLogOut } from "@/api/login";
 import { getSetMeal, getDownloadNum, getMyCoupon } from "@/api/about";
 import { useStore } from "vuex";
 components: {
@@ -236,10 +237,8 @@ const store = useStore();
 let state = ref("");
 state.value = store.state.login.userid;
 onMounted(() => {
-  // 获取工具剩余次数
-  getFrequency(state.value);
   // 获取可用优惠券信息
-  getCoupon(state.value);
+  // getCoupon(state.value);
 });
 // 测试路由
 const handle1 = () => {
@@ -286,17 +285,6 @@ watch(
     immediate: true,
   }
 );
-
-// 3.获取工具剩余次数
-const getFrequency = (userid) => {
-  return getDownloadNum(userid).then((res) => {
-    // console.log(res.data);
-    if (res.data.code == 200) {
-      // 保存次数至本地
-      store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
-    }
-  });
-};
 
 // 4.获取可用优惠券
 const getCoupon = (userid) => {

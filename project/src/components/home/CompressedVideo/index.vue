@@ -1,6 +1,6 @@
 <template>
   <div class="home_compressedVideo">
-    <!-- 用户身份 下载弹出框-->
+    <!-- 用户身份 下载弹出框  选择试试 和立即升级 -->
     <uploadModal
       :UploadModal="UploadModal"
       @updateFlag="updateStateHandle"
@@ -89,18 +89,21 @@
       </div>
     </div>
   </div>
+  <!-- 登录弹出框 -->
+  <loginModel :loginFlag="loginFlag" @cancelChild="CancelChild"></loginModel>
 </template>
 
 <script setup>
 import UploadModule from "@/components/home/UploadModule/index.vue"; // 下载列表
-import uploadModal from "@/components/modal/uploadModal/index.vue";
+import uploadModal from "@/components/modal/uploadModal/index.vue"; // 选择支付试试弹出框
 import download2 from "@/components/modal/download/download2.vue"; // 视频下载中弹出框
 import downloadWc from "@/components/modal/download/downloadWc.vue"; // 视频下载完成弹出框
+import loginModel from "@/components/modal/loginModal/index.vue"; // 登录弹出框
 import Custom from "@/components/home/Custom/index.vue"; // 自定义压缩
 import defaultYS from "@/components/home/defaultYS/index.vue"; // 压缩场景
-import { onMounted, onUpdated, onUnmounted, ref } from "vue";
+import { onMounted, onUpdated, onUnmounted, ref, watch } from "vue";
 import { getCompressScenes, homeTemplateList } from "@/api/home";
-import { getKillDownloadNum } from "@/api/about";
+import { getKillDownloadNum, getDownloadNum } from "@/api/about";
 import { useStore } from "vuex";
 import { message } from "ant-design-vue";
 import { httpcode } from "@/utils/httpCode";
@@ -112,7 +115,13 @@ import FileSaver from "file-saver";
 import { useRouter } from "vue-router";
 
 components: {
-  UploadModule, uploadModal, Custom, defaultYS, download2, downloadWc;
+  UploadModule,
+    uploadModal,
+    Custom,
+    defaultYS,
+    download2,
+    downloadWc,
+    loginModel;
 }
 
 const $router = useRouter();
@@ -137,15 +146,29 @@ let time = ref(null);
 let succeedtime = ref(null);
 let succeed = ref(false);
 
+// 3.获取工具剩余次数
+const getFrequency = (userid) => {
+  return getDownloadNum(userid).then((res) => {
+    // console.log(res.data);
+    if (res.data.code == 200) {
+      // 保存次数至本地
+      store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
+    }
+  });
+};
+
+// 监听用户id
+watch(
+  () => store.state.login.userid,
+  (newValue) => {
+    console.log(userid);
+    userid.value = newValue;
+  }
+);
+
 // 子组件传参给父组件，item是转码要用的参数
 const handleParamsObj = (item) => {
   params1.value = item;
-};
-
-let upload = ref(null);
-//  添加按钮，触发input，让文件夹弹出  3.
-const handleUploading = (e) => {
-  upload.value.click();
 };
 
 // 视频下载弹出框弹出框
@@ -163,6 +186,28 @@ let videoDownWc = ref(false);
 // 隐藏下载完成
 const DownWcHandle = (res) => {
   videoDownWc.value = res;
+};
+
+// 登录弹出框
+const loginFlag = ref(false);
+// 获取子组件传值复制
+const CancelChild = (val) => {
+  loginFlag.value = val;
+};
+
+let upload = ref(null);
+//  添加按钮，触发input，让文件夹弹出  3.
+const handleUploading = (e) => {
+  // 点击弹出框先判断用户有没有登录
+  if (userid.value !== null) {
+    // 让文件夹打开
+    upload.value.click();
+    // 获取剩余次数
+    getFrequency(userid.value);
+  } else {
+    // 未登录先登录
+    loginFlag.value = true;
+  }
 };
 
 onUnmounted(() => {
@@ -184,6 +229,7 @@ const updateStateHandle = (state) => {
 };
 
 let handleInputV = (e) => {
+  console.log(111);
   // 获取选中的视频
   const uploadFiles = e.target.files;
   // 获取视频大小
@@ -291,7 +337,7 @@ const downloadHandle = () => {
 
   // 判断下载次数是否小于用户准备下载视频的个数
   if (downloadNumber.value < fileUrlList.value.length) {
-    message.warning("下载次数不够");
+ 
     // 复制参数，修改弹出框信息
     return (UploadModal.value = {
       flag: true,
@@ -392,6 +438,7 @@ const getImgArrayBuffer = (url) => {
 
 // 点击下载扣除次数
 const killDownLoadNumber = (picNumber, userId) => {
+  console.log(picNumber, userId);
   return getKillDownloadNum(picNumber, userId).then((res) => {
     if (res.data.code == 200) {
       // 修改本地下载次数
@@ -409,6 +456,7 @@ const FileItemParams = (item) => {
 
 <style lang="scss" scoped>
 @import "@/assets/styles/animation/home/CompressedVideo/index.scss";
+
 // @import "assets/styles/test.scss"; // 自定义别名路径：详见vue.config.js
 // @import "../../assets/styles/test.scss"; 相对路径
 /*文件上传css*/
@@ -532,7 +580,7 @@ const FileItemParams = (item) => {
   padding-top: 156px;
   .home_compressedVideo_hanzi {
     text-align: left;
-    margin: 17px 0 21px 293px;
+    margin: 17px 0 21px 288px;
     font-size: 16px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
@@ -545,6 +593,7 @@ const FileItemParams = (item) => {
     justify-content: center;
   }
   .home_uploadingVideo {
+    margin-bottom: 111px;
     width: 1333px;
     height: 335px;
     border-radius: 19px;
@@ -612,6 +661,7 @@ const FileItemParams = (item) => {
   }
 }
 .home_compressedVideo_top {
+  text-align: center;
   padding-bottom: 60px;
   h2 {
     font-size: 53px;
@@ -631,12 +681,13 @@ const FileItemParams = (item) => {
 }
 
 .home_compressedVideo_bottom {
+  text-align: center;
   width: 100%;
   display: flex;
   justify-content: center;
 
   .home_compressedVideo_bottom_box {
-    width: 1333px;
+    width: 1333px !important;
     height: 165px;
     border: 1px solid rgba(255, 255, 255, 0.22);
     backdrop-filter: blur(7.321131447587355px);
@@ -699,7 +750,6 @@ const FileItemParams = (item) => {
 .border_col {
   background: #e1e9ff !important;
 }
-
 @import "@/assets/css/home/homeNav/CompressedVideo/CompressedVideo_media1440px.scss";
 @import "@/assets/css/home/homeNav/CompressedVideo/CompressedVideo_media1280px.scss";
 // @import "@/assrts/styles/animation/home/CompressedVideo/index.scss";

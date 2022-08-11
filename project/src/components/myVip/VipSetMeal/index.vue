@@ -14,9 +14,8 @@
       <div
         ref="setMealUl"
         :class="[
-          setMealList.length > 4
-            ? 'myVip-setMeal-layout'
-            : 'myVip-setMeal-layout2',
+          'myVip-setMeal-layout',
+          setMealList.length > 4 ? '' : 'myVip-setMeal-layout2',
           !btnToggle && btnToggle != null ? 'cliStyle' : '',
           btnToggle && btnToggle != null ? 'clitogglestyle' : '',
           MealUlWidth == 0 ? 'UpdateStyle' : '',
@@ -182,11 +181,7 @@
 
     <!-- 左右两边的点击按钮 -->
     <div
-      v-show="
-        MealUlWidth !== 0 &&
-        setMealList.length > 4 &&
-        (btnToggle || btnToggle == null)
-      "
+      v-show="MealUlWidth !== 0 && (btnToggle || btnToggle == null)"
       v-on:click="btnToggle = false"
       class="myVip-setMeal-clickBtn myVip-setMeal-clickBtn-left"
     >
@@ -245,9 +240,9 @@ onUpdated(() => {
   erd.listenTo(MealBox.value, (ele) => {
     // 获取需要的宽度
     MealUlWidth.value =
-      ele.offsetWidth > setMealUl.value.clientWidth
+      ele.offsetWidth > setMealUl.value.offsetWidth
         ? 0
-        : setMealUl.value.clientWidth - ele.offsetWidth;
+        : setMealUl.value.offsetWidth - ele.offsetWidth;
     // 判断窗口大小是否大于ul大小，大的话赋值需要移动的宽度，不大就不需要移动
     if (MealUlWidth.value !== 0) {
       setMealUl.value.style.setProperty(

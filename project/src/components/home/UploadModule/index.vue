@@ -8,6 +8,12 @@
       @updateFlag="DownWcHandle"
     ></downloadWc>
 
+    <!-- 用户身份 下载弹出框  选择试试 和立即升级 -->
+    <uploadModal
+      :UploadModal="UploadModal"
+      @updateFlag="updateStateHandle"
+    ></uploadModal>
+
     <span class="home_fileCompression_box_name">{{ fileName }} </span>
     <div class="home_fileCompression_box_center">
       <span
@@ -71,6 +77,7 @@ import {
 import { getKillDownloadNum } from "@/api/about";
 import download2 from "@/components/modal/download/download2.vue"; // 视频下载中弹出框
 import downloadWc from "@/components/modal/download/downloadWc.vue"; // 视频下载完成弹出框
+import uploadModal from "@/components/modal/uploadModal/index.vue"; // 选择支付试试弹出框
 import { useStore } from "vuex";
 import { ref, onMounted, onUpdated, watch, toRefs } from "vue";
 import { defineEmits } from "vue";
@@ -78,7 +85,7 @@ import { message } from "ant-design-vue";
 import { saveFile } from "@/components/home/CompressedVideo/download.js";
 import axios from "axios";
 components: {
-  download2, downloadWc;
+  download2, downloadWc, uploadModal;
 }
 const store = useStore();
 const emit = defineEmits(["getFileItemParams"]);
@@ -360,7 +367,7 @@ const updateStateHandle = (state) => {
 const downloadBtn = () => {
   // 判断下载次数是否小于用户准备下载视频的个数
   if (downloadNumber.value < 1) {
-    message.warning("下载次数不够");
+ 
     // 复制参数，修改弹出框信息
     return (UploadModal.value = {
       flag: true,
@@ -400,14 +407,14 @@ const downloadFn = () => {
   let delayTime = 1800;
   // 下载起始时间
   let currentTime = new Date().getTime();
+  // 让下载中弹窗显示
+  videoXz.value.flag = true;
   return axios({
     method: "post",
     url: videoUrl.value,
     responseType: "blob",
   })
     .then((res) => {
-      // 让下载中弹窗显示
-      videoXz.value.flag = true;
       // 下载后时间
       let tempTime = new Date().getTime();
       // 下载时间

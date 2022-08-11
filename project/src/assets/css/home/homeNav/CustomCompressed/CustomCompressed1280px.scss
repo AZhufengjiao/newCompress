@@ -2,11 +2,14 @@
 @media screen and (max-width: 1280px) {
   // 新添加的下载按钮
   .home .home_uploadingVideo_box .download {
-    margin-top: 53px;
     width: 331px;
     height: 46px;
     background: #0544ff;
     border-radius: 6px;
+    margin: 53px auto 74px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   // 新添加下拉框iconyangshi
   .home #qw .ant-select {
@@ -159,7 +162,7 @@
     }
     .home_uploadingVideo {
       text-align: center;
-      width: 1000px;
+      width: 889px;
       height: 223px;
       border-radius: 12px;
       opacity: 0.6;
@@ -246,7 +249,7 @@
     justify-content: center;
 
     .home_compressedVideo_bottom_box {
-      width: 1000px;
+      width: 889px !important;
       height: 132px;
       border: 1px solid rgba(255, 255, 255, 0.22);
       backdrop-filter: blur(7.321131447587355px);

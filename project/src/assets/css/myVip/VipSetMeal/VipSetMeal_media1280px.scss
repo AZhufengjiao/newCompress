@@ -1,28 +1,4 @@
 @media screen and (max-width: 1280px) {
-  .cliStyle {
-    animation: identifier 1s forwards;
-  }
-  .clitogglestyle {
-    animation: succeed-in 1s forwards;
-  }
-  @keyframes identifier {
-    0% {
-      left: 0;
-    }
-    100% {
-      left: -359px;
-    }
-  }
-  @keyframes succeed-in {
-    0% {
-      // left: -195px;
-      left: -359px;
-    }
-    100% {
-      left: 0;
-    }
-  }
-
   .myVip-setMealbox {
     position: relative;
     width: 100%;

@@ -119,6 +119,7 @@
       justify-content: center;
     }
     .home_uploadingVideo {
+      margin-bottom: 83px;
       text-align: center;
       width: 1000px;
       height: 251px;
@@ -183,6 +184,7 @@
     }
   }
   .home_compressedVideo_top {
+    text-align: center;
     padding-bottom: 41px;
     h2 {
       font-size: 36px;
@@ -202,6 +204,8 @@
   }
 
   .home_compressedVideo_bottom {
+    text-align: center;
+
     width: 100%;
     display: flex;
     justify-content: center;

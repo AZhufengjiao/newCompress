@@ -266,4 +266,7 @@ const CompressScenes = (tmpId) => {
 .border_col {
   background: #e1e9ff !important;
 }
+@import "@/assets/css/home/homeNav/CustomCompressed/CustomCompressed1920px.scss";
+@import "@/assets/css/home/homeNav/CustomCompressed/CustomCompressed1440px.scss";
+@import "@/assets/css/home/homeNav/CustomCompressed/CustomCompressed1280px.scss";
 </style>
