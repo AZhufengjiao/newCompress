@@ -155,8 +155,10 @@ let fileUrlList = ref(store.state.home.conversionList);
 watch(
   () => store.state.login.userid,
   (newValue) => {
-    console.log(userid);
     userid.value = newValue;
+
+    // 获取剩余次数
+    getFrequency(userid.value);
   }
 );
 
@@ -217,10 +219,7 @@ const handleUploading = (e) => {
 onUnmounted(() => {
   store.commit("home/setConversionList", []);
 });
-onMounted(() => {
-  // 获取剩余次数
-  getFrequency(userid.value);
-});
+onMounted(() => {});
 
 /* 文件夹弹出 选择图片上传 */
 let file = ref(null);
@@ -272,7 +271,7 @@ let handleInputV = (e) => {
     function estimateFn(state, num) {
       // 视频大小，不超过身份限制，下载视频
       if (videoSize <= num || num === null) {
-        console.log("我的身份是" + state);
+        // console.log("我的身份是" + state);
         // 复制参数，修改弹出框信息
         UploadModal.value = {
           flag: false,
@@ -347,6 +346,9 @@ const HandleDrag = (e) => {
 let downloadTimer = ref(null);
 // 点击下载全部
 const downloadHandle = () => {
+  // 让下载中弹窗显示
+  videoXz.value.flag = true;
+  videoXz.value.num = fileUrlList.value.length;
   // 查看用户的身份
   let roleType = store.state.user.userData.roleType;
 
@@ -390,7 +392,6 @@ const downloadHandle = () => {
     promiseArr.push(promise);
   }
   Promise.all(promiseArr).then(() => {
-    console.log(555);
     // 下载默认时间
     let delayTime = 1800;
     // 下载起始时间
@@ -398,8 +399,6 @@ const downloadHandle = () => {
     zip
       .generateAsync({ type: "blob" })
       .then((content) => {
-        // 让下载中弹窗显示
-        videoXz.value.flag = true;
         // 下载后时间
         let tempTime = new Date().getTime();
         // 下载时间
@@ -438,7 +437,6 @@ const getImgArrayBuffer = (url) => {
     xmlHttp.responseType = "blob";
     xmlHttp.onload = function () {
       if (this.status == 200) {
-        console.log(111111);
         resolve(this.response);
 
         // window.URL.createObjectURL();
@@ -452,7 +450,6 @@ const getImgArrayBuffer = (url) => {
 
 // 点击下载扣除次数
 const killDownLoadNumber = (picNumber, userId) => {
-  console.log(picNumber, userId);
   return getKillDownloadNum(picNumber, userId).then((res) => {
     if (res.data.code == 200) {
       // 修改本地下载次数

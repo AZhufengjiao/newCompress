@@ -294,7 +294,7 @@ onMounted(() => {
 
 // 2. 获取套餐信息列表存储本地
 const setMealInfo = (id) => {
-  id = id === null ? -1 : id;
+  id = id === null || id.length == 0 ? -1 : id;
   return getSetMeal(id).then((res) => {
     if (res.data.code == 200) {
       console.log(res.data.data);

@@ -5,7 +5,7 @@
         <div
           v-for="item in compressList"
           :key="item"
-          @click="compressHandle(item.id)"
+          @click="activeKey = item.id"
           :class="[activeKey == item.id ? 'border_col' : '']"
         >
           {{ item.name }}
@@ -171,6 +171,30 @@ const selectChange2 = (value) => {
   selectVal2.value = value;
 };
 
+// 压缩类型数组
+let compressList = ref([
+  {
+    id: 1,
+    type: "format",
+    name: "场景压缩",
+    router: "/video-converter/",
+  },
+  {
+    id: 2,
+    type: "compress",
+    name: "大小压缩",
+    router: "/video-compressor",
+  },
+  {
+    id: 3,
+    type: "upload",
+    name: "无损压缩",
+    router: "/video-lossless-compression",
+  },
+]);
+
+const compressHandle = (id) => {};
+
 // 设置尺寸 input值
 const sizeIpt1 = ref(1080);
 const sizeIpt2 = ref(1080);
@@ -244,7 +268,7 @@ onUpdated(() => {
     border: 1px solid rgba(255, 255, 255, 0.22);
     backdrop-filter: blur(7.321131447587355px);
     .home_compressedVideo_bottom_top {
-      display: flex;
+      display: flex !important;
       width: 719px;
       height: 77px;
 

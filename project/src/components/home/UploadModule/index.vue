@@ -365,6 +365,9 @@ const updateStateHandle = (state) => {
 };
 // 用户点击下载
 const downloadBtn = () => {
+  // 让下载中弹窗显示
+  videoXz.value.flag = true;
+  videoXz.value.num = 1;
   // 判断下载次数是否小于用户准备下载视频的个数
   if (downloadNumber.value < 1) {
     // 复制参数，修改弹出框信息
@@ -406,8 +409,7 @@ const downloadFn = () => {
   let delayTime = 1800;
   // 下载起始时间
   let currentTime = new Date().getTime();
-  // 让下载中弹窗显示
-  videoXz.value.flag = true;
+
   return axios({
     method: "post",
     url: videoUrl.value,

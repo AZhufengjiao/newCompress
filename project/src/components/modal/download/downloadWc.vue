@@ -39,11 +39,13 @@
 </template>
 
 <script setup>
-import { onUpdated, ref, toRefs, watch } from "vue";
+import { onMounted, onUpdated, ref, toRefs, watch } from "vue";
 import VueQr from "vue-qr/src/packages/vue-qr.vue";
+import { useStore } from "vuex";
 components: {
   VueQr;
 }
+let store = useStore();
 // 二维码中图片url
 let logo = require("@/assets/logo.png");
 // 父子通讯
@@ -54,6 +56,26 @@ let { downloadModal } = toRefs(props);
 const exitBtnHandle = () => {
   emit("updateFlag", false);
 };
+// 用户身份
+let identity = ref(store.state.user.userData.roleType);
+console.log(identity.value);
+// 用户身份变化的时候，修改身份
+watch(
+  () => identity.value,
+  (newValue) => {
+    identity.value = newValue;
+  }
+);
+
+// 当弹出框显示的时候，进行操作
+watch(
+  () => props.downloadModal,
+  (newValue) => {
+    if (newValue) {
+      // console.log(store.state.user.userData.roleType);
+    }
+  }
+);
 
 // 父组件代码
 // let flag = ref(false);

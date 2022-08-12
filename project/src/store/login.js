@@ -5,7 +5,7 @@ const login = {
   state() {
     return {
       // 用户id
-      userid: "",
+      userid: null,
     };
   },
   mutations: {
