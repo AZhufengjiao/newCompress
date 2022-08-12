@@ -263,8 +263,6 @@ let handleInputV = (e) => {
       }
     }
 
-    // fileList.value.push(arr);
-
     // 判断身份，及视频大小
     /**
      *
