@@ -292,15 +292,6 @@ onMounted(() => {
   setMealInfo(userid.value);
 });
 
-// 检测用户是否重新登录
-watch(
-  () => userid.value,
-  (newValue) => {
-    // 获取套餐数据
-    setMealInfo(userid.value);
-  }
-);
-
 // 2. 获取套餐信息列表存储本地
 const setMealInfo = (id) => {
   id = id === null ? -1 : id;

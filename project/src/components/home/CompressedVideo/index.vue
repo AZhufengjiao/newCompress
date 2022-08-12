@@ -206,9 +206,6 @@ const getFrequency = (userid) => {
 const handleUploading = (e) => {
   // 点击弹出框先判断用户有没有登录
   if (userid.value !== null) {
-    // 获取剩余次数
-    getFrequency(userid.value);
-
     // 让文件夹打开
     upload.value.click();
   } else {
@@ -219,6 +216,10 @@ const handleUploading = (e) => {
 
 onUnmounted(() => {
   store.commit("home/setConversionList", []);
+});
+onMounted(() => {
+  // 获取剩余次数
+  getFrequency(userid.value);
 });
 
 /* 文件夹弹出 选择图片上传 */
@@ -235,6 +236,9 @@ const updateStateHandle = (state) => {
   UploadModal.value.flag = state;
 };
 
+// 创建一个下载过的文件数组
+// let ToDownloadList = ref([]);
+
 let handleInputV = (e) => {
   // 获取选中的视频
   const uploadFiles = e.target.files;
@@ -246,10 +250,20 @@ let handleInputV = (e) => {
   if (uploadFiles.length > 0) {
     // 选中添加进fileList数组
     function fn() {
+      // 遍历选中的文件
       for (let i = 0; i < uploadFiles.length; i++) {
-        fileList.value.push(uploadFiles[i]);
+        // 判断该文件是否添加
+        let flag = fileList.value.some(
+          (item) => item.lastModified === uploadFiles[i].lastModified
+        );
+        // 没有添加就添加
+        if (!flag) {
+          fileList.value.push(uploadFiles[i]);
+        }
       }
     }
+
+    // fileList.value.push(arr);
 
     // 判断身份，及视频大小
     /**
@@ -481,7 +495,8 @@ const FileItemParams = (item) => {
 
 .btn {
   display: flex;
-  justify-content: center;    margin-bottom:111px;
+  justify-content: center;
+  margin-bottom: 111px;
 }
 
 .home_fileCompression {

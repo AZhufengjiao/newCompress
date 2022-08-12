@@ -375,8 +375,6 @@ const updateFlagHandle = (res) => {
 onMounted(() => {
   console.log();
   roleType.value = store.state.user.userData;
-  // 获取可用优惠券信息
-  getCoupon(userid.value);
 });
 
 // 1. 获取套餐信息列表存储本地
@@ -513,10 +511,12 @@ watch(
 watch(
   () => props.modalFlag,
   (newValue) => {
-    // 1.1赋值
-    setMealInfo(userid.value);
     // 参数是true，就赋值显示弹出框
     if (newValue == true && taocanList.value) {
+      // 1.1赋值
+      setMealInfo(userid.value);
+      // 获取可用优惠券信息
+      getCoupon(userid.value);
       // 修改支付金额
       taocanList.value.map((item) => {
         //  修改最开始的pid
