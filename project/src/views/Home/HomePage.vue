@@ -80,7 +80,6 @@ const getUserInfo = (userid) => {
   return userList(userid).then((res) => {
     // 没有过期 保存用户状态信息
     if (res.data.code == 200) {
-      // console.log(res.data.data);
       // 存本地
       store.commit("user/setUserData", res.data.data);
     } else {

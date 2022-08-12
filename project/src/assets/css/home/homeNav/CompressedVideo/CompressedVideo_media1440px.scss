@@ -1,5 +1,11 @@
 // 适配1440px
 @media screen and (max-width: 1440px) {
+  .btn {
+    margin-bottom: 83px;
+    display: flex;
+    justify-content: center;
+  }
+
   /*文件上传css*/
   .home_fileCompression {
     width: 100%;

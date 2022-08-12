@@ -1,19 +1,5 @@
 <template>
   <div class="home_fileCompression_box_box">
-    <!-- 视频下载弹出框 -->
-    <download2 :downloadModal="videoXz" @updateFlag="updateFlag"></download2>
-    <!-- 视频下载完成弹出框 -->
-    <downloadWc
-      :downloadModal="videoDownWc"
-      @updateFlag="DownWcHandle"
-    ></downloadWc>
-
-    <!-- 用户身份 下载弹出框  选择试试 和立即升级 -->
-    <uploadModal
-      :UploadModal="UploadModal"
-      @updateFlag="updateStateHandle"
-    ></uploadModal>
-
     <span class="home_fileCompression_box_name">{{ fileName }} </span>
     <div class="home_fileCompression_box_center">
       <span
@@ -63,6 +49,20 @@
       }}</span>
     </div>
   </div>
+
+  <!-- 视频下载弹出框 -->
+  <download2 :downloadModal="videoXz" @updateFlag="updateFlag"></download2>
+  <!-- 视频下载完成弹出框 -->
+  <downloadWc
+    :downloadModal="videoDownWc"
+    @updateFlag="DownWcHandle"
+  ></downloadWc>
+
+  <!-- 用户身份 下载弹出框  选择试试 和立即升级 -->
+  <uploadModal
+    :UploadModal="UploadModal"
+    @updateFlag="updateStateHandle"
+  ></uploadModal>
 </template>
 
 <script setup>
@@ -367,7 +367,6 @@ const updateStateHandle = (state) => {
 const downloadBtn = () => {
   // 判断下载次数是否小于用户准备下载视频的个数
   if (downloadNumber.value < 1) {
- 
     // 复制参数，修改弹出框信息
     return (UploadModal.value = {
       flag: true,

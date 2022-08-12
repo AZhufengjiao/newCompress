@@ -386,6 +386,7 @@ const setMealInfo = (id) => {
       // 1.1赋值
       // taocanList.value = res.data.data;
       taocanList.value = taoCanFn(res.data.data, store.state.home.myCoupon);
+
       // 存本地
       // store.commit("home/setSetMealInfo", res.data.data);
     }
@@ -512,22 +513,19 @@ watch(
 watch(
   () => props.modalFlag,
   (newValue) => {
+    // 1.1赋值
+    setMealInfo(userid.value);
     // 参数是true，就赋值显示弹出框
-    if (newValue == true) {
-      // 1.1赋值
-      setMealInfo(userid.value);
-
+    if (newValue == true && taocanList.value) {
       // 修改支付金额
       taocanList.value.map((item) => {
         //  修改最开始的pid
         if (roleType.value.roleType == "free") {
-          item.roleType;
           Id.value = taocanList.value.filter(
             (item) => item.roleType === "gold"
           )[0].pId;
         }
         if (roleType.value.roleType == "gold") {
-          item.roleType;
           Id.value = taocanList.value.filter(
             (item) => item.roleType === "platinum"
           )[0].pId;

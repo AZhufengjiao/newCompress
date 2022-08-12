@@ -79,13 +79,15 @@
             </div>
           </div>
         </div>
-        <a-button
-          v-if="SonList.length > 0"
-          type="primary"
-          class="download"
-          v-on:click="downloadHandle"
-          >下载全部</a-button
-        >
+        <div class="btn">
+          <a-button
+            v-if="SonList.length > 0"
+            type="primary"
+            class="download"
+            v-on:click="downloadHandle"
+            >下载全部</a-button
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -146,16 +148,8 @@ let time = ref(null);
 let succeedtime = ref(null);
 let succeed = ref(false);
 
-// 3.获取工具剩余次数
-const getFrequency = (userid) => {
-  return getDownloadNum(userid).then((res) => {
-    // console.log(res.data);
-    if (res.data.code == 200) {
-      // 保存次数至本地
-      store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
-    }
-  });
-};
+// 创建一个可以下载的url数组
+let fileUrlList = ref(store.state.home.conversionList);
 
 // 监听用户id
 watch(
@@ -196,14 +190,27 @@ const CancelChild = (val) => {
 };
 
 let upload = ref(null);
+
+// 3.获取工具剩余次数
+const getFrequency = (userid) => {
+  return getDownloadNum(userid).then((res) => {
+    // console.log(res.data);
+    if (res.data.code == 200) {
+      // 保存次数至本地
+      store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
+    }
+  });
+};
+
 //  添加按钮，触发input，让文件夹弹出  3.
 const handleUploading = (e) => {
   // 点击弹出框先判断用户有没有登录
   if (userid.value !== null) {
-    // 让文件夹打开
-    upload.value.click();
     // 获取剩余次数
     getFrequency(userid.value);
+
+    // 让文件夹打开
+    upload.value.click();
   } else {
     // 未登录先登录
     loginFlag.value = true;
@@ -229,7 +236,6 @@ const updateStateHandle = (state) => {
 };
 
 let handleInputV = (e) => {
-  console.log(111);
   // 获取选中的视频
   const uploadFiles = e.target.files;
   // 获取视频大小
@@ -326,9 +332,6 @@ const HandleDrag = (e) => {
   }
 };
 
-// 创建一个可以下载的url数组
-let fileUrlList = ref(store.state.home.conversionList);
-
 let downloadTimer = ref(null);
 // 点击下载全部
 const downloadHandle = () => {
@@ -337,7 +340,6 @@ const downloadHandle = () => {
 
   // 判断下载次数是否小于用户准备下载视频的个数
   if (downloadNumber.value < fileUrlList.value.length) {
- 
     // 复制参数，修改弹出框信息
     return (UploadModal.value = {
       flag: true,
@@ -475,6 +477,11 @@ const FileItemParams = (item) => {
   .ant-progress-text {
     display: none !important;
   }
+}
+
+.btn {
+  display: flex;
+  justify-content: center;    margin-bottom:111px;
 }
 
 .home_fileCompression {

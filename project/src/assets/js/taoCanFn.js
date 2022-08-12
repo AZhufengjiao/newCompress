@@ -98,7 +98,7 @@ const taoCanFn = (res, yhq) => {
         }
       });
     }
-
+    obj.roleType = item.roleSearch.roleType; // 需要身份
     arr.push(obj);
   });
   return arr;
