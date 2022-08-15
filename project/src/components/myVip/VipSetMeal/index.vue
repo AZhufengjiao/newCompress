@@ -181,7 +181,11 @@
 
     <!-- 左右两边的点击按钮 -->
     <div
-      v-show="MealUlWidth !== 0 && (btnToggle || btnToggle == null)"
+      v-if="
+        setMealList.length != 0 &&
+        MealUlWidth !== 0 &&
+        (btnToggle || btnToggle == null)
+      "
       v-on:click="btnToggle = false"
       class="myVip-setMeal-clickBtn myVip-setMeal-clickBtn-left"
     >
@@ -213,7 +217,7 @@ var erd = elementResizeDetectorMaker(); //创建实例
 const $router = useRouter();
 const store = useStore();
 // 用户id
-let userid = ref(null);
+let userid = ref(store.state.login.userid);
 // 选择套餐id
 let currentId = ref(null);
 // 支付弹出框 -----------------支付弹出框
@@ -229,7 +233,7 @@ const MealBox = ref(null);
 const setMealUl = ref("");
 // left移动的宽度
 const MealUlWidth = ref(118);
-onMounted(() => {});
+
 // 组件卸载
 onUnmounted(() => {
   // 离开页面删除检测器和所有侦听器
@@ -258,9 +262,11 @@ onUpdated(() => {
 watch(
   () => store.state.login.userid,
   (newValue) => {
+    console.log(newValue);
     userid.value = newValue;
-  },
-  { immediate: true }
+    // 获取套餐数据
+    setMealInfo(newValue);
+  }
 );
 
 // 登录弹出框  -----------------录弹出框
@@ -272,8 +278,9 @@ const CancelChild = (val) => {
 
 // 点击立即弹出框，判断有无登录，支付弹出框
 const modalShow = (item) => {
+  console.log(userid.value);
   // 登录显示支付弹窗
-  if (userid.value !== null) {
+  if (userid.value !== null && userid.value.length !== 0) {
     modalFlag.value = true;
   } // 未登录显示登录弹窗
   else {

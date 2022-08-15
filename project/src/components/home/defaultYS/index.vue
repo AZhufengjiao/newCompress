@@ -24,6 +24,8 @@
                 :class="[activeKeySon === item.tmpId ? 'border_cor' : '']"
               >
                 {{ item.title }}
+                <!-- {{ "ref" + activeKeySon }} -->
+                <!-- {{ "item:" + item.tmpId }} -->
               </div>
             </template>
           </Size>
@@ -37,14 +39,17 @@
 import Size from "@/components/home/defaultYS/component/Size/index.vue";
 import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import { getCompressScenes, homeTemplateList } from "@/api/home";
 components: {
   Size;
 }
 const emit = defineEmits(["paramsObj"]);
-const $router = useRouter();
+// 获取参数
+const $router = useRoute();
+// 跳转
+const router = useRouter();
 const store = useStore();
 //压缩类型 样式类名变化
 const activeKey = ref("format");
@@ -58,7 +63,7 @@ let compressList = ref([
     id: 1,
     type: "format",
     name: "场景压缩",
-    router: "/video-converter/",
+    router: "/video-converter",
   },
   {
     id: 2,
@@ -75,8 +80,20 @@ let compressList = ref([
 ]);
 
 onMounted(() => {
-  // 发起请求，获取默认数据
-  getCompressList(activeKey.value);
+  // // 获取首页路由传参
+  if (JSON.stringify($router.params) !== "{}") {
+    activeKeySon.value = $router.params.tmpId;
+    let routerParams = $router.params.link;
+    let str = compressList.value.filter((item) => {
+      return item.router === routerParams;
+    });
+    activeKey.value = str[0].type;
+    // 发起请求，获取默认数据
+    getCompressList(activeKey.value);
+  } else {
+    // 发起请求，获取默认数据
+    getCompressList(activeKey.value);
+  }
 });
 
 // 定义一个装压缩类型的数组，存储起来
@@ -91,7 +108,7 @@ const compressHandle = (item) => {
   // 存储到本地，刷新保存
   // store.commit("home/setYsSctiveKey", state);
   // 跳转页面
-  $router.push({ path: item.router });
+  router.push({ path: item.router });
   // 切换类名
   activeKey.value = state;
   // 发起请求，获取该类型数据
@@ -117,11 +134,15 @@ const getCompressList = (state) => {
 
         // 判断 compressState是否为true，是的话activeKeySon保持点击的那个
         SonList.value.data.map((item) => {
-          if (item.compressState) {
-            activeKeySon.value = item.compressState;
+          if (JSON.stringify($router.params) !== "{}") {
+            activeKeySon.value = $router.params.tmpId;
           } else {
-            // 让activeKeySon类名样式保持在第一个
-            activeKeySon.value = SonList.value.data[0].tmpId;
+            if (item.compressState) {
+              activeKeySon.value = item.compressState;
+            } else {
+              // 让activeKeySon类名样式保持在第一个
+              activeKeySon.value = SonList.value.data[0].tmpId;
+            }
           }
         });
       }
@@ -137,11 +158,15 @@ const getCompressList = (state) => {
 
     // 判断 compressState是否为true，是的话activeKeySon保持点击的那个
     SonList.value.data.map((item) => {
-      if (item.compressState) {
-        activeKeySon.value = item.compressState;
+      if (JSON.stringify($router.params) !== "{}") {
+        activeKeySon.value = $router.params.tmpId;
       } else {
-        // 让activeKeySon类名样式保持在第一个
-        activeKeySon.value = SonList.value.data[0].tmpId;
+        if (item.compressState) {
+          activeKeySon.value = item.compressState;
+        } else {
+          // 让activeKeySon类名样式保持在第一个
+          activeKeySon.value = SonList.value.data[0].tmpId;
+        }
       }
     });
 

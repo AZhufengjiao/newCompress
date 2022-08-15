@@ -6,7 +6,11 @@
     <div class="loginModal-box">
       <!-- 取消按钮 -->
       <div class="loginModal-cancel" v-on:click="cancelHandle">
-        <div>x</div>
+        <!-- <div>x</div> -->
+        <img
+          src="@/assets/img/modal/loginModal/close_slices/close.png"
+          alt=""
+        />
       </div>
 
       <!-- 左盒子 -->
@@ -17,25 +21,37 @@
         <ul>
           <li>
             <div>
-              <img src="" alt="" />
+              <img
+                src="@/assets/img/modal/loginModal/slices/shape.png"
+                alt=""
+              />
             </div>
             一步极速注册
           </li>
           <li>
             <div>
-              <img src="" alt="" />
+              <img
+                src="@/assets/img/modal/loginModal/slices/shape.png"
+                alt=""
+              />
             </div>
             一站式GIF制作工具
           </li>
           <li>
             <div>
-              <img src="" alt="" />
+              <img
+                src="@/assets/img/modal/loginModal/slices/shape.png"
+                alt=""
+              />
             </div>
             10s上手制作高级动图
           </li>
           <li>
             <div>
-              <img src="" alt="" />
+              <img
+                src="@/assets/img/modal/loginModal/slices/shape.png"
+                alt=""
+              />
             </div>
             新用户限时领取工具会员
           </li>
@@ -50,7 +66,12 @@
       <!-- 右盒子 -->
       <div class="loginModal-right">
         <div class="loginModal-right-title">
-          <div class="loginModal-right-img"><img src="" alt="" /></div>
+          <div class="loginModal-right-img">
+            <img
+              src="@/assets/img/modal/loginModal/wechat-small_slices/wechat-small.png"
+              alt=""
+            />
+          </div>
           <span>微信扫码立即登陆</span>
         </div>
         <!-- 二维码 -->
@@ -74,7 +95,12 @@
         >
         <!-- 登录按钮 -->
         <a-button type="primary">
-          <div class="primary-img"><img src="" alt="" /></div>
+          <div class="primary-img">
+            <img
+              src="@/assets/img/modal/loginModal/phone_slices/phone.png"
+              alt=""
+            />
+          </div>
           手机登录
         </a-button>
       </div>
@@ -98,7 +124,7 @@ import { getScanQRcodes, userLogin } from "@/api/login";
 import { useStore } from "vuex";
 const store = useStore();
 // 二维码中图片url
-let logo = require("@/assets/logo.png");
+let logo = require("@/assets/img/modal/loginModal/wechat-small_slices/wechat-small@2x.png");
 components: {
   VueQr;
 }
@@ -162,9 +188,9 @@ const cancelHandle = () => {
   flag.value = false;
   // 传递参数状态给父组件
   emit("cancelChild", false);
-        // 清除定时器
-      clearInterval(time.value);
-      time.value = null;
+  // 清除定时器
+  clearInterval(time.value);
+  time.value = null;
 };
 
 // 轮训调用来确定扫码是否成功

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="downloadModal" class="downloadWc">
+  <div v-if="downloadModal.flag" class="downloadWc">
     <!-- 遮罩层 -->
     <div class="zzc"></div>
     <!-- 弹出框盒子部分 -->
@@ -13,7 +13,10 @@
           <span>下载成功</span>
         </div>
         <h1>
-          今日剩余下载数<span>{{ downloadModal.num }}</span> /3张
+          今日剩余下载数<span>{{
+            dayNum === "无限制*" ? "无限" : dayNum - downloadModal.num
+          }}</span>
+          /{{ dayNum }}张
         </h1>
         <h2>不确定图片下载到哪里? <span>点击这里</span> ，查看文件储存位置</h2>
       </div>
@@ -49,16 +52,16 @@ let store = useStore();
 // 二维码中图片url
 let logo = require("@/assets/logo.png");
 // 父子通讯
-const props = defineProps({ downloadModal: Boolean });
+const props = defineProps({ downloadModal: Object });
 const emit = defineEmits(["updateFlag"]);
 let { downloadModal } = toRefs(props);
 // 退出按钮
 const exitBtnHandle = () => {
   emit("updateFlag", false);
 };
+const dayNum = ref(0);
 // 用户身份
 let identity = ref(store.state.user.userData.roleType);
-console.log(identity.value);
 // 用户身份变化的时候，修改身份
 watch(
   () => identity.value,
@@ -72,9 +75,22 @@ watch(
   () => props.downloadModal,
   (newValue) => {
     if (newValue) {
-      // console.log(store.state.user.userData.roleType);
+      console.log(newValue);
+      console.log(store.state.user.userData.roleType);
+      if (store.state.user.userData.roleType == "free") {
+        dayNum.value = 1;
+      } else if (store.state.user.userData.roleType == "silver") {
+        dayNum.value = 3;
+      } else if (store.state.user.userData.roleType == "goid") {
+        dayNum.value = 10;
+      } else if (store.state.user.userData.roleType == "platinum") {
+        dayNum.value = 100;
+      } else if (store.state.user.userData.roleType == "diamond") {
+        dayNum.value = "无限制*";
+      }
     }
-  }
+  },
+  { immediate: true }
 );
 
 // 父组件代码

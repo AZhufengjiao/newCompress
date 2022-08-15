@@ -1,6 +1,7 @@
 // import { createRouter, createWebHashHistory } from "vue-router"; // hash
 import { createRouter, createWebHistory } from "vue-router"; //history
 import HomeView from "../views/Home/HomePage.vue";
+import pricing from "@/views/MyVip/index.vue";
 
 const routes = [
   // 首页是obout
@@ -23,13 +24,13 @@ const routes = [
       // 视频格式
       {
         path: "/video-converter",
-        name: "video-converter",
-        redirect: "/video-converter",
+        name: "video-converter1",
+        // redirect: "/video-converter",
         component: () => import("@/components/home/defaultYS/index.vue"),
         children: [
           {
             path: "/video-converter",
-            name: "converter",
+            name: "video-converter",
             component: () =>
               import("@/components/home/defaultYS/component/Size/index.vue"),
             // import(
@@ -38,13 +39,13 @@ const routes = [
           },
           {
             path: "/video-compressor",
-            name: "size",
+            name: "video-compressor",
             component: () =>
               import("@/components/home/defaultYS/component/Size/index.vue"),
           },
           {
             path: "/video-lossless-compression",
-            name: "compressor",
+            name: "video-lossless-compression",
             component: () =>
               // import("@/components/home/defaultYS/component/Wusun/index.vue"),
               import("@/components/home/defaultYS/component/Size/index.vue"),
@@ -57,7 +58,8 @@ const routes = [
   {
     path: "/pricing",
     name: "pricing",
-    component: () => import("@/views/MyVip/index.vue"),
+    // component: () => import("@/views/MyVip/index.vue"),
+    component: pricing,
   },
 ];
 

@@ -302,10 +302,12 @@ import { userList } from "@/api/user";
 import { userLogOut } from "@/api/login";
 import { onMounted, ref, watch } from "vue";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 components: {
   aboutNav, VipSetMeal;
 }
 const store = useStore();
+const $router = useRoute();
 // vip会员特权数组
 const arr = [1, 2, 3, 4, 5, 6, 7, 8];
 // 年费大礼包数组

@@ -134,10 +134,13 @@ const updateFlag = (res) => {
 };
 
 // 下载完成弹出框
-let videoDownWc = ref(false);
+let videoDownWc = ref({
+  flag: false,
+  num: 0,
+});
 // 隐藏下载完成
 const DownWcHandle = (res) => {
-  videoDownWc.value = res;
+  videoDownWc.value.flag = res;
 };
 
 watch(
@@ -365,6 +368,7 @@ const updateStateHandle = (state) => {
 };
 // 用户点击下载
 const downloadBtn = () => {
+  videoDownWc.value.num = 1;
   // 让下载中弹窗显示
   videoXz.value.flag = true;
   videoXz.value.num = 1;
@@ -379,7 +383,7 @@ const downloadBtn = () => {
   if (state.value == "zh" && completeWih.value == 100) {
     downloadFn();
   }
-  console.log(obj.value);
+
   // 判断本地是否有这个
   fileUrlList.value.forEach((element) => {
     if (element.videoUrl === obj.value.videoUrl && element.xz == false) {
@@ -425,7 +429,7 @@ const downloadFn = () => {
         // 下载中弹出框隐藏
         videoXz.value.flag = false;
         // 下载完成弹出框显示
-        videoDownWc.value = true;
+        videoDownWc.value.flag = true;
         // 去除定时器
         clearInterval(downloadTimer.value);
         // 让定时器为空

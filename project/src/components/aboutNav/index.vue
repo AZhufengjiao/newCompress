@@ -21,7 +21,7 @@
           <div v-if="userid == null || userid.length <= 0" class="notLogin">
             <div class="header-login" v-on:click="loginFlag = true">登录</div>
             <div class="header-xian"></div>
-            <div class="header-login">注册</div>
+            <div class="header-login" v-on:click="loginFlag = true">注册</div>
           </div>
           <!--  已登录显示 -->
           <div v-else class="haveLogged">

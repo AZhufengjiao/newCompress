@@ -14,7 +14,9 @@
         <!-- 顶部 -->
         <div class="modal-header">
           <!-- 删除按钮 -->
-          <div class="ant-modal-close-x" @click="handleOk">x</div>
+          <div class="ant-modal-close-x" @click="handleOk">
+            <img src="@/assets/img/modal/payModal/del/del.png" alt="" />
+          </div>
           <!-- 左边 -->
           <div class="modal-header-left">
             <div class="modal-header-img">

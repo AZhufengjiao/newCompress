@@ -122,6 +122,7 @@ import { saveFile } from "@/components/home/CompressedVideo/download.js";
 import axios from "axios";
 import JSZip from "jszip";
 import FileSaver from "file-saver";
+import { useRouter } from "vue-router";
 components: {
   UploadModule, SmileOutlined, MehOutlined, CaretDownOutlined;
 }
@@ -139,6 +140,7 @@ let state = ref("sc");
 let time = ref(null);
 let succeedtime = ref(null);
 let succeed = ref(false);
+const $router = useRouter();
 
 // 选择器
 const selectVal1 = ref("mov");

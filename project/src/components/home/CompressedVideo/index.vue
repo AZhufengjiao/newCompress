@@ -35,7 +35,10 @@
         >
           <div class="home_uploadingVideo_bottom">
             <div class="home_uploadingVideo_bottom_img">
-              <img src="" alt="" />
+              <img
+                src="@/assets/img/homePage/upload_slices/upload.png"
+                alt=""
+              />
             </div>
             <div
               v-on:click="handleUploading"
@@ -61,7 +64,7 @@
             ref="videoDom"
             @canplaythrough="myFunction"
           ></video>
-          <h1>最大支持400M以内视频压缩，<span>升级会员</span>享受无限大小</h1>
+          <h1>最大支持400M以内视频压缩，<span>升级会员 </span>享受无限大小</h1>
         </div>
         <div v-if="fileList.length > 0" class="home_fileCompression">
           <div class="home_fileCompression_flex">
@@ -103,7 +106,7 @@ import downloadWc from "@/components/modal/download/downloadWc.vue"; // 视频�
 import loginModel from "@/components/modal/loginModal/index.vue"; // 登录弹出框
 import Custom from "@/components/home/Custom/index.vue"; // 自定义压缩
 import defaultYS from "@/components/home/defaultYS/index.vue"; // 压缩场景
-import { onMounted, onUpdated, onUnmounted, ref, watch } from "vue";
+import { onMounted, onUpdated, onUnmounted, ref, watch, toRefs } from "vue";
 import { getCompressScenes, homeTemplateList } from "@/api/home";
 import { getKillDownloadNum, getDownloadNum } from "@/api/about";
 import { useStore } from "vuex";
@@ -151,6 +154,8 @@ let succeed = ref(false);
 // 创建一个可以下载的url数组
 let fileUrlList = ref(store.state.home.conversionList);
 
+watch(() => {});
+
 // 监听用户id
 watch(
   () => store.state.login.userid,
@@ -177,11 +182,14 @@ const updateFlag = (res) => {
   videoXz.value.flag = res;
 };
 
-// 下载完成弹出框
-let videoDownWc = ref(false);
+// 下载完成弹出框 downloadWc
+let videoDownWc = ref({
+  flag: false,
+  num: 0,
+});
 // 隐藏下载完成
 const DownWcHandle = (res) => {
-  videoDownWc.value = res;
+  videoDownWc.value.flag = res;
 };
 
 // 登录弹出框
@@ -349,6 +357,7 @@ const downloadHandle = () => {
   // 让下载中弹窗显示
   videoXz.value.flag = true;
   videoXz.value.num = fileUrlList.value.length;
+  videoDownWc.value.num = fileUrlList.value.length;
   // 查看用户的身份
   let roleType = store.state.user.userData.roleType;
 
@@ -409,7 +418,7 @@ const downloadHandle = () => {
           // 下载中弹出框隐藏
           videoXz.value.flag = false;
           // 下载完成弹出框显示
-          videoDownWc.value = true;
+          videoDownWc.value.flag = true;
           // 去除定时器
           clearInterval(downloadTimer.value);
           // 让定时器为空

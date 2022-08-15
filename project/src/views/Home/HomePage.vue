@@ -69,6 +69,9 @@ const $router = useRoute();
 components: {
   aboutNav, CompressedVideo;
 }
+// 路由传参
+let touterParams = ref({});
+
 // 2 是自定义压缩视频
 let routerNum = ref(1);
 

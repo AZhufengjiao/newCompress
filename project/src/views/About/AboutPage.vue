@@ -1,7 +1,5 @@
 <template>
   <div class="about">
-    <downloadWc :downloadModal="flag" @updateFlag="updateFlag"></downloadWc>
-
     <!-- 上部分 -->
     <div class="about-top">
       <!-- 头部 -->
@@ -16,20 +14,15 @@
       <!-- list -->
       <div class="about-compressList">
         <ul>
-          <li v-on:click="handle1">
-            <h1>已打包！2G 免费商用字体</h1>
+          <li
+            v-on:click="handleSkip(item)"
+            v-for="item in TemplateList"
+            :key="item"
+          >
+            <h1>{{ item.title }}</h1>
             <div class="hot">HOT</div>
           </li>
-          <li v-on:click="handle2"><h1>已打包！2G 免费商用字体</h1></li>
-          <li @click="flag = true"><h1>已打包2！2G 免费商用字体</h1></li>
-          <li><h1>已打包！2G 免费商用字体</h1></li>
-          <li>
-            <h1>已打包！2G 免费商用字体</h1>
-            <div class="hot">HOT</div>
-          </li>
-          <li><h1>已打包！2G 免费商用字体</h1></li>
-          <li><h1>已打包！2G 免费商用字体</h1></li>
-          <li><h1>已打包！2G 免费商用字体</h1></li>
+          <!-- <li v-on:click="handle2"><h1>已打包！2G 免费商用字体</h1></li> -->
         </ul>
       </div>
     </div>
@@ -220,29 +213,46 @@
 <script setup>
 import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import payModel from "@/components/modal/payModal/index.vue";
-import downloadWc from "@/components/modal/download/downloadWc.vue";
+
 import aboutNav from "@/components/aboutNav/index.vue";
 import { userList } from "@/api/user";
 import { userLogOut } from "@/api/login";
 import { getSetMeal, getDownloadNum, getMyCoupon } from "@/api/about";
+import { homeTemplateList } from "@/api/home";
 import { useStore } from "vuex";
 components: {
-  payModel, aboutNav, downloadWc;
+  aboutNav;
 }
 const $router = useRouter();
 const store = useStore();
-
 // 获取本地用户id，查看是否登录
-let state = ref("");
-state.value = store.state.login.userid;
+let state = ref(store.state.login.userid);
+// 获取工具跳转列表
+let TemplateList = ref([]);
 onMounted(() => {
-  // 获取可用优惠券信息
-  // getCoupon(state.value);
+  // 获取跳转列表
+  getTemplateList();
 });
+
+// 获取跳转列表
+const getTemplateList = () => {
+  return homeTemplateList(null, 1, 10).then((res) => {
+    if (res.data.code == 200) {
+      TemplateList.value = res.data.data.list;
+    }
+  });
+};
 // 测试路由
-const handle1 = () => {
-  $router.push({ path: "/video-converter" });
+const handleSkip = (item) => {
+  // let url=item.link.slice(1)
+  // console.log(item.link.slice(1));
+  $router.push({
+    name: "video-converter1",
+    params: {
+      link: item.link,
+      tmpId: item.tmpId,
+    },
+  });
 };
 const handle2 = () => {
   $router.push({ path: "/video-custom-converter" });
@@ -285,21 +295,6 @@ watch(
     immediate: true,
   }
 );
-
-// 4.获取可用优惠券
-const getCoupon = (userid) => {
-  return getMyCoupon(userid).then((res) => {
-    if (res.data.code == 200) {
-      store.commit("home/setMyCoupon", res.data.data);
-    }
-  });
-};
-
-// 弹出框
-let flag = ref(false);
-const updateFlag = (res) => {
-  flag.value = res;
-};
 </script>
 
 <style lang="scss" scoped>
