@@ -58,6 +58,13 @@
     @updateFlag="DownWcHandle"
   ></downloadWc>
 
+  <!-- 支付弹出层 -->
+  <payModel
+    :modalFlag="modalFlag"
+    @updataVisible="updataModalFlag"
+    @close="closeHandle"
+  ></payModel>
+
   <!-- 用户身份 下载弹出框  选择试试 和立即升级 -->
   <uploadModal
     :UploadModal="UploadModal"
@@ -78,6 +85,7 @@ import { getKillDownloadNum } from "@/api/about";
 import download2 from "@/components/modal/download/download2.vue"; // 视频下载中弹出框
 import downloadWc from "@/components/modal/download/downloadWc.vue"; // 视频下载完成弹出框
 import uploadModal from "@/components/modal/uploadModal/index.vue"; // 选择支付试试弹出框
+import payModel from "@/components/modal/payModal/index.vue"; // 用户支付弹出框
 import { useStore } from "vuex";
 import { ref, onMounted, onUpdated, watch, toRefs } from "vue";
 import { defineEmits } from "vue";
@@ -85,7 +93,7 @@ import { message } from "ant-design-vue";
 import { saveFile } from "@/components/home/CompressedVideo/download.js";
 import axios from "axios";
 components: {
-  download2, downloadWc, uploadModal;
+  download2, downloadWc, uploadModal, payModel;
 }
 const store = useStore();
 const emit = defineEmits(["getFileItemParams"]);
@@ -123,7 +131,8 @@ let compressSize = ref(null);
 let fileURL = ref(props.item);
 let uploadProcess = ref(0);
 
-// 视频下载弹出框弹出框
+// 弹出框系列
+// 1.视频下载弹出框弹出框
 let videoXz = ref({
   flag: false,
   num: 0,
@@ -133,7 +142,7 @@ const updateFlag = (res) => {
   videoXz.value.flag = res;
 };
 
-// 下载完成弹出框
+// 2.下载完成弹出框
 let videoDownWc = ref({
   flag: false,
   num: 0,
@@ -143,15 +152,22 @@ const DownWcHandle = (res) => {
   videoDownWc.value.flag = res;
 };
 
-watch(
-  () => props.item,
-  (newValue, oldValue) => {
-    // console.log(newValue);
-  },
-  {
-    immediate: true,
-  }
-);
+// 3. 支付弹出框
+// 支付弹出框
+let modalFlag = ref(false);
+// 点击显示弹出框
+const payModalShow = () => {
+  emit("updateFlag", false);
+  modalFlag.value = true;
+};
+// 点击弹出框确定按钮，隐藏弹出框
+const updataModalFlag = (bol) => {
+  modalFlag.value = bol;
+};
+// 支付成功，关闭自己
+const closeHandle = (state) => {
+  modalShow.value = state;
+};
 
 onMounted(() => {
   // 获取文件上传url，赋值给video
@@ -368,31 +384,36 @@ const updateStateHandle = (state) => {
 };
 // 用户点击下载
 const downloadBtn = () => {
-  videoDownWc.value.num = 1;
-  // 让下载中弹窗显示
-  videoXz.value.flag = true;
-  videoXz.value.num = 1;
-  // 判断下载次数是否小于用户准备下载视频的个数
-  if (downloadNumber.value < 1) {
-    // 复制参数，修改弹出框信息
-    return (UploadModal.value = {
-      flag: true,
-      state: roleType,
+  // 点击全部，判断试试功能状态是否为true，如果是true，就不能下载，用户权限不够，是false才能下载
+  if (store.state.home.trial) {
+    modalFlag.value = true;
+  } else {
+    videoDownWc.value.num = 1;
+    // 让下载中弹窗显示
+    videoXz.value.flag = true;
+    videoXz.value.num = 1;
+    // 判断下载次数是否小于用户准备下载视频的个数
+    if (downloadNumber.value < 1) {
+      // 复制参数，修改弹出框信息
+      return (UploadModal.value = {
+        flag: true,
+        state: roleType,
+      });
+    }
+    if (state.value == "zh" && completeWih.value == 100) {
+      downloadFn();
+    }
+
+    // 判断本地是否有这个
+    fileUrlList.value.forEach((element) => {
+      if (element.videoUrl === obj.value.videoUrl && element.xz == false) {
+        element.xz = true;
+        store.commit("home/setConversionList", fileUrlList.value);
+        // 扣除本地下载次数
+        killDownLoadNumber(1, userid.value);
+      }
     });
   }
-  if (state.value == "zh" && completeWih.value == 100) {
-    downloadFn();
-  }
-
-  // 判断本地是否有这个
-  fileUrlList.value.forEach((element) => {
-    if (element.videoUrl === obj.value.videoUrl && element.xz == false) {
-      element.xz = true;
-      store.commit("home/setConversionList", fileUrlList.value);
-      // 扣除本地下载次数
-      killDownLoadNumber(1, userid.value);
-    }
-  });
 };
 
 // 点击下载扣除次数

@@ -107,43 +107,183 @@
             height: 100%;
             border-radius: 50%;
           }
+          // 新 经过显示
           .haveLoggedHover {
+            cursor: default;
+            border-radius: 7px;
             position: absolute;
-            top: 60px;
-            right: 6px;
+            top: 48px;
+            right: -4px;
             display: none;
-            width: 218px;
-            background-color: #0544ff;
-            h1 {
-              margin: 5px 12px 0;
-              cursor: pointer;
-              font-size: 15px;
+            width: 253px;
+            height: 404px;
+            background: #0544ff;
+            // 用户信息
+            .haveLoggedHover-user {
+              display: flex;
+              margin: 16px 12px 19px;
+              // 左
+              .user-img {
+                width: 52px;
+                height: 52px;
+                img {
+                  width: 52px;
+                  height: 52px;
+                }
+              }
+              // 右
+              .haveLoggedHover-info {
+                margin-left: 12px;
+                h1 {
+                  margin: 9px 0 7px;
+                  font-size: 14px;
+                  font-family: OPPOSans-B, OPPOSans;
+                  font-weight: normal;
+                  color: #ffffff;
+                  line-height: 14px;
+                }
+                h2 {
+                  font-size: 12px;
+                  font-family: OPPOSans-M, OPPOSans;
+                  font-weight: normal;
+                  color: #ffffff;
+                  line-height: 16px;
+                }
+              }
+            }
+            // 开通会员
+            .haveLoggedHover-vip {
+              position: relative;
+              font-size: 12px;
+              font-family: PingFangSC-Regular, PingFang SC;
               font-weight: 400;
-              color: rgba(255, 255, 255, 1);
-              line-height: 21px;
-              letter-spacing: 1px;
-            }
-            h2 {
-              margin: 0 12px;
-              display: block;
               color: #ffffff;
-              font-size: 14px;
-              line-height: 40px;
-              letter-spacing: 1px;
+              line-height: 17px;
+              margin: 0 auto 28px;
+              display: flex;
+              width: 229px;
+              height: 62px;
+              align-items: center;
+              border-radius: 10px;
+              // opacity: 0.6;
+              border: 1px solid #ffffff;
+              background: rgba(255, 255, 255, 0.15);
+              div {
+                margin: 0 20px 0 15px;
+                h1 {
+                  margin-bottom: 1px;
+                  font-size: 14px;
+                  font-family: PingFangSC-Semibold, PingFang SC;
+                  font-weight: 600;
+                  color: #ffffff;
+                  line-height: 20px;
+                }
+                h2 {
+                  font-size: 12px;
+                  font-family: PingFangSC-Regular, PingFang SC;
+                  font-weight: 400;
+                  color: #ffffff;
+                  line-height: 17px;
+                }
+              }
+              button {
+                margin: 0;
+                padding: 0;
+                width: 62px;
+                height: 26px;
+                background: #ffdd53;
+                border-radius: 4px;
+                font-size: 12px;
+                font-family: PingFangSC-Semibold, PingFang SC;
+                font-weight: 600;
+                color: #675303;
+                line-height: 12px;
+              }
+            }
+            // 列表
+            .haveLoggedHover-list {
+              ul {
+                position: relative;
+                padding: 6px 0;
+                li {
+                  cursor: pointer;
+
+                  align-items: center;
+                  padding: 6px 0;
+                  display: flex;
+                  padding-left: 22px;
+                  img {
+                    width: 26px;
+                    height: 26px;
+                    margin-right: 16px;
+                  }
+                  span {
+                    font-size: 14px;
+                    font-family: OPPOSans-B, OPPOSans;
+                    font-weight: normal;
+                    color: #ffffff;
+                    // line-height: 14px;
+                  }
+                }
+                li:hover {
+                  background: #0136d1;
+                }
+              }
+              ul::before {
+                content: "";
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                width: 233px;
+                height: 1px;
+                background: rgba(255, 255, 255, 0.15);
+              }
+              ul:nth-child(1)::before {
+                content: "";
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                width: 233px;
+                height: 1px;
+                background: rgba(255, 255, 255, 0.15);
+                display: none;
+              }
+            }
+            // 定位背景
+            .positionImg {
+              position: absolute;
+              top: 103px;
+              right: 0;
+              width: 99px;
+              height: 117px;
+              background-image: url("@/assets/img/aboutPage/nav/dist/zan.png");
+              /* 让背景图基于容器大小伸缩 */
+              background-size: 99px 117px;
+            }
+            // 球
+            .ball {
+              position: absolute;
+              top: -2px;
+              right: -47px;
+              width: 56px;
+              height: 56px;
+              border-radius: 50%;
+              z-index: -2;
+              background: #0544ff;
             }
           }
-          .haveLoggedHover:after {
-            content: " ";
-            position: absolute;
-            top: -16px;
-            right: 10px;
-            display: inline-block;
-            width: 0;
-            height: 0;
-            border: 8px solid transparent;
-            border-bottom: 8px solid #0544ff;
-            // background-color: #0544ff;
-          }
+          // .haveLoggedHover:after {
+          //   content: " ";
+          //   position: absolute;
+          //   top: -16px;
+          //   right: 10px;
+          //   display: inline-block;
+          //   width: 0;
+          //   height: 0;
+          //   border: 8px solid transparent;
+          //   border-bottom: 8px solid #0544ff;
+          //   // background-color: #0544ff;
+          // }
         }
         .haveLogged:hover .haveLoggedHover {
           display: block;

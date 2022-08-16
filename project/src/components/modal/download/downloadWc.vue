@@ -75,8 +75,6 @@ watch(
   () => props.downloadModal,
   (newValue) => {
     if (newValue) {
-      console.log(newValue);
-      console.log(store.state.user.userData.roleType);
       if (store.state.user.userData.roleType == "free") {
         dayNum.value = 1;
       } else if (store.state.user.userData.roleType == "silver") {
@@ -92,6 +90,28 @@ watch(
   },
   { immediate: true }
 );
+
+//执行每天24:00 刷新
+const setTimeout = () => {
+  var nowTemp = new Date().getTime(); //获取当前时间戳
+
+  var tomorrowTemp =
+    new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000;
+
+  var residueTemp = tomorrowTemp - nowTemp; //距离当天24：00的时间戳
+
+  //执行定时任务
+
+  setTimeout(() => {
+    this.nowData();
+
+    //次天0点 执行每天24;00 刷新
+
+    setInterval(() => {
+      this.nowData();
+    }, 1000 * 60 * 60 * 24);
+  }, residueTemp);
+};
 
 // 父组件代码
 // let flag = ref(false);

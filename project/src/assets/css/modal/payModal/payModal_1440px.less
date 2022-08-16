@@ -438,6 +438,9 @@
                 line-height: 14px;
               }
             }
+            li:nth-child(1) {
+              pointer-events: none;
+            }
             .styleLi {
               background: rgba(255, 150, 117, 0.15) !important;
               border: 2px solid #ff5b00;
@@ -449,6 +452,7 @@
         }
 
         .mvpTC-left {
+          pointer-events: auto;
           position: absolute;
           left: 0;
           bottom: 36px;
@@ -710,10 +714,14 @@
 
         // 二维码 -->
         .modal-QRCode {
+          padding: 3px;
           margin-top: 10px;
           margin-right: 19px;
           width: 94px;
           height: 94px;
+
+          box-sizing: border-box;
+          background: #fff;
           img {
             width: 100%;
             height: 100%;

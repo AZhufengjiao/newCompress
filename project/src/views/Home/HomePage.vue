@@ -57,6 +57,7 @@
 <script setup>
 import HomeNav from "@/components/home/Nav/index.vue";
 import CompressedVideo from "@/components/home/CompressedVideo/index.vue";
+import { getDownloadNum } from "@/api/about";
 import aboutNav from "@/components/aboutNav/index.vue";
 import { userList } from "@/api/user";
 import { userLogOut } from "@/api/login";
@@ -75,7 +76,10 @@ let touterParams = ref({});
 // 2 是自定义压缩视频
 let routerNum = ref(1);
 
-onMounted(() => {});
+onMounted(() => {
+  store.commit("home/setTrial", false);
+  getFrequency();
+});
 onUpdated(() => {});
 
 // 1.2 调用接口，获取用户登录是否过期
@@ -97,6 +101,19 @@ const getUserInfo = (userid) => {
   });
 };
 
+// 更新下载次数
+// 3.获取工具剩余次数
+const getFrequency = (userid) => {
+  return getDownloadNum(userid).then((res) => {
+    // console.log(res.data);
+    if (res.data.code == 200) {
+      console.log(res.data.data.downloadNumber);
+      // 保存次数至本地
+      store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
+    }
+  });
+};
+
 // 1.进入首页，判断本地缓存是否存在userid，有就是已登录
 watch(
   () => store.state.login.userid,
@@ -107,6 +124,7 @@ watch(
     } else {
       // 已登录，获取用户信息
       getUserInfo(newValue);
+      getFrequency(newValue);
     }
   },
   {

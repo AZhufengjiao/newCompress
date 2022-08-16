@@ -1,4 +1,5 @@
 <template>
+  <!-- <div v-if="ZFBQR.length > 0"> -->
   <div>
     <!-- 支付成功弹出框 -->
     <paySucceedModal
@@ -121,6 +122,7 @@
             <div class="modal-mvpTC">
               <div class="modal-mvpTC-box">
                 <ul
+                  ref="stykleUl"
                   :class="[
                     !StyleFlag && StyleFlag != null ? 'StyleaLeft' : '',
                     StyleFlag && StyleFlag != null ? 'StyleaRight' : '',
@@ -130,15 +132,14 @@
                     @click="clickLiHandle(item, index)"
                     v-for="(item, index) in taocanList"
                     :class="[
-                      index !== 0 ? 'twoLi' : '',
-                      Id + '' == item.pId ? 'styleLi' : '',
+                      // index !== 0 ? 'twoLi' : '',
+                      Id + '' == item.pId ? '' : 'twoLi',
                       MousemoveNum + '' == item.pId ? 'styleLi' : '',
                     ]"
                     :key="item"
-                    @mousemove="handleMousemove(item.pId, index)"
                   >
                     <!-- 立减 -->
-                    <div v-if="item.tag.length !== ''" class="subtract1">
+                    <div v-if="item.tag.length !== 0" class="subtract1">
                       {{ item.tag }}
                     </div>
                     <!-- 左下角-卷 -->
@@ -270,7 +271,7 @@
               </div>
               <!-- 二维码 -->
               <div class="modal-QRCode">
-                <qrcode-vue :value="ZFBQR" :size="94"></qrcode-vue>
+                <qrcode-vue :value="ZFBQR" :size="90"></qrcode-vue>
               </div>
               <!-- 支付金额 -->
               <div class="modePayment-price">
@@ -375,7 +376,6 @@ const updateFlagHandle = (res) => {
 
 // 1.从本地拿套餐数据
 onMounted(() => {
-  console.log();
   roleType.value = store.state.user.userData;
 });
 
@@ -416,6 +416,8 @@ const getPayStatus = (userId) => {
       // 关闭弹窗
       visible.value = false;
       emit("close", false);
+    } else {
+      // console.log("未支付");
     }
   });
 };
@@ -490,21 +492,6 @@ watch(
   () => currentId.value,
   (newValue) => {
     Id.value = newValue;
-    if (newValue !== 0) {
-      // 修改支付金额
-      taocanList.value.map((item) => {
-        if (item.pId === currentId.value) {
-          ticketType.value = item.timeLimit;
-          // 套餐id改变时，修改支付金额
-          paymentAmount.value.price = item.discountPrice;
-          paymentAmount.value.discounts = item.pPrice - item.discountPrice;
-
-          // 赋值
-          // 获取支付宝支付二维码
-          getZfbQR(Id.value, userid.value, ticketType.value);
-        }
-      });
-    }
   },
   { deep: true, immediate: true }
 );
@@ -514,51 +501,82 @@ watch(
   () => props.modalFlag,
   (newValue) => {
     // 参数是true，就赋值显示弹出框
-    if (newValue == true && taocanList.value) {
+    if (newValue == true) {
       // 1.1赋值
       setMealInfo(userid.value);
       // 获取可用优惠券信息
       getCoupon(userid.value);
-      // 修改支付金额
-      taocanList.value.map((item) => {
-        //  修改最开始的pid
-        if (roleType.value.roleType == "free") {
-          Id.value = taocanList.value.filter(
-            (item) => item.roleType === "gold"
-          )[0].pId;
-        }
-        if (roleType.value.roleType == "gold") {
-          Id.value = taocanList.value.filter(
-            (item) => item.roleType === "platinum"
-          )[0].pId;
-        }
-
-        if (item.pId == Id.value) {
-          ticketType.value = item.timeLimit;
-          // 套餐id改变时，修改支付金额
-          paymentAmount.value.price = item.discountPrice;
-          paymentAmount.value.discounts = item.pPrice - item.discountPrice;
-          // 赋值
-          // 获取支付宝支付二维码
-          getZfbQR(Id.value, userid.value, ticketType.value);
-        }
-      });
-
-      // 弹出框显示，展示支付二维码，查看用户是否支付
-      payTimerHandle();
       // 赋值
       visible.value = newValue;
-      // 获取支付宝二维码参数的函数
-      taocanList.value.map((item) => {
-        if (item.pId == props.currentId) {
-          ticketType.value = item.timeLimit;
-        }
-      });
     }
   },
   {
     deep: true,
-    immediate: true,
+    // immediate: true,
+  }
+);
+
+// 监听数据数组获取到没，获取到了判断如果没有Id的话进这个逻辑
+watch(
+  () => taocanList.value,
+  (newValue) => {
+    if (newValue.length != 0) {
+      // 判断id是否为空
+      if (Id.value == null || Id.value.length === 0) {
+        // 修改支付金额
+        taocanList.value.map((item) => {
+          //  修改最开始的pid
+          if (roleType.value.roleType == "free") {
+            Id.value = taocanList.value.filter(
+              (item) => item.roleType === "gold"
+            )[0].pId;
+          }
+          if (roleType.value.roleType == "gold") {
+            Id.value = taocanList.value.filter(
+              (item) => item.roleType === "platinum"
+            )[0].pId;
+          }
+
+          if (item.pId == Id.value) {
+            ticketType.value = item.timeLimit;
+            // 套餐id改变时，修改支付金额
+            paymentAmount.value.price = item.discountPrice;
+            paymentAmount.value.discounts = item.pPrice - item.discountPrice;
+            // 赋值
+            // 获取支付宝支付二维码
+            getZfbQR(Id.value, userid.value, ticketType.value);
+          }
+        });
+
+        // 弹出框显示，展示支付二维码，查看用户是否支付
+        payTimerHandle();
+
+        // // 获取支付宝二维码参数的函数
+        // taocanList.value.map((item) => {
+        //   if (item.pId == props.currentId) {
+        //     ticketType.value = item.timeLimit;
+        //   }
+        // });
+      } else if (currentId.value.length !== 0 || currentId.value !== null) {
+        // 修改支付金额
+        taocanList.value.map((item) => {
+          if (item.pId === currentId.value) {
+            Id.value = item.pId;
+            ticketType.value = item.timeLimit;
+            // 套餐id改变时，修改支付金额
+            paymentAmount.value.price = item.discountPrice;
+            paymentAmount.value.discounts = item.pPrice - item.discountPrice;
+
+            // 赋值
+            // 获取支付宝支付二维码
+            getZfbQR(Id.value, userid.value, ticketType.value);
+          }
+        });
+
+        // 弹出框显示，展示支付二维码，查看用户是否支付
+        payTimerHandle();
+      }
+    }
   }
 );
 
@@ -573,20 +591,22 @@ const handleOk = (e) => {
   clearInterval(payTimer.value);
   payTimer.value = null;
   payNum.value = 0;
-  console.log("定时器已清除");
+
   // 传递参数给父组件
   emit("updataVisible", false);
 };
 
 // 存储鼠标经过的id
 let MousemoveNum = ref(Number);
-// 鼠标经过li的时候
-const handleMousemove = (id, index) => {
-  index !== 0 ? (MousemoveNum.value = id) : "";
-};
+// // 鼠标经过li的时候
+// const handleMousemove = (id, index) => {
+//   index !== 0 ? (MousemoveNum.value = id) : "";
+// };
+// 动画ul的DOM
+let stykleUl = ref(null);
 // 鼠标点击li的时候
 const clickLiHandle = (item, index) => {
-  index !== 0 ? (Id.value = item.pId) : "";
+  Id.value = item.pId;
   // 更新支付金额
   paymentAmount.value.price = item.discountPrice;
   paymentAmount.value.discounts = item.pPrice - item.discountPrice;
@@ -596,6 +616,16 @@ const clickLiHandle = (item, index) => {
 
   // 获取支付宝支付二维码
   getZfbQR(Id.value, userid.value, ticketType.value);
+
+  if (taocanList.value.length > 4) {
+    if (index == 3 || index == 4) {
+      console.log(stykleUl.value);
+      stykleUl.value.style.setProperty("--view-left", -122 + "px");
+    } else {
+      console.log(stykleUl.value);
+      stykleUl.value.style.setProperty("--view-left", 0 + "px");
+    }
+  }
 };
 
 // 点击按钮，切换支付宝微信二维码
@@ -666,7 +696,7 @@ onUnmounted(() => {
 </script>
 
 <style lang="less" scoped>
-// @import "@/assets/styles/animation/payModel/index.scss";
 // @import "ant-design-vue/dist/antd.less";
 @import "@/assets/css/modal/payModal/payModal_1440px.less";
+@import "@/assets/styles/animation/payModel/index.scss";
 </style>

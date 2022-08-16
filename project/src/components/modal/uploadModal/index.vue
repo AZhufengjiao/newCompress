@@ -26,7 +26,7 @@
         <h1>成为白金会员立享<span>无限制</span>视频上传</h1>
       </div>
       <div class="button">
-        <a-button @click="payModalShow">我先试试</a-button>
+        <a-button @click="handleShiShi">我先试试</a-button>
         <a-button class="nth-last" type="primary" @click="payModalShow"
           >立即升级
         </a-button>
@@ -44,12 +44,14 @@
 <script setup>
 import payModel from "@/components/modal/payModal/index.vue";
 import { onUpdated, ref, toRefs, watch } from "vue";
+import { useStore } from "vuex";
 components: {
   payModel;
 }
 const props = defineProps({ UploadModal: Object });
 const emit = defineEmits(["updateFlag"]);
 let { UploadModal } = toRefs(props);
+const store = useStore();
 
 // 弹出框显示与隐藏的状态
 let modalShow = ref(UploadModal.value.flag);
@@ -69,10 +71,7 @@ const handleTry = () => {
   emit("");
 };
 
-// 支付成功，关闭自己
-const closeHandle = (state) => {
-  modalShow.value = state;
-};
+
 
 // 点击删除键，关闭弹出框
 const cancelHandle = () => {
@@ -92,6 +91,17 @@ const payModalShow = () => {
 // 点击弹出框确定按钮，隐藏弹出框
 const updataModalFlag = (bol) => {
   modalFlag.value = bol;
+};
+// 支付成功，关闭自己
+const closeHandle = (state) => {
+  modalShow.value = state;
+};
+
+// 点击我先试试
+const handleShiShi = () => {
+  modalShow.value = false;
+  store.commit("home/setTrial", true);
+  emit("updateFlag", false);
 };
 </script>
 

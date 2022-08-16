@@ -34,7 +34,11 @@
             'myVip-setMealboxSi': index === 3,
             'myVip-setMealboxWu': index === 4,
           }"
-          :id="index !== 0 && item.scene === '' ? 'myVip-setMeal-pattern' : ''"
+          :id="
+            item.scene.indexOf('/activity/') == -1
+              ? 'myVip-setMeal-pattern'
+              : ''
+          "
           v-on:click="currentId = item.pId"
         >
           <!--    class="myVip-setMeal-box myVip-setMealboxOne"   -->
@@ -42,7 +46,7 @@
           <div class="myVip-setMeal-box-plan">
             <!-- 右上角定位 -->
             <div
-              v-if="item.tag.length !== ''"
+              v-if="item.tag.length !== 0"
               class="myVip-setMeal-box-plan-preference"
             >
               {{ item.tag }}
@@ -278,7 +282,6 @@ const CancelChild = (val) => {
 
 // 点击立即弹出框，判断有无登录，支付弹出框
 const modalShow = (item) => {
-  console.log(userid.value);
   // 登录显示支付弹窗
   if (userid.value !== null && userid.value.length !== 0) {
     modalFlag.value = true;
@@ -304,11 +307,9 @@ const setMealInfo = (id) => {
   id = id === null || id.length == 0 ? -1 : id;
   return getSetMeal(id).then((res) => {
     if (res.data.code == 200) {
-      console.log(res.data.data);
       // 1.1赋值
       setMealList.value = taoCanFn(res.data.data, store.state.home.myCoupon);
 
-      console.log(setMealList.value);
       // 存本地
       // store.commit("home/setSetMealInfo", res.data.data);
     }

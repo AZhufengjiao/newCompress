@@ -14,6 +14,8 @@ const home = {
       conversionList: [],
       // homeYsAction 1.压缩样式类名
       YsSctiveKey: "format",
+      // 试试权限
+      trial: false,
     };
   },
   mutations: {
@@ -36,6 +38,9 @@ const home = {
     // 修改压缩样式类名
     setYsSctiveKey(state, string) {
       state.YsSctiveKey = string;
+    }, // 修改我要试试状态
+    setTrial(state, boolean) {
+      state.trial = boolean;
     },
   },
 };

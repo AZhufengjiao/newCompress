@@ -29,10 +29,75 @@
               src="https://www.soogif.com/images/website/photo/photo6.gif"
               alt=""
             />
-
+            <!-- 经过显示 -->
             <div class="haveLoggedHover">
-              <h1>SOOGIF ID: {{ userid }}</h1>
-              <h2 v-on:click="logoutHandle">退出账号</h2>
+              <!-- 定位背景 -->
+              <div class="positionImg"></div>
+
+              <!-- 用户信息 -->
+              <div class="haveLoggedHover-user">
+                <div class="user-img">
+                  <img
+                    src="https://www.soogif.com/images/website/photo/photo6.gif"
+                    alt=""
+                  />
+                </div>
+                <div class="haveLoggedHover-info">
+                  <h1>SOOGIF</h1>
+                  <h2>ID: {{ userid }} &nbsp; 复制</h2>
+                </div>
+              </div>
+              <!-- 开通会员 -->
+              <div class="haveLoggedHover-vip">
+                <!-- 球 -->
+                <div class="ball"></div>
+                <div>
+                  <h1>尚未开通VIP</h1>
+                  <h2>享全站工具288+功能</h2>
+                </div>
+                <a-button type="primary">立即开通</a-button>
+              </div>
+              <!-- 列表 -->
+              <div class="haveLoggedHover-list">
+                <ul>
+                  <li>
+                    <img
+                      src="@/assets/img/aboutPage/nav/dist/juxing.png"
+                      alt=""
+                    />
+                    <span>我的订单</span>
+                  </li>
+                  <li>
+                    <img
+                      src="@/assets/img/aboutPage/nav/dist/shenqing.png"
+                      alt=""
+                    />
+                    <span>申请发票</span>
+                  </li>
+                </ul>
+                <ul>
+                  <li>
+                    <img src="@/assets/img/aboutPage/nav/dist/my.png" alt="" />
+                    <span>我的GIF库</span>
+                  </li>
+                  <li>
+                    <img
+                      src="@/assets/img/aboutPage/nav/dist/setting.png"
+                      alt=""
+                    />
+                    <span>账号设置</span>
+                  </li>
+                </ul>
+                <ul>
+                  <li v-on:click="logoutHandle">
+                    <img
+                      src="@/assets/img/aboutPage/nav/dist/quit.png"
+                      alt=""
+                    />
+                    <span>退出登陆</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -49,6 +114,7 @@ import loginModel from "@/components/modal/loginModal/index.vue";
 import { userLogOut } from "@/api/login";
 import { ref, toRefs, watch } from "vue";
 import { useStore } from "vuex";
+import { imgList } from "./index.js";
 components: {
   loginModel;
 }
@@ -90,6 +156,18 @@ const logoutHandle = () => {
 </script>
 
 <style lang="scss" scoped>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
 @import "@/assets/css/about/aboutNav/aboutNav_1440px.scss";
 @import "@/assets/css/about/aboutNav/aboutNav_1280px.scss";
 </style>

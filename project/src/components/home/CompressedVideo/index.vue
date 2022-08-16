@@ -6,6 +6,13 @@
       @updateFlag="updateStateHandle"
     ></uploadModal>
 
+    <!-- 支付弹出层 -->
+    <payModel
+      :modalFlag="modalFlag"
+      @updataVisible="updataModalFlag"
+      @close="closeHandle"
+    ></payModel>
+
     <!-- 视频下载弹出框 -->
     <download2 :downloadModal="videoXz" @updateFlag="updateFlag"></download2>
     <!-- 视频下载完成弹出框 -->
@@ -99,11 +106,13 @@
 </template>
 
 <script setup>
-import UploadModule from "@/components/home/UploadModule/index.vue"; // 下载列表
 import uploadModal from "@/components/modal/uploadModal/index.vue"; // 选择支付试试弹出框
 import download2 from "@/components/modal/download/download2.vue"; // 视频下载中弹出框
 import downloadWc from "@/components/modal/download/downloadWc.vue"; // 视频下载完成弹出框
+import payModel from "@/components/modal/payModal/index.vue"; // 用户支付弹出框
 import loginModel from "@/components/modal/loginModal/index.vue"; // 登录弹出框
+import UploadModule from "@/components/home/UploadModule/index.vue"; // 下载列表
+
 import Custom from "@/components/home/Custom/index.vue"; // 自定义压缩
 import defaultYS from "@/components/home/defaultYS/index.vue"; // 压缩场景
 import { onMounted, onUpdated, onUnmounted, ref, watch, toRefs } from "vue";
@@ -120,13 +129,8 @@ import FileSaver from "file-saver";
 import { useRouter } from "vue-router";
 
 components: {
-  UploadModule,
-    uploadModal,
-    Custom,
-    defaultYS,
-    download2,
-    downloadWc,
-    loginModel;
+  UploadModule, uploadModal, Custom, defaultYS, download2, payModel;
+  downloadWc, loginModel;
 }
 
 const $router = useRouter();
@@ -142,7 +146,14 @@ let params1 = ref(null);
 // 获取用户id
 let userid = ref(store.state.login.userid);
 // 获取该用户下载次数
-let downloadNumber = ref(store.state.home.downloadNumber);
+let downloadNumber = ref(0);
+watch(
+  () => store.state.home.downloadNumber,
+  (newValue) => {
+    downloadNumber.value = newValue;
+  },
+  { immediate: true }
+);
 
 // 动画状态
 let flag = ref(false);
@@ -152,18 +163,16 @@ let succeedtime = ref(null);
 let succeed = ref(false);
 
 // 创建一个可以下载的url数组
-let fileUrlList = ref(store.state.home.conversionList);
-
-watch(() => {});
+let fileUrlList = ref([]);
 
 // 监听用户id
 watch(
   () => store.state.login.userid,
   (newValue) => {
     userid.value = newValue;
-
+    // console.log(userid.value);
     // 获取剩余次数
-    getFrequency(userid.value);
+    // getFrequency(userid.value);
   }
 );
 
@@ -172,7 +181,8 @@ const handleParamsObj = (item) => {
   params1.value = item;
 };
 
-// 视频下载弹出框弹出框
+// 弹出框
+// 1.视频下载弹出框弹出框
 let videoXz = ref({
   flag: false,
   num: 0,
@@ -182,7 +192,7 @@ const updateFlag = (res) => {
   videoXz.value.flag = res;
 };
 
-// 下载完成弹出框 downloadWc
+// 2. 下载完成弹出框 downloadWc
 let videoDownWc = ref({
   flag: false,
   num: 0,
@@ -192,25 +202,55 @@ const DownWcHandle = (res) => {
   videoDownWc.value.flag = res;
 };
 
-// 登录弹出框
+// 3.登录弹出框
 const loginFlag = ref(false);
 // 获取子组件传值复制
 const CancelChild = (val) => {
   loginFlag.value = val;
 };
 
+// 4. 支付弹出框
+// 支付弹出框
+let modalFlag = ref(false);
+// 点击显示弹出框
+const payModalShow = () => {
+  emit("updateFlag", false);
+  modalFlag.value = true;
+};
+// 点击弹出框确定按钮，隐藏弹出框
+const updataModalFlag = (bol) => {
+  modalFlag.value = bol;
+};
+// 支付成功，关闭自己
+const closeHandle = (state) => {
+  modalShow.value = state;
+};
+
+// 5.点击试试弹出框
+let UploadModal = ref({
+  flag: false,
+  state: "",
+});
+// 子组件像父组件传递参数，修改UploadModal的状态
+const updateStateHandle = (state) => {
+  UploadModal.value.flag = state;
+  upload.value.value = null;
+};
+
 let upload = ref(null);
 
-// 3.获取工具剩余次数
-const getFrequency = (userid) => {
-  return getDownloadNum(userid).then((res) => {
-    // console.log(res.data);
-    if (res.data.code == 200) {
-      // 保存次数至本地
-      store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
-    }
-  });
-};
+// // 3.获取工具剩余次数
+// const getFrequency = (userid) => {
+//   return getDownloadNum(userid).then((res) => {
+//     // console.log(res.data);
+//     if (res.data.code == 200) {
+//       console.log(res.data);
+//       downloadNumber.value = res.data.data.downloadNumber;
+//       // 保存次数至本地
+//       store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
+//     }
+//   });
+// };
 
 //  添加按钮，触发input，让文件夹弹出  3.
 const handleUploading = (e) => {
@@ -227,26 +267,34 @@ const handleUploading = (e) => {
 onUnmounted(() => {
   store.commit("home/setConversionList", []);
 });
-onMounted(() => {});
+onMounted(() => {
+  store.commit("home/setConversionList", []);
+});
 
 /* 文件夹弹出 选择图片上传 */
 let file = ref(null);
 let videoDom = ref(null);
 // 获取置视频的时长
 let videoTime = ref(null);
-let UploadModal = ref({
-  flag: false,
-  state: "",
-});
-// 子组件像父组件传递参数，修改UploadModal的状态
-const updateStateHandle = (state) => {
-  UploadModal.value.flag = state;
-};
+
+// 试试功能
+const filtsShi = ref([]);
+watch(
+  () => store.state.home.trial,
+  (newValue) => {
+    if (newValue) {
+      fileList.value = filtsShi.value;
+    }
+  },
+  { immediate: true }
+);
 
 // 创建一个下载过的文件数组
 // let ToDownloadList = ref([]);
 
 let handleInputV = (e) => {
+  // 为我要试试功能存储
+  filtsShi.value = e.target.files;
   // 获取选中的视频
   const uploadFiles = e.target.files;
   // 获取视频大小
@@ -266,6 +314,7 @@ let handleInputV = (e) => {
         // 没有添加就添加
         if (!flag) {
           fileList.value.push(uploadFiles[i]);
+          fileUrlList.value.push(uploadFiles[i]);
         }
       }
     }
@@ -290,7 +339,6 @@ let handleInputV = (e) => {
       }
       // 视频大小， 超出身份限制
       else {
-        console.log("视频太大啦");
         // 复制参数，修改弹出框信息
         UploadModal.value = {
           flag: true,
@@ -333,6 +381,7 @@ let handleInputV = (e) => {
   } else {
     console.log("没选");
   }
+  upload.value = null;
 };
 //  获取videotime
 const myFunction = (e) => {
@@ -354,84 +403,90 @@ const HandleDrag = (e) => {
 let downloadTimer = ref(null);
 // 点击下载全部
 const downloadHandle = () => {
-  // 让下载中弹窗显示
-  videoXz.value.flag = true;
-  videoXz.value.num = fileUrlList.value.length;
-  videoDownWc.value.num = fileUrlList.value.length;
-  // 查看用户的身份
-  let roleType = store.state.user.userData.roleType;
+  // 点击全部，判断试试功能状态是否为true，如果是true，就不能下载，用户权限不够，是false才能下载
+  if (store.state.home.trial) {
+    store.state.home.trial;
+    modalFlag.value = true;
+  } else {
+    // 让下载中弹窗显示
+    videoXz.value.flag = true;
+    videoXz.value.num = fileUrlList.value.length;
+    videoDownWc.value.num = fileUrlList.value.length;
+    // 查看用户的身份
+    let roleType = store.state.user.userData.roleType;
 
-  // 判断下载次数是否小于用户准备下载视频的个数
-  if (downloadNumber.value < fileUrlList.value.length) {
-    // 复制参数，修改弹出框信息
-    return (UploadModal.value = {
-      flag: true,
-      state: roleType,
-    });
-  }
-
-  // 设置一个记录下载为false的变量
-  let FalseNum = 0;
-  let blogTitle = "下载文件的名字";
-  let zip = new JSZip();
-  let promiseArr = [];
-  let cache = {};
-  // 要下载图片的url
-  let arrImg = [];
-  for (let i = 0; i < fileUrlList.value.length; i++) {
-    if (fileUrlList.value[i].xz === false) {
-      FalseNum++;
-      // 下载
-      arrImg.push({
-        path: fileUrlList.value[i].videoUrl,
-        name: fileUrlList.value[i].file.name,
+    // 判断下载次数是否小于用户准备下载视频的个数
+    if (downloadNumber.value < fileUrlList.value.length) {
+      // 复制参数，修改弹出框信息
+      return (UploadModal.value = {
+        flag: true,
+        state: roleType,
       });
-      fileUrlList.value[i].xz = true;
-      store.commit("home/setConversionList", fileUrlList.value);
     }
-  }
-  // 扣除本地下载次数
-  killDownLoadNumber(FalseNum, userid.value);
-  for (let item of arrImg) {
-    const promise = getImgArrayBuffer(item.path).then((data) => {
-      // 下载文件，并存成ArrayBuffer对象（blob）
-      zip.file(item.name, data, { binary: true }); // 逐个添加文件
-      cache[item.name] = data;
-    });
-    promiseArr.push(promise);
-  }
-  Promise.all(promiseArr).then(() => {
-    // 下载默认时间
-    let delayTime = 1800;
-    // 下载起始时间
-    let currentTime = new Date().getTime();
-    zip
-      .generateAsync({ type: "blob" })
-      .then((content) => {
-        // 下载后时间
-        let tempTime = new Date().getTime();
-        // 下载时间
-        delayTime =
-          tempTime - currentTime < 1800 ? 1800 : tempTime - currentTime;
-        // 开启定时器
-        downloadTimer.value = window.setInterval(() => {
-          // 下载中弹出框隐藏
-          videoXz.value.flag = false;
-          // 下载完成弹出框显示
-          videoDownWc.value.flag = true;
-          // 去除定时器
-          clearInterval(downloadTimer.value);
-          // 让定时器为空
-          downloadTimer.value = true;
-        }, delayTime);
-        // 生成二进制
-        FileSaver.saveAs(content, blogTitle); // 利用file-saver保存文件 自定义文件名
-        this.btnLoading = false;
-      })
-      .catch((res) => {
-        // message.warning("文件压缩失败");
+
+    // 设置一个记录下载为false的变量
+    let FalseNum = 0;
+    let blogTitle = "下载文件的名字";
+    let zip = new JSZip();
+    let promiseArr = [];
+    let cache = {};
+    // 要下载图片的url
+    let arrImg = [];
+    for (let i = 0; i < fileUrlList.value.length; i++) {
+      if (fileUrlList.value[i].xz === false) {
+        FalseNum++;
+        // 下载
+        arrImg.push({
+          path: fileUrlList.value[i].videoUrl,
+          name: fileUrlList.value[i].file.name,
+        });
+        fileUrlList.value[i].xz = true;
+        store.commit("home/setConversionList", fileUrlList.value);
+      }
+    }
+    // 扣除本地下载次数
+    killDownLoadNumber(FalseNum, userid.value);
+    for (let item of arrImg) {
+      const promise = getImgArrayBuffer(item.path).then((data) => {
+        // 下载文件，并存成ArrayBuffer对象（blob）
+        zip.file(item.name, data, { binary: true }); // 逐个添加文件
+        cache[item.name] = data;
       });
-  });
+      promiseArr.push(promise);
+    }
+    Promise.all(promiseArr).then(() => {
+      // 下载默认时间
+      let delayTime = 1800;
+      // 下载起始时间
+      let currentTime = new Date().getTime();
+      zip
+        .generateAsync({ type: "blob" })
+        .then((content) => {
+          // 下载后时间
+          let tempTime = new Date().getTime();
+          // 下载时间
+          delayTime =
+            tempTime - currentTime < 1800 ? 1800 : tempTime - currentTime;
+          // 开启定时器
+          downloadTimer.value = window.setInterval(() => {
+            // 下载中弹出框隐藏
+            videoXz.value.flag = false;
+            // 下载完成弹出框显示
+            videoDownWc.value.flag = true;
+            // 去除定时器
+            clearInterval(downloadTimer.value);
+            // 让定时器为空
+            downloadTimer.value = true;
+          }, delayTime);
+          // 生成二进制
+          FileSaver.saveAs(content, blogTitle); // 利用file-saver保存文件 自定义文件名
+          this.btnLoading = false;
+        })
+        .catch((res) => {
+          // message.warning("文件压缩失败");
+        });
+    });
+  }
 };
 
 /**
