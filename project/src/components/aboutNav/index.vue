@@ -91,4 +91,5 @@ const logoutHandle = () => {
 
 <style lang="scss" scoped>
 @import "@/assets/css/about/aboutNav/aboutNav_1440px.scss";
+@import "@/assets/css/about/aboutNav/aboutNav_1280px.scss";
 </style>
