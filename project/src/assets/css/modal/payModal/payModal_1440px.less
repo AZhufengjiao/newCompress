@@ -324,6 +324,7 @@
           height: 211px;
           position: relative;
           ul {
+            z-index: 1;
             padding-top: 14px;
             position: relative;
             display: flex;
@@ -438,9 +439,7 @@
                 line-height: 14px;
               }
             }
-            li:nth-child(1) {
-              pointer-events: none;
-            }
+
             .styleLi {
               background: rgba(255, 150, 117, 0.15) !important;
               border: 2px solid #ff5b00;
@@ -452,7 +451,7 @@
         }
 
         .mvpTC-left {
-          pointer-events: auto;
+          // pointer-events: auto;
           position: absolute;
           left: 0;
           bottom: 36px;
@@ -461,6 +460,7 @@
           background: #ffffff;
           opacity: 0.66;
           border-radius: 0 8px 8px 0;
+          z-index: 10;
         }
         .mvpTC-left:after {
           content: "";
@@ -499,12 +499,20 @@
           background: #03030340;
           border-radius: 8px 0 0 8px;
         }
-        .mvpTC-right:hover .StyleaLeft li {
-          pointer-events: none;
-        }
-        .mvpTC-right:hover {
-          pointer-events: auto;
-        }
+        // .mvpTC-right:hover .StyleaLeft li {
+        //   pointer-events: none;
+        // }
+        // .mvpTC-right:hover {
+        //   pointer-events: auto;
+        // }
+        // .mvpTC-left:hover   .modal-mvpTC ul #li {
+        //   // pointer-events: none !important;
+        //   background-color: red;
+        // }
+        // .mvpTC-left:hover {
+
+        //   // pointer-events: auto !important;
+        // }
       }
 
       // 优惠下拉框
@@ -584,23 +592,20 @@
           }
         }
       }
-      .discountCoupon:hover .top-sj {
-        display: none;
-      }
 
-      .discountCoupon:hover .xialakuang {
-        display: block;
-      }
+      // .discountCoupon:hover .xialakuang {
+      //   display: block;
+      // }
       // 下拉框
       .xialakuang {
         z-index: 9;
         position: absolute;
         left: 0;
-        padding-top: 17px;
-        top: 26px;
+        top: 45px;
+        height: 212px;
         display: flex;
-        display: none;
         width: 100%;
+        background: #fff;
         ul {
           width: 100%;
           li {
@@ -656,6 +661,9 @@
           // }
         }
       }
+      .xialakuangOver-Y {
+        overflow-y: auto;
+      }
 
       // 支付方式
       .modePayment {
@@ -680,13 +688,15 @@
             display: flex;
             align-items: center;
             width: 100px;
+            width: 140px;
             height: 42px;
             background: #0040ff;
             border-radius: 25px;
             .modal-payment-img {
-              margin-left: 33px;
+              margin-left: 20px;
               font-size: 0;
               width: 24px;
+
               height: 19px;
               img {
                 display: block;
@@ -696,6 +706,7 @@
             }
             span {
               margin: auto;
+              margin-left: 12px;
               font-size: 16px;
               font-family: PingFangSC-Medium, PingFang SC;
               font-weight: 500;
@@ -738,6 +749,10 @@
             font-weight: 400;
             color: #956637;
             line-height: 19px;
+            h5 {
+              display: inline-block;
+              color: #ff4a00;
+            }
             span {
               font-size: 30px;
               font-family: HarmonyOS_Sans_Condensed_Bold;
@@ -750,18 +765,18 @@
             }
           }
           h2 {
-            width: 215px;
             height: 20px;
             background: rgba(201, 169, 106, 0.15);
             border-radius: 4px;
             margin-bottom: 11px;
+            padding: 0 6px;
             font-size: 11px;
             transform: scale(0.83333);
             transform-origin: 0 0;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: #956637;
-            line-height: 16px;
+            line-height: 20px;
             span {
               color: #eb2b00;
             }

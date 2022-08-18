@@ -10,6 +10,7 @@
       <div class="img">
         <img src="" alt="" />
       </div>
+
       <!-- 免费会员  -->
       <div v-if="UploadModal.state === 'free'">
         <p>免费会员支持大小不超过10M视频上传</p>
@@ -49,10 +50,9 @@ components: {
   payModel;
 }
 const props = defineProps({ UploadModal: Object });
-const emit = defineEmits(["updateFlag"]);
+const emit = defineEmits(["updateFlag", "trialFlag"]);
 let { UploadModal } = toRefs(props);
 const store = useStore();
-
 // 弹出框显示与隐藏的状态
 let modalShow = ref(UploadModal.value.flag);
 
@@ -70,8 +70,6 @@ watch(
 const handleTry = () => {
   emit("");
 };
-
-
 
 // 点击删除键，关闭弹出框
 const cancelHandle = () => {
@@ -101,7 +99,8 @@ const closeHandle = (state) => {
 const handleShiShi = () => {
   modalShow.value = false;
   store.commit("home/setTrial", true);
-  emit("updateFlag", false);
+  emit("trialFlag", false);
+  // emit("updateFlag", false);
 };
 </script>
 

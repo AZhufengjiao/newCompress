@@ -34,11 +34,9 @@
           }}</span>
         </div>
       </div>
-      <span
-        class="home_fileCompression_box_memory"
-        :style="{ opacity: compressSize ? 1 : 0 }"
-        >{{ compressSize + "M" }}</span
-      >
+      <span class="home_fileCompression_box_memory">{{
+        compressSize ? compressSize + "M" : "-"
+      }}</span>
     </div>
     <div class="home_fileCompression_box_zh">
       <span v-if="state == 'sc'">{{
@@ -78,7 +76,6 @@ import {
   getCompressToken,
   getSchedule,
   getTranscoding,
-  homeTemplateList,
   getOperationStatusAvinfo,
 } from "@/api/home";
 import { getKillDownloadNum } from "@/api/about";
@@ -118,7 +115,6 @@ const props = defineProps({
 });
 // 获取上传文件
 let file = ref(props.item);
-// console.log(file.value);
 // 获取上传文件类型  "video/mp4"
 let fileType = ref(props.item.type);
 // 获取上传视频名字
@@ -226,7 +222,7 @@ const getCompressTK = (suffix) => {
         uploadForm.append("file", file.value);
         axios({
           method: "post",
-          url: "https://upload.qiniup.com",
+          url: "https://up-cn-east-2.qiniup.com",
           data: uploadForm,
           onUploadProgress: (propressEvent) => {
             if (propressEvent.lengthComputable) {
@@ -240,7 +236,7 @@ const getCompressTK = (suffix) => {
           },
         }).then((res) => {
           if (res.status == 200) {
-            uploadinUrl.value = "https://img.soogif.com/" + res.data.key; // https://img.soogif.com/video/cb55e08285524315b9634875a5b156acMyVideo_3.mp4 这个样子
+            uploadinUrl.value = "http://video.heycut.com/" + res.data.key; // https://img.soogif.com/video/cb55e08285524315b9634875a5b156acMyVideo_3.mp4 这个样子
             // 调取转码api接口
             setTranscoding();
           }
@@ -532,7 +528,7 @@ const downloadFn = () => {
         display: flex;
         align-items: center;
         .home_fileCompression_box_memory {
-          opacity: 0;
+          // opacity: 0;
           width: 65px;
           height: 29px;
           font-size: 21px;

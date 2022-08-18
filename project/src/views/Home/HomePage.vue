@@ -87,6 +87,7 @@ const getUserInfo = (userid) => {
   return userList(userid).then((res) => {
     // 没有过期 保存用户状态信息
     if (res.data.code == 200) {
+      // console.log(res.data.data.roleType);
       // 存本地
       store.commit("user/setUserData", res.data.data);
     } else {
@@ -95,6 +96,7 @@ const getUserInfo = (userid) => {
         if (res.data.code) {
           localStorage.removeItem("userid");
           store.commit("login/setParams", null);
+          store.commit("login/setUserObj", {});
         }
       });
     }
@@ -107,7 +109,6 @@ const getFrequency = (userid) => {
   return getDownloadNum(userid).then((res) => {
     // console.log(res.data);
     if (res.data.code == 200) {
-      console.log(res.data.data.downloadNumber);
       // 保存次数至本地
       store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
     }

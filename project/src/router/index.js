@@ -17,42 +17,57 @@ const routes = [
     children: [
       // 自定义格式
       {
-        path: "/video-custom-converter",
+        path: "/video-converter/:id",
         name: "video-custom-converter",
         component: () => import("@/components/home/Custom/index.vue"),
       },
       // 视频格式
       {
-        path: "/video-converter",
-        name: "video-converter1",
+        path: "/video-compressor/:id",
+        name: "video-converter",
         // redirect: "/video-converter",
         component: () => import("@/components/home/defaultYS/index.vue"),
-        children: [
-          {
-            path: "/video-converter",
-            name: "video-converter",
-            component: () =>
-              import("@/components/home/defaultYS/component/Size/index.vue"),
-            // import(
-            // "@/components/home/defaultYS/component/Converter/index.vue"
-            // ),
-          },
-          {
-            path: "/video-compressor",
-            name: "video-compressor",
-            component: () =>
-              import("@/components/home/defaultYS/component/Size/index.vue"),
-          },
-          {
-            path: "/video-lossless-compression",
-            name: "video-lossless-compression",
-            component: () =>
-              // import("@/components/home/defaultYS/component/Wusun/index.vue"),
-              import("@/components/home/defaultYS/component/Size/index.vue"),
-          },
-        ],
       },
     ],
+    // children: [
+    //   // 自定义格式
+    //   {
+    //     path: "/video-custom-converter",
+    //     name: "video-custom-converter",
+    //     component: () => import("@/components/home/Custom/index.vue"),
+    //   },
+    //   // 视频格式
+    //   {
+    //     path: "/video-converter",
+    //     name: "video-converter1",
+    //     // redirect: "/video-converter",
+    //     component: () => import("@/components/home/defaultYS/index.vue"),
+    //     children: [
+    //       {
+    //         path: "/video-converter/:id",
+    //         name: "video-converter",
+    //         component: () =>
+    //           import("@/components/home/defaultYS/component/Size/index.vue"),
+    //         // import(
+    //         // "@/components/home/defaultYS/component/Converter/index.vue"
+    //         // ),
+    //       },
+    //       {
+    //         path: "/video-compressor/:id",
+    //         name: "video-compressor",
+    //         component: () =>
+    //           import("@/components/home/defaultYS/component/Size/index.vue"),
+    //       },
+    //       {
+    //         path: "/video-lossless-compression/:id",
+    //         name: "video-lossless-compression",
+    //         component: () =>
+    //           // import("@/components/home/defaultYS/component/Wusun/index.vue"),
+    //           import("@/components/home/defaultYS/component/Size/index.vue"),
+    //       },
+    //     ],
+    //   },
+    // ],
   },
 
   {

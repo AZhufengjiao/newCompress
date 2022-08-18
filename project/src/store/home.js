@@ -16,6 +16,8 @@ const home = {
       YsSctiveKey: "format",
       // 试试权限
       trial: false,
+      // 转化需要的参数
+      params1: {},
     };
   },
   mutations: {
@@ -41,6 +43,9 @@ const home = {
     }, // 修改我要试试状态
     setTrial(state, boolean) {
       state.trial = boolean;
+    },
+    setParams1(state, obj) {
+      state.params1 = obj;
     },
   },
 };

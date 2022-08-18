@@ -129,10 +129,10 @@
                   ]"
                 >
                   <li
+                    id="li"
                     @click="clickLiHandle(item, index)"
                     v-for="(item, index) in taocanList"
                     :class="[
-                      // index !== 0 ? 'twoLi' : '',
                       Id + '' == item.pId ? '' : 'twoLi',
                       MousemoveNum + '' == item.pId ? 'styleLi' : '',
                     ]"
@@ -195,41 +195,49 @@
             </div>
 
             <!-- 优惠下拉框 -->
-            <div class="discountCoupon">
+            <div class="discountCoupon" @click="myCouponFlag = !myCouponFlag">
               <!-- 左 -->
               <div class="discountCoupon-left">
                 <div class="discountCoupon-left-quan">券</div>
                 <span>优惠折扣:</span>
-                <div class="discountCoupon-left-jian">-¥0.00</div>
+                <div class="discountCoupon-left-jian">
+                  -¥{{ paymentAmount.discounts }}
+                </div>
               </div>
               <!-- 右 -->
               <div class="discountCoupon-right">
                 <span>不使用优惠券</span>
                 <div class="discountCoupon-right-box">
-                  <div class="top-sj"></div>
+                  <div class="top-sj" v-show="!myCouponFlag"></div>
                   <div class="bottom-sj"></div>
                 </div>
               </div>
 
               <!-- 下拉框 -->
-              <div class="xialakuang">
+              <div
+                :class="{
+                  xialakuang: true,
+                  'xialakuangOver-Y': myCouponList.length > 5,
+                }"
+                v-show="myCouponFlag"
+              >
                 <ul>
-                  <li>
+                  <li
+                    v-for="item in myCouponList"
+                    :key="item.couponId"
+                    @click="handleYhq(item)"
+                  >
                     <div class="xialakuang-left">
                       <span>优惠券</span>
-                      <div>¥150.00</div>
+                      <div>¥: {{ item.discountPrice }}</div>
                     </div>
                     <div class="xialakuang-right">
-                      仅限购买钻石终身卡使用 07月28号前有效
+                      仅限购买{{ item.huiyuan }}使用
                     </div>
                   </li>
                   <li>
                     <div class="xialakuang-left">
-                      <span>优惠券</span>
-                      <div>¥150.00</div>
-                    </div>
-                    <div class="xialakuang-right">
-                      仅限购买钻石终身卡使用 07月28号前有效
+                      <span>不使用优惠券</span>
                     </div>
                   </li>
                 </ul>
@@ -249,10 +257,11 @@
                   }"
                   @click="payToggleHandle('wx')"
                 >
-                  <!-- <div class="modal-payment-img">
-                  <img src="" alt="" />
-                </div> -->
+                  <div class="modal-payment-img">
+                    <img src="" alt="" />
+                  </div>
                   <span>微信支付</span>
+                  <!-- <span>微信支付</span> -->
                 </a-button>
                 <!-- 支付宝 -->
                 <a-button
@@ -263,10 +272,11 @@
                   }"
                   @click="payToggleHandle('zfb')"
                 >
-                  <!-- <div class="modal-payment-img">
-                  <img src="" alt="" />
-                </div> -->
+                  <div class="modal-payment-img">
+                    <img src="" alt="" />
+                  </div>
                   <span>支付宝</span>
+                  <!-- <span>支付宝</span> -->
                 </a-button>
               </div>
               <!-- 二维码 -->
@@ -276,18 +286,20 @@
               <!-- 支付金额 -->
               <div class="modePayment-price">
                 <h1>
-                  支付金额 <span>{{ paymentAmount.price }}</span> 元/12个月
+                  实付 <span>{{ paymentAmount.price }}</span
+                  >元
+
+                  <h5>已优惠{{ paymentAmount.discounts }}元</h5>
                 </h1>
                 <h2>
-                  已优惠 <span>{{ paymentAmount.discounts }}</span> 元,优惠仅剩
-                  : &nbsp;
+                  优惠券倒计时 : &nbsp;
                   <span class="red-span">09:08:03,6</span>
                 </h2>
                 <h3>支付即视为同意 《SOOGIF抠图协议》</h3>
               </div>
 
               <!-- 动画 -->
-              <div class="modePayment-dh">
+              <!-- <div class="modePayment-dh">
                 <ul ref="carouselDom" :style="{ top: -carouselNum + 'px' }">
                   <li v-for="item in carouselList" :key="item">
                     <div class="modePayment-dh-img">
@@ -296,7 +308,7 @@
                     <p><span>S*****1，购买了白金会员</span></p>
                   </li>
                 </ul>
-              </div>
+              </div> -->
             </div>
 
             <p>支付即视为同意 《SOOGIF抠图协议》</p>
@@ -326,10 +338,13 @@ import { getAlipayQR, getWxQR, getPayState } from "@/api/payQR";
 import { getDownloadNum, getSetMeal, getMyCoupon } from "@/api/about";
 import taoCanFn from "@/assets/js/taoCanFn.js"; //封装套餐数据
 import { userList } from "@/api/user";
+import { useRouter } from "vue-router";
 components: {
   QrcodeVue, paySucceedModal;
 }
 const store = useStore();
+// 跳转router
+const router = useRouter();
 const props = defineProps({
   modalFlag: Boolean,
   currentId: Number,
@@ -367,6 +382,11 @@ let payTimer = ref(null);
 // Pid
 let Id = ref(Number);
 
+// 优惠券列表
+const myCouponList = ref([]);
+// 优惠框开关
+const myCouponFlag = ref(false);
+
 // 支付成功弹出框
 const paySuccessF = ref(false);
 // 子组件传值，修改父组件
@@ -386,7 +406,6 @@ const setMealInfo = (id) => {
       // 1.1赋值
       // taocanList.value = res.data.data;
       taocanList.value = taoCanFn(res.data.data, store.state.home.myCoupon);
-
       // 存本地
       // store.commit("home/setSetMealInfo", res.data.data);
     }
@@ -400,6 +419,8 @@ const getPayStatus = (userId) => {
   return getPayState(formData).then((res) => {
     // 支付成功
     if (res.data.code == 200) {
+      // 支付成功，刷新页面
+      router.go(0);
       // 支付成功，弹出支付成功弹出框
       paySuccessF.value = true;
 
@@ -557,7 +578,7 @@ watch(
         //     ticketType.value = item.timeLimit;
         //   }
         // });
-      } else if (currentId.value.length !== 0 || currentId.value !== null) {
+      } else if (currentId.value !== null) {
         // 修改支付金额
         taocanList.value.map((item) => {
           if (item.pId === currentId.value) {
@@ -603,13 +624,21 @@ let MousemoveNum = ref(Number);
 //   index !== 0 ? (MousemoveNum.value = id) : "";
 // };
 // 动画ul的DOM
-let stykleUl = ref(null);
+let stykleUl = ref("");
 // 鼠标点击li的时候
 const clickLiHandle = (item, index) => {
+  if (taocanList.value.length > 4) {
+    if (index === 3 || index === 4) {
+      StyleFlag.value = false;
+    } else {
+      StyleFlag.value = true;
+    }
+  }
+  if (index === 0) {
+    return;
+  }
+  // 切换li
   Id.value = item.pId;
-  // 更新支付金额
-  paymentAmount.value.price = item.discountPrice;
-  paymentAmount.value.discounts = item.pPrice - item.discountPrice;
 
   // 重新赋值发起请求
   ticketType.value = item.timeLimit;
@@ -617,14 +646,19 @@ const clickLiHandle = (item, index) => {
   // 获取支付宝支付二维码
   getZfbQR(Id.value, userid.value, ticketType.value);
 
-  if (taocanList.value.length > 4) {
-    if (index == 3 || index == 4) {
-      console.log(stykleUl.value);
-      stykleUl.value.style.setProperty("--view-left", -122 + "px");
-    } else {
-      console.log(stykleUl.value);
-      stykleUl.value.style.setProperty("--view-left", 0 + "px");
+  // 获取优惠券
+  let yhq = [];
+  myCouponList.value.map((res) => {
+    if (res.roleType === item.roleType) {
+      yhq.push(res);
     }
+  });
+  // 更新支付金额
+  paymentAmount.value.price = item.discountPrice - yhq[0].discountPrice;
+  // 已优惠
+  paymentAmount.value.discounts = yhq[0].discountPrice;
+  if (paymentAmount.value.price <= 0) {
+    paymentAmount.value.price = 0.01;
   }
 };
 
@@ -678,7 +712,39 @@ const carouselRotation = () => {
 const getCoupon = (userid) => {
   return getMyCoupon(userid).then((res) => {
     if (res.data.code == 200) {
+      res.data.data.map((item) => {
+        if (item.roleType === "diamond") {
+          item.huiyuan = "钻石终身卡";
+        } else if (item.roleType === "platinum") {
+          item.huiyuan = "白金年卡";
+        } else if (item.roleType === "gold") {
+          item.huiyuan = "黄金月卡";
+        } else if (item.roleType === "free") {
+          item.huiyuan = "免费会员";
+        } else if (item.roleType === "silver") {
+          item.huiyuan = "白银周卡";
+        }
+      });
+      myCouponList.value = res.data.data;
       store.commit("home/setMyCoupon", res.data.data);
+    }
+  });
+};
+
+// 点击优惠券
+const handleYhq = (item) => {
+  taocanList.value.map((res) => {
+    console.log(res);
+    if (res.roleType === item.roleType) {
+      Id.value = res.pId;
+      if (res.roleType === "diamond") {
+        Id.value = 81;
+      }
+      // 套餐id改变时，修改支付金额s
+
+      paymentAmount.value.price = res.discountPrice - item.discountPrice;
+      // paymentAmount.value.discounts = res.pPrice - item.discountPrice;
+      paymentAmount.value.discounts = item.discountPrice;
     }
   });
 };
@@ -697,6 +763,6 @@ onUnmounted(() => {
 
 <style lang="less" scoped>
 // @import "ant-design-vue/dist/antd.less";
-@import "@/assets/css/modal/payModal/payModal_1440px.less";
 @import "@/assets/styles/animation/payModel/index.scss";
+@import "@/assets/css/modal/payModal/payModal_1440px.less";
 </style>

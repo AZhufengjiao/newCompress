@@ -30,6 +30,7 @@ p {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  min-width: 1024px;
 
   .home_fileCompression_box_center_box {
     .ant-progress-outer {

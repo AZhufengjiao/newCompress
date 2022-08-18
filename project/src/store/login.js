@@ -6,12 +6,18 @@ const login = {
     return {
       // 用户id
       userid: null,
+      // 用户数据
+      userObj: {},
     };
   },
   mutations: {
     // 设置用户id
     setParams(state, str) {
       state.userid = str;
+    },
+    // 修改用户信息
+    setUserObj(state, obj) {
+      state.userObj = obj;
     },
   },
   actions: {},

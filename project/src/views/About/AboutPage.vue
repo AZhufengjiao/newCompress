@@ -225,6 +225,7 @@ components: {
 }
 const $router = useRouter();
 const store = useStore();
+
 // 获取本地用户id，查看是否登录
 let state = ref(store.state.login.userid);
 // 获取工具跳转列表
@@ -234,7 +235,7 @@ onMounted(() => {
   getTemplateList();
 });
 
-// 获取跳转列表
+// 获取数据列表
 const getTemplateList = () => {
   return homeTemplateList(null, 1, 10).then((res) => {
     if (res.data.code == 200) {
@@ -243,15 +244,19 @@ const getTemplateList = () => {
   });
 };
 // 测试路由
-const handleSkip = (item) => {
-  // let url=item.link.slice(1)
-  // console.log(item.link.slice(1));
-  $router.push({
-    name: "video-converter1",
-    params: {
-      link: item.link,
-      tmpId: item.tmpId,
-    },
+const handleSkip = (res) => {
+  TemplateList.value.map((item) => {
+    if (res.tmpId === item.tmpId) {
+      if (item.sceneType === "format") {
+        $router.push({
+          path: "/video-converter/" + item.tmpId,
+        });
+      } else {
+        $router.push({
+          path: "/video-compressor/" + item.tmpId,
+        });
+      }
+    }
   });
 };
 const handle2 = () => {
@@ -272,6 +277,7 @@ const getUserInfo = (userid) => {
         if (res.data.code) {
           localStorage.removeItem("userid");
           store.commit("login/setParams", null);
+          store.commit("login/setUserObj", {});
         }
       });
     }

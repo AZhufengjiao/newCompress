@@ -348,6 +348,7 @@ const getUserInfo = (userid) => {
         if (res.data.code) {
           localStorage.removeItem("userid");
           store.commit("login/setParams", null);
+          store.commit("login/setUserObj", {});
         }
       });
     }

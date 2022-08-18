@@ -43,7 +43,7 @@ const route = useRoute();
   justify-content: center;
   background: #f6f7f9;
   z-index: 9;
-  min-width: 1920px;
+  // min-width: 1920px;
 }
 .header_logo {
   width: 207px;

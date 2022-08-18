@@ -197,10 +197,16 @@ const cancelHandle = () => {
 const scanQRcodes = (ticket) => {
   return getScanQRcodes(ticket).then((res) => {
     if (res.data.code === 200) {
+      console.log(res.data.data);
       // 存储用户id到本地
       let id = res.data.data.entity.id;
-      localStorage.setItem("userid", id);
+      // 存储用户姓名和头像
+      let obj = {
+        face: res.data.data.entity.face,
+        nickname:res.data.data.entity.nickname
+      }
       store.commit("login/setParams", id);
+           store.commit("login/setUserObj", obj);
       // 清除定时器
       clearInterval(time.value);
       time.value = null;

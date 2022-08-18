@@ -111,7 +111,6 @@ import {
   getCompressToken,
   getSchedule,
   getTranscoding,
-  homeTemplateList,
 } from "@/api/home";
 
 import { useStore } from "vuex";
@@ -175,18 +174,6 @@ const selectChange2 = (value) => {
 
 // 压缩类型数组
 let compressList = ref([
-  {
-    id: 1,
-    type: "format",
-    name: "场景压缩",
-    router: "/video-converter/",
-  },
-  {
-    id: 2,
-    type: "compress",
-    name: "大小压缩",
-    router: "/video-compressor",
-  },
   {
     id: 3,
     type: "upload",

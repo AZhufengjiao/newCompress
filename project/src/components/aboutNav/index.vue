@@ -26,7 +26,7 @@
           <!--  已登录显示 -->
           <div v-else class="haveLogged">
             <img
-              src="https://www.soogif.com/images/website/photo/photo6.gif"
+        :src="store.state.login.userObj.face"
               alt=""
             />
             <!-- 经过显示 -->
@@ -37,13 +37,10 @@
               <!-- 用户信息 -->
               <div class="haveLoggedHover-user">
                 <div class="user-img">
-                  <img
-                    src="https://www.soogif.com/images/website/photo/photo6.gif"
-                    alt=""
-                  />
+                  <img :src="store.state.login.userObj.face" alt="" />
                 </div>
                 <div class="haveLoggedHover-info">
-                  <h1>SOOGIF</h1>
+                  <h1>{{ store.state.login.userObj.nickname }}</h1>
                   <h2>ID: {{ userid }} &nbsp; 复制</h2>
                 </div>
               </div>
@@ -150,6 +147,7 @@ const logoutHandle = () => {
     if (res.data.code) {
       localStorage.removeItem("userid");
       store.commit("login/setParams", null);
+      store.commit("login/setUserObj", {});
     }
   });
 };

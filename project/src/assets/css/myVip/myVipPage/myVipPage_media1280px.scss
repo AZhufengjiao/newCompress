@@ -12,7 +12,7 @@
     .myVip-soogif {
       width: 100%;
       margin-top: 89px;
-      min-width: 900px;
+      // min-width: 900px;
       .myVip-soogif-top {
         width: 100%;
         display: flex;
@@ -51,7 +51,7 @@
 
     // vip会员特权
     .myVip-tq {
-      min-width: 1280px;
+      // min-width: 1280px;
       width: 100%;
       margin: 53px auto 0;
       text-align: center;
@@ -112,7 +112,7 @@
 
     // 会员特权
     .myVip-privilege {
-      min-width: 1280px;
+      // min-width: 1280px;
       width: 100%;
       margin-top: 53px;
       h2 {
@@ -242,6 +242,7 @@
     // 常见问题
     .myVip-tq {
       .home_footer_box {
+        // min-width: 1000px;
         padding-bottom: 89px;
         display: flex;
         width: 100%;
@@ -286,7 +287,7 @@
       padding: 73px 111px 179px;
       background-color: #f1f2f3;
       border-radius: 12px 12px 0 0;
-      min-width: 1280px;
+      // min-width: 1280px;
       h1,
       p {
         margin: 0;

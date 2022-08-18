@@ -4,6 +4,7 @@
     <uploadModal
       :UploadModal="UploadModal"
       @updateFlag="updateStateHandle"
+      @trialFlag="trialStateHandle"
     ></uploadModal>
 
     <!-- 支付弹出层 -->
@@ -26,7 +27,7 @@
       <div>智能场景压缩 · 一步搞定所有视频需求</div>
     </div>
 
-    <router-view @paramsObj="handleParamsObj"></router-view>
+    <router-view></router-view>
 
     <p class="home_compressedVideo_hanzi">
       1·解决抖音上传视频被压缩、不清晰问题
@@ -95,8 +96,8 @@
             type="primary"
             class="download"
             v-on:click="downloadHandle"
-            >下载全部</a-button
-          >
+            >下载全部
+          </a-button>
         </div>
       </div>
     </div>
@@ -116,7 +117,7 @@ import UploadModule from "@/components/home/UploadModule/index.vue"; // 下载�
 import Custom from "@/components/home/Custom/index.vue"; // 自定义压缩
 import defaultYS from "@/components/home/defaultYS/index.vue"; // 压缩场景
 import { onMounted, onUpdated, onUnmounted, ref, watch, toRefs } from "vue";
-import { getCompressScenes, homeTemplateList } from "@/api/home";
+import { getCompressScenes } from "@/api/home";
 import { getKillDownloadNum, getDownloadNum } from "@/api/about";
 import { useStore } from "vuex";
 import { message } from "ant-design-vue";
@@ -155,6 +156,16 @@ watch(
   { immediate: true }
 );
 
+watch(
+  () => store.state.home.params1,
+  (value) => {
+    params1.value = value;
+  },
+  {
+    immediate: true,
+  }
+);
+
 // 动画状态
 let flag = ref(false);
 let state = ref("sc");
@@ -175,11 +186,6 @@ watch(
     // getFrequency(userid.value);
   }
 );
-
-// 子组件传参给父组件，item是转码要用的参数
-const handleParamsObj = (item) => {
-  params1.value = item;
-};
 
 // 弹出框
 // 1.视频下载弹出框弹出框
@@ -231,10 +237,25 @@ let UploadModal = ref({
   flag: false,
   state: "",
 });
+// 试试功能
+const filtsShi = ref([]);
+let shishiFlag = ref(false);
+watch(
+  () => store.state.home.trial,
+  (newValue) => {
+    shishiFlag.value = newValue;
+    fileList.value = filtsShi.value;
+  },
+  { immediate: true }
+);
 // 子组件像父组件传递参数，修改UploadModal的状态
 const updateStateHandle = (state) => {
   UploadModal.value.flag = state;
   upload.value.value = null;
+};
+// 我要试试关闭弹窗
+const trialStateHandle = (state) => {
+  UploadModal.value.flag = state;
 };
 
 let upload = ref(null);
@@ -277,21 +298,15 @@ let videoDom = ref(null);
 // 获取置视频的时长
 let videoTime = ref(null);
 
-// 试试功能
-const filtsShi = ref([]);
+// 查看用户的身份
+let roleType = ref(store.state.user.userData.roleType);
 watch(
-  () => store.state.home.trial,
+  () => store.state.user.userData.roleType,
   (newValue) => {
-    if (newValue) {
-      fileList.value = filtsShi.value;
-    }
+    roleType.value = newValue;
   },
   { immediate: true }
 );
-
-// 创建一个下载过的文件数组
-// let ToDownloadList = ref([]);
-
 let handleInputV = (e) => {
   // 为我要试试功能存储
   filtsShi.value = e.target.files;
@@ -299,15 +314,15 @@ let handleInputV = (e) => {
   const uploadFiles = e.target.files;
   // 获取视频大小
   let videoSize = parseInt(uploadFiles[0].size / 1024 / 1024);
-
   // 查看用户的身份
-  let roleType = store.state.user.userData.roleType;
+  // let roleType = store.state.user.userData.roleType;
   if (uploadFiles.length > 0) {
     // 选中添加进fileList数组
     function fn() {
       // 遍历选中的文件
       for (let i = 0; i < uploadFiles.length; i++) {
         // 判断该文件是否添加
+        console.log(fileList.value);
         let flag = fileList.value.some(
           (item) => item.lastModified === uploadFiles[i].lastModified
         );
@@ -363,26 +378,29 @@ let handleInputV = (e) => {
     }
 
     // 免费
-    if (roleType === "free") {
-      estimateFn(roleType, 10);
+    if (roleType.value === "free") {
+      estimateFn(roleType.value, 10);
     }
     // 银
-    else if (roleType === "silver") {
-      estimateFn(roleType, 50);
+    else if (roleType.value === "silver") {
+      estimateFn(roleType.value, 50);
     }
     // 黄金
-    else if (roleType === "goid") {
-      estimateFn(roleType, 100);
+    else if (roleType.value === "goid") {
+      estimateFn(roleType.value, 100);
     }
     // 白金或者钻石
-    else if (roleType === "platinum" || roleType === "diamond") {
-      estimateFn(roleType, null);
+    else if (roleType.value === "platinum" || roleType.value === "diamond") {
+      estimateFn(roleType.value, null);
+    } else {
+      console.log("eeeeeeeeeee");
     }
   } else {
     console.log("没选");
   }
-  upload.value = null;
+  // upload.value = null;
 };
+
 //  获取videotime
 const myFunction = (e) => {
   videoTime.value = e.target.duration;
@@ -404,25 +422,24 @@ let downloadTimer = ref(null);
 // 点击下载全部
 const downloadHandle = () => {
   // 点击全部，判断试试功能状态是否为true，如果是true，就不能下载，用户权限不够，是false才能下载
-  if (store.state.home.trial) {
-    store.state.home.trial;
-    modalFlag.value = true;
+  if (shishiFlag.value) {
+    console.log(shishiFlag.value);
+    modalFlag.value = true; // 支付弹出框
   } else {
-    // 让下载中弹窗显示
-    videoXz.value.flag = true;
-    videoXz.value.num = fileUrlList.value.length;
-    videoDownWc.value.num = fileUrlList.value.length;
-    // 查看用户的身份
-    let roleType = store.state.user.userData.roleType;
-
     // 判断下载次数是否小于用户准备下载视频的个数
     if (downloadNumber.value < fileUrlList.value.length) {
       // 复制参数，修改弹出框信息
       return (UploadModal.value = {
         flag: true,
-        state: roleType,
+        state: roleType.value,
       });
     }
+    // 让下载中弹窗显示
+    videoXz.value.flag = true;
+    videoXz.value.num = fileUrlList.value.length;
+    videoDownWc.value.num = fileUrlList.value.length;
+    // 查看用户的身份
+    // let roleType = store.state.user.userData.roleType;
 
     // 设置一个记录下载为false的变量
     let FalseNum = 0;
@@ -660,8 +677,9 @@ const FileItemParams = (item) => {
   width: 100%;
   padding-top: 156px;
   .home_compressedVideo_hanzi {
+    width: 1333px;
     text-align: left;
-    margin: 17px 0 21px 288px;
+    margin: 17px auto 21px;
     font-size: 16px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
