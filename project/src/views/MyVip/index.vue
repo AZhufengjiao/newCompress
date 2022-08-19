@@ -26,7 +26,7 @@
         <ul>
           <li v-for="item in arr" :key="item">
             <div class="myVip-tq-box-b">
-              <img src="" alt="" />
+              <img src="@/assets/img/vipPage/tequan/one.png" alt="" />
             </div>
             <p>实时热图更新</p>
           </li>
@@ -202,7 +202,7 @@
         <ul>
           <li v-for="item in yearArr" :key="item">
             <div class="myVip-tq-box-b">
-              <img src="" alt="" />
+              <img src="@/assets/img/vipPage/dalibao/route.png" alt="" />
             </div>
             <p>335款可商用字体</p>
           </li>
@@ -216,7 +216,7 @@
       <h1>提供发票 报销无忧</h1>
       <div class="myVip-tq-box">
         <div class="myVip-tq-box-left">
-          <img src="" alt="" />
+          <img src="@/assets/img/vipPage/invoice.png" alt="" />
         </div>
         <div class="myVip-tq-box-right">
           <h1>发票类型：增值税普通发票/增值税专用发票</h1>

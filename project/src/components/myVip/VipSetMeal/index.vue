@@ -54,7 +54,7 @@
             <p>{{ item.huiYuanType }}会员·{{ item.newTimeLimit }}</p>
             <div class="myVip-setMeal-box-plan-price-box">
               <div
-                v-if="index !== 0 && item.yhq[0]"
+                v-if="index !== 0 && item.flag !== false"
                 class="myVip-setMeal-box-plan-quan"
               >
                 券后
@@ -210,7 +210,7 @@ import elementResizeDetectorMaker from "element-resize-detector";
 import { useRouter } from "vue-router";
 import payModel from "@/components/modal/payModal/index.vue"; // 支付弹出框
 import loginModel from "@/components/modal/loginModal/index.vue"; // 支付弹出框
-import { getSetMeal } from "@/api/about";
+import { getSetMeal, getMyCoupon } from "@/api/about";
 import { onMounted, onUpdated, ref, watch, onUnmounted } from "vue";
 import taoCanFn from "@/assets/js/taoCanFn.js"; // 封装套餐数据
 import { useStore } from "vuex";
@@ -266,8 +266,9 @@ onUpdated(() => {
 watch(
   () => store.state.login.userid,
   (newValue) => {
-    console.log(newValue);
     userid.value = newValue;
+    // 获取优惠券
+    getCoupon(userid.value);
     // 获取套餐数据
     setMealInfo(newValue);
   }
@@ -295,12 +296,27 @@ const btnToggle = ref(null);
 
 // 套餐数据
 let setMealList = ref([]);
+// 优惠券数据
+const myCouponList = ref([]);
 
 // 1.从本地拿套餐数据
 onMounted(() => {
+  // 获取优惠券
+  getCoupon(userid.value);
   // 获取套餐数据
   setMealInfo(userid.value);
 });
+
+// 3.获取可用优惠券
+const getCoupon = (userid) => {
+  return getMyCoupon(userid).then((res) => {
+    if (res.data.code == 200) {
+      myCouponList.value = res.data.data;
+
+      store.commit("home/setMyCoupon", res.data.data);
+    }
+  });
+};
 
 // 2. 获取套餐信息列表存储本地
 const setMealInfo = (id) => {
@@ -309,9 +325,32 @@ const setMealInfo = (id) => {
     if (res.data.code == 200) {
       // 1.1赋值
       setMealList.value = taoCanFn(res.data.data, store.state.home.myCoupon);
+      setMealList.value.map((item) => {
+        // console.log(11, item.roleType);
+        let arr = [];
+        myCouponList.value.filter((j) => {
+          // console.log(22, j.roleType);
+          if (j.roleType === item.roleType) {
+            arr.push(j);
+          } else {
+            arr.push({ discountPrice: 0 });
+          }
+        });
+        item.discountPrice = item.discountPrice - arr[0].discountPrice;
+        item.discountPrice <= 0
+          ? (item.discountPrice = 0.01)
+          : item.discountPrice;
 
-      // 存本地
-      // store.commit("home/setSetMealInfo", res.data.data);
+        // 查看哪个套餐没有优惠券
+        let flag = myCouponList.value.some((s) => item.roleType === s.roleType);
+        // 没有就标记一下
+        if (!flag) {
+          item = item.flag = false;
+        }
+        // console.log(flag);
+      });
+      // console.log(myCouponList.value);
+      // console.log(setMealList.value);
     }
   });
 };

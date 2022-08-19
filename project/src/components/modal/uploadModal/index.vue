@@ -8,7 +8,7 @@
       <div class="cancel" v-on:click="cancelHandle">x</div>
       <!-- 图片 -->
       <div class="img">
-        <img src="" alt="" />
+        <img src="@/assets/img/modal/shiyongModal/shiyong.png" alt="" />
       </div>
 
       <!-- 免费会员  -->

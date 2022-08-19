@@ -21,11 +21,11 @@
           <!-- 左边 -->
           <div class="modal-header-left">
             <div class="modal-header-img">
-              <img src="" alt="" />
+              <img :src="store.state.login.userObj.face" alt="" />
             </div>
             <div class="modal-header-span">
               <div class="modal-header-name">
-                <div>SOOGIF_d436190</div>
+                <div>{{ store.state.login.userObj.nickname }}</div>
                 <div class="modal-header-identity">黄金</div>
               </div>
               <span>2028.09.23到期</span>
@@ -44,19 +44,39 @@
               <ul class="equityUl">
                 <li>
                   <h3>下载提升50张/天</h3>
-                  <div><img src="" alt="" /></div>
+                  <div>
+                    <img
+                      src="@/assets/img/modal/payModal/slices/gou.png"
+                      alt=""
+                    />
+                  </div>
                 </li>
                 <li>
                   <h3>下载提升50张/天</h3>
-                  <div><img src="" alt="" /></div>
+                  <div>
+                    <img
+                      src="@/assets/img/modal/payModal/slices/gou.png"
+                      alt=""
+                    />
+                  </div>
                 </li>
                 <li>
                   <h3>下载提升50张/天</h3>
-                  <div><img src="" alt="" /></div>
+                  <div>
+                    <img
+                      src="@/assets/img/modal/payModal/slices/gou.png"
+                      alt=""
+                    />
+                  </div>
                 </li>
                 <li>
                   <h3>下载提升50张/天</h3>
-                  <div><img src="" alt="" /></div>
+                  <div>
+                    <img
+                      src="@/assets/img/modal/payModal/slices/gou.png"
+                      alt=""
+                    />
+                  </div>
                 </li>
               </ul>
 
@@ -206,7 +226,7 @@
               </div>
               <!-- 右 -->
               <div class="discountCoupon-right">
-                <span>不使用优惠券</span>
+                <span>已为您匹配最大金额优惠券</span>
                 <div class="discountCoupon-right-box">
                   <div class="top-sj" v-show="!myCouponFlag"></div>
                   <div class="bottom-sj"></div>
@@ -257,9 +277,9 @@
                   }"
                   @click="payToggleHandle('wx')"
                 >
-                  <div class="modal-payment-img">
+                  <!-- <div class="modal-payment-img">
                     <img src="" alt="" />
-                  </div>
+                  </div> -->
                   <span>微信支付</span>
                   <!-- <span>微信支付</span> -->
                 </a-button>
@@ -272,9 +292,9 @@
                   }"
                   @click="payToggleHandle('zfb')"
                 >
-                  <div class="modal-payment-img">
+                  <!-- <div class="modal-payment-img">
                     <img src="" alt="" />
-                  </div>
+                  </div> -->
                   <span>支付宝</span>
                   <!-- <span>支付宝</span> -->
                 </a-button>
@@ -406,8 +426,19 @@ const setMealInfo = (id) => {
       // 1.1赋值
       // taocanList.value = res.data.data;
       taocanList.value = taoCanFn(res.data.data, store.state.home.myCoupon);
-      // 存本地
-      // store.commit("home/setSetMealInfo", res.data.data);
+      taocanList.value.map((item) => {
+        myCouponList.value.filter((j) => {
+          if (item.roleType === j.roleType) {
+            item.yhq.push(j);
+          }
+        });
+
+        // 查看没有优惠券的套餐
+        let flag = myCouponList.value.some((s) => item.roleType === s.roleType);
+        if (!flag) {
+          item.yhq.push({ discountPrice: 0 });
+        }
+      });
     }
   });
 };
@@ -523,10 +554,11 @@ watch(
   (newValue) => {
     // 参数是true，就赋值显示弹出框
     if (newValue == true) {
-      // 1.1赋值
-      setMealInfo(userid.value);
       // 获取可用优惠券信息
       getCoupon(userid.value);
+      // 1.1赋值
+      setMealInfo(userid.value);
+
       // 赋值
       visible.value = newValue;
     }
@@ -558,15 +590,16 @@ watch(
             )[0].pId;
           }
 
-          if (item.pId == Id.value) {
-            ticketType.value = item.timeLimit;
-            // 套餐id改变时，修改支付金额
-            paymentAmount.value.price = item.discountPrice;
-            paymentAmount.value.discounts = item.pPrice - item.discountPrice;
-            // 赋值
-            // 获取支付宝支付二维码
-            getZfbQR(Id.value, userid.value, ticketType.value);
-          }
+          // if (item.pId == Id.value) {
+          //   console.log(item);
+          //   ticketType.value = item.timeLimit;
+          //   // 套餐id改变时，修改支付金额
+          //   paymentAmount.value.price = item.discountPrice;
+          //   paymentAmount.value.discounts = item.pPrice - item.discountPrice;
+          //   // 赋值
+          //   // 获取支付宝支付二维码
+          //   getZfbQR(Id.value, userid.value, ticketType.value);
+          // }
         });
 
         // 弹出框显示，展示支付二维码，查看用户是否支付
@@ -580,13 +613,24 @@ watch(
         // });
       } else if (currentId.value !== null) {
         // 修改支付金额
-        taocanList.value.map((item) => {
+        taocanList.value.map((item, index) => {
           if (item.pId === currentId.value) {
             Id.value = item.pId;
             ticketType.value = item.timeLimit;
             // 套餐id改变时，修改支付金额
-            paymentAmount.value.price = item.discountPrice;
-            paymentAmount.value.discounts = item.pPrice - item.discountPrice;
+            paymentAmount.value.price =
+              item.discountPrice - item.yhq[0].discountPrice;
+            paymentAmount.value.price <= 0
+              ? (paymentAmount.value.price = 0.01)
+              : paymentAmount.value.price;
+            paymentAmount.value.discounts = item.yhq[0].discountPrice;
+
+            // 判断数组是否大于4，并且ID是都是最后一个，如果是最后，那么就要滚动支付弹出框
+            if (taocanList.value.length > 4) {
+              if (index === 3 || index === 4) {
+                StyleFlag.value = false;
+              }
+            }
 
             // 赋值
             // 获取支付宝支付二维码
@@ -651,12 +695,14 @@ const clickLiHandle = (item, index) => {
   myCouponList.value.map((res) => {
     if (res.roleType === item.roleType) {
       yhq.push(res);
+    } else {
+      yhq.push({ discountPrice: 0 });
     }
   });
   // 更新支付金额
   paymentAmount.value.price = item.discountPrice - yhq[0].discountPrice;
   // 已优惠
-  paymentAmount.value.discounts = yhq[0].discountPrice;
+  paymentAmount.value.discounts = item.yhq[0].discountPrice;
   if (paymentAmount.value.price <= 0) {
     paymentAmount.value.price = 0.01;
   }
