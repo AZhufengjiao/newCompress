@@ -322,7 +322,6 @@ let handleInputV = (e) => {
       // 遍历选中的文件
       for (let i = 0; i < uploadFiles.length; i++) {
         // 判断该文件是否添加
-        console.log(fileList.value);
         let flag = fileList.value.some(
           (item) => item.lastModified === uploadFiles[i].lastModified
         );

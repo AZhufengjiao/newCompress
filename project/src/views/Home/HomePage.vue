@@ -52,7 +52,6 @@
       </a-layout-footer>
     </a-layout>
   </div>
-  <aa :downloadModal="downloadModal"></aa>
 </template>
 
 <script setup>
@@ -135,8 +134,6 @@ watch(
     immediate: true,
   }
 );
-
- 
 
 // onMounted(() => {
 //   axios({

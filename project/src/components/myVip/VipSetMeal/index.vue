@@ -327,28 +327,33 @@ const setMealInfo = (id) => {
       // 1.1赋值
       setMealList.value = taoCanFn(res.data.data, store.state.home.myCoupon);
       setMealList.value.map((item) => {
-        // console.log(11, item.roleType);
         let arr = [];
         myCouponList.value.filter((j) => {
-          // console.log(22, j.roleType);
           if (j.roleType === item.roleType) {
             arr.push(j);
           } else {
             arr.push({ discountPrice: 0 });
           }
         });
-        item.discountPrice = item.discountPrice - arr[0].discountPrice;
-        item.discountPrice <= 0
-          ? (item.discountPrice = 0.01)
-          : item.discountPrice;
 
         // 查看哪个套餐没有优惠券
         let flag = myCouponList.value.some((s) => item.roleType === s.roleType);
         // 没有就标记一下
         if (!flag) {
-          item = item.flag = false;
+          item.flag = false;
+          arr.push({ discountPrice: 0 });
         }
-        // console.log(flag);
+        if (myCouponList.value.length !== 0) {
+          item.discountPrice = item.discountPrice - arr[0].discountPrice;
+          item.discountPrice <= 0
+            ? (item.discountPrice = 0.01)
+            : item.discountPrice;
+        } else {
+          item.discountPrice = item.discountPrice;
+          item.discountPrice <= 0
+            ? (item.discountPrice = 0.01)
+            : item.discountPrice;
+        }
       });
       // console.log(myCouponList.value);
       // console.log(setMealList.value);

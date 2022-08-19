@@ -25,10 +25,7 @@
           </div>
           <!--  已登录显示 -->
           <div v-else class="haveLogged">
-            <img
-        :src="store.state.login.userObj.face"
-              alt=""
-            />
+            <img :src="store.state.login.userObj.face" alt="" />
             <!-- 经过显示 -->
             <div class="haveLoggedHover">
               <!-- 定位背景 -->
@@ -49,7 +46,7 @@
                 <!-- 球 -->
                 <div class="ball"></div>
                 <div>
-                  <h1>尚未开通VIP</h1>
+                  <h1>{{ identityInfo }}</h1>
                   <h2>享全站工具288+功能</h2>
                 </div>
                 <a-button type="primary">立即开通</a-button>
@@ -109,7 +106,7 @@
 <script setup>
 import loginModel from "@/components/modal/loginModal/index.vue";
 import { userLogOut } from "@/api/login";
-import { ref, toRefs, watch } from "vue";
+import { onMounted, ref, toRefs, watch } from "vue";
 import { useStore } from "vuex";
 import { imgList } from "./index.js";
 components: {
@@ -123,15 +120,44 @@ const store = useStore();
 let visible = ref(true);
 
 // 获取本地用户id，查看是否登录
-let userid = ref("");
-userid.value = store.state.login.userid;
+let userid = ref(store.state.login.userid);
+//  获取用户身份
+const identity = ref("");
+const identityInfo = ref("免费会员：终身");
 
+// 监听用户id
 watch(
   () => store.state.login.userid,
   (newValue) => {
     userid.value = newValue;
   },
   { immediate: true }
+);
+
+// 监听用户身份
+watch(
+  () => store.state.user.userData.roleType,
+  (newValue) => {
+    // 判断用户身份是否为空
+    if (newValue !== null || newValue.length !== 0) {
+      // 赋值用户身份
+      identity.value = newValue;
+      if (identity.value === "free") {
+        identityInfo.value = "免费会员：终身";
+      } else if (identity.value === "silver") {
+        identityInfo.value = "白银会员：周卡";
+      } else if (identity.value === "gold") {
+        identityInfo.value = "黄金会员：月卡";
+      } else if (identity.value === "platinum") {
+        identityInfo.value = "白金会员：年卡";
+      } else if (identity.value === "diamond") {
+        identityInfo.value = "钻石会员：终身";
+      }
+    }
+  },
+  {
+    immediate: true,
+  }
 );
 
 // 登录弹出框
@@ -145,9 +171,7 @@ const CancelChild = (val) => {
 const logoutHandle = () => {
   return userLogOut().then((res) => {
     if (res.data.code) {
-      localStorage.removeItem("userid");
-      store.commit("login/setParams", null);
-      store.commit("login/setUserObj", {});
+      localStorage.removeItem("lanhu");
     }
   });
 };

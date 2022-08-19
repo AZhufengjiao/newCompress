@@ -126,7 +126,7 @@ components: {
   UploadModule, SmileOutlined, MehOutlined, CaretDownOutlined;
 }
 const store = useStore();
-const activeKey = ref(1);
+const activeKey = ref(3);
 const activeKeySon = ref(1);
 // 定义选择的压缩类型数组
 let fileList = ref([]);
