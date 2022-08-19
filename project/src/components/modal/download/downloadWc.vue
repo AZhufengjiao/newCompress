@@ -9,7 +9,10 @@
 
       <div class="download1-top">
         <div class="download1-img">
-          <img src="" alt="" />
+          <img
+            src="@/assets/img/modal/xiazaizhongModal/xiazaiwanc.png"
+            alt=""
+          />
           <span>下载成功</span>
         </div>
         <h1>

@@ -202,14 +202,14 @@
                 <div
                   class="mvpTC-left"
                   v-show="
-                    (StyleFlag || StyleFlag == null) && taocanList.length > 4
+                    (!StyleFlag || StyleFlag == null) && taocanList.length > 4
                   "
-                  v-on:click="StyleFlag = false"
+                  v-on:click="StyleFlag = true"
                 ></div>
                 <div
                   class="mvpTC-right"
-                  v-show="StyleFlag === false"
-                  v-on:click="StyleFlag = true"
+                  v-show="StyleFlag === true"
+                  v-on:click="StyleFlag = false"
                 ></div>
               </div>
             </div>

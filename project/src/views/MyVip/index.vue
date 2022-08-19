@@ -24,9 +24,9 @@
       <h1>VIP会员特权</h1>
       <div class="myVip-tq-box">
         <ul>
-          <li v-for="item in arr" :key="item">
+          <li v-for="item in arr" :key="item.id">
             <div class="myVip-tq-box-b">
-              <img src="@/assets/img/vipPage/tequan/one.png" alt="" />
+              <img :src="item.src" alt="" />
             </div>
             <p>实时热图更新</p>
           </li>
@@ -200,9 +200,9 @@
       <h1>年费会员大礼包</h1>
       <div class="myVip-tq-box">
         <ul>
-          <li v-for="item in yearArr" :key="item">
+          <li v-for="item in yearArr" :key="item.id">
             <div class="myVip-tq-box-b">
-              <img src="@/assets/img/vipPage/dalibao/route.png" alt="" />
+              <img :src="item.src" alt="" />
             </div>
             <p>335款可商用字体</p>
           </li>
@@ -309,9 +309,107 @@ components: {
 const store = useStore();
 const $router = useRoute();
 // vip会员特权数组
-const arr = [1, 2, 3, 4, 5, 6, 7, 8];
+const arr = [
+  {
+    id: 1,
+    src: require(`../../assets/img/vipPage/tequan/one.png`),
+  },
+  {
+    id: 2,
+    src: require(`../../assets/img/vipPage/tequan/two.png`),
+  },
+  {
+    id: 3,
+    src: require(`../../assets/img/vipPage/tequan/three.png`),
+  },
+  {
+    id: 4,
+    src: require(`../../assets/img/vipPage/tequan/four.png`),
+  },
+  {
+    id: 5,
+    src: require(`../../assets/img/vipPage/tequan/five.png`),
+  },
+  {
+    id: 6,
+    src: require(`../../assets/img/vipPage/tequan/six.png`),
+  },
+  {
+    id: 7,
+    src: require(`../../assets/img/vipPage/tequan/seven.png`),
+  },
+  {
+    id: 8,
+    src: require(`../../assets/img/vipPage/tequan/eight.png`),
+  },
+];
 // 年费大礼包数组
-const yearArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+const yearArr = [
+  {
+    id: 1,
+    src: require(`../../assets/img/vipPage/dalibao/1.png`),
+  },
+  {
+    id: 2,
+    src: require(`../../assets/img/vipPage/dalibao/2.png`),
+  },
+  {
+    id: 3,
+    src: require(`../../assets/img/vipPage/dalibao/3.png`),
+  },
+  {
+    id: 4,
+    src: require(`../../assets/img/vipPage/dalibao/4.png`),
+  },
+  {
+    id: 5,
+    src: require(`../../assets/img/vipPage/dalibao/5.png`),
+  },
+  {
+    id: 6,
+    src: require(`../../assets/img/vipPage/dalibao/6.png`),
+  },
+  {
+    id: 7,
+    src: require(`../../assets/img/vipPage/dalibao/7.png`),
+  },
+  {
+    id: 8,
+    src: require(`../../assets/img/vipPage/dalibao/8.png`),
+  },
+  {
+    id: 9,
+    src: require(`../../assets/img/vipPage/dalibao/9.png`),
+  },
+  {
+    id: 10,
+    src: require(`../../assets/img/vipPage/dalibao/10.png`),
+  },
+  {
+    id: 11,
+    src: require(`../../assets/img/vipPage/dalibao/11.png`),
+  },
+  {
+    id: 12,
+    src: require(`../../assets/img/vipPage/dalibao/12.png`),
+  },
+  {
+    id: 13,
+    src: require(`../../assets/img/vipPage/dalibao/default.png`),
+  },
+  {
+    id: 14,
+    src: require(`../../assets/img/vipPage/dalibao/default.png`),
+  },
+  {
+    id: 15,
+    src: require(`../../assets/img/vipPage/dalibao/default.png`),
+  },
+  {
+    id: 16,
+    src: require(`../../assets/img/vipPage/dalibao/default.png`),
+  },
+];
 
 // 通过ref绑定获取会员特权组件dom
 let privilege = ref(null);

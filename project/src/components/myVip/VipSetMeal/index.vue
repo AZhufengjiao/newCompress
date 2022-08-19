@@ -185,19 +185,19 @@
 
     <!-- 左右两边的点击按钮 -->
     <div
-      v-if="
-        setMealList.length != 0 &&
-        MealUlWidth !== 0 &&
-        (btnToggle || btnToggle == null)
-      "
-      v-on:click="btnToggle = false"
+      v-if="setMealList.length != 0 && MealUlWidth !== 0 && btnToggle == false"
+      v-on:click="btnToggle = true"
       class="myVip-setMeal-clickBtn myVip-setMeal-clickBtn-left"
     >
       <span class="sj"></span>
     </div>
     <div
-      v-show="btnToggle === false"
-      v-on:click="btnToggle = true"
+      v-show="
+        setMealList.length > 4 &&
+        (btnToggle === true || btnToggle == null) &&
+        MealUlWidth !== 0
+      "
+      v-on:click="btnToggle = false"
       class="myVip-setMeal-clickBtn myVip-setMeal-clickBtn-right"
     >
       <span class="sj"></span>
@@ -257,6 +257,7 @@ onUpdated(() => {
         "--view-left",
         -MealUlWidth.value + "px"
       );
+      console.log(123);
     } else {
       setMealUl.value.style.setProperty("--view-left", 0 + "px");
     }

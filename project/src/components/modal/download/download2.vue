@@ -9,7 +9,10 @@
 
       <div class="download1-top">
         <div class="download1-img">
-          <img src="" alt="" />
+          <img
+            src="@/assets/img/modal/xiazaizhongModal/xiazaizhong.png"
+            alt=""
+          />
           <span>GIF图片下载中</span>
         </div>
         <h1>
@@ -18,7 +21,7 @@
         <h2>请耐心等待</h2>
       </div>
       <div class="download1-bottom">
-        <img class="cliStyle" src="" alt="" />
+        <div class="cliStyle"></div>
       </div>
     </div>
   </div>

@@ -52,11 +52,13 @@
       </a-layout-footer>
     </a-layout>
   </div>
+  <aa :downloadModal="downloadModal"></aa>
 </template>
 
 <script setup>
 import HomeNav from "@/components/home/Nav/index.vue";
 import CompressedVideo from "@/components/home/CompressedVideo/index.vue";
+
 import { getDownloadNum } from "@/api/about";
 import aboutNav from "@/components/aboutNav/index.vue";
 import { userList } from "@/api/user";
@@ -133,6 +135,8 @@ watch(
     immediate: true,
   }
 );
+
+ 
 
 // onMounted(() => {
 //   axios({
