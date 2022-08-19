@@ -300,7 +300,7 @@ import VipSetMeal from "@/components/myVip/VipSetMeal/index.vue";
 import aboutNav from "@/components/aboutNav/index.vue";
 import { userList } from "@/api/user";
 import { userLogOut } from "@/api/login";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, onUnmounted } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 components: {
@@ -423,6 +423,9 @@ const white = ref("white");
 onMounted(() => {
   privilegeTop = privilege.value.offsetTop;
   window.addEventListener("scroll", handleScroll);
+});
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
 });
 // 滚动定位
 const handleScroll = () => {

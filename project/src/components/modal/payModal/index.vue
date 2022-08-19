@@ -561,6 +561,17 @@ watch(
 
       // 赋值
       visible.value = newValue;
+
+      if (taocanList.value.length !== 0) {
+        taocanList.value.map((item, index) => {
+          // 判断数组是否大于4，并且ID是都是最后一个，如果是最后，那么就要滚动支付弹出框
+          if (taocanList.value.length > 4) {
+            if (index === 3 || index === 4) {
+              StyleFlag.value = false;
+            }
+          }
+        });
+      }
     }
   },
   {
@@ -577,7 +588,7 @@ watch(
       // 判断id是否为空
       if (Id.value == null || Id.value.length === 0) {
         // 修改支付金额
-        taocanList.value.map((item) => {
+        taocanList.value.map((item, index) => {
           //  修改最开始的pid
           if (roleType.value.roleType == "free") {
             Id.value = taocanList.value.filter(
@@ -588,6 +599,13 @@ watch(
             Id.value = taocanList.value.filter(
               (item) => item.roleType === "platinum"
             )[0].pId;
+          }
+
+          // 判断数组是否大于4，并且ID是都是最后一个，如果是最后，那么就要滚动支付弹出框
+          if (taocanList.value.length > 4) {
+            if (index === 3 || index === 4) {
+              StyleFlag.value = false;
+            }
           }
 
           // if (item.pId == Id.value) {
