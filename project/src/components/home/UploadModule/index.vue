@@ -162,7 +162,8 @@ const updataModalFlag = (bol) => {
 };
 // 支付成功，关闭自己
 const closeHandle = (state) => {
-  modalShow.value = state;
+  modalFlag.value = state;
+    // modalShow.value = state;
 };
 
 onMounted(() => {

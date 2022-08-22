@@ -391,8 +391,6 @@ let handleInputV = (e) => {
     // 白金或者钻石
     else if (roleType.value === "platinum" || roleType.value === "diamond") {
       estimateFn(roleType.value, null);
-    } else {
-      console.log("eeeeeeeeeee");
     }
   } else {
     console.log("没选");
@@ -422,7 +420,6 @@ let downloadTimer = ref(null);
 const downloadHandle = () => {
   // 点击全部，判断试试功能状态是否为true，如果是true，就不能下载，用户权限不够，是false才能下载
   if (shishiFlag.value) {
-    console.log(shishiFlag.value);
     modalFlag.value = true; // 支付弹出框
   } else {
     // 判断下载次数是否小于用户准备下载视频的个数
