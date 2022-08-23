@@ -185,12 +185,13 @@ let succeedtime = ref(null);
 let succeed = ref(false);
 
 // 创建一个可以下载的url数组
-let fileUrlList = ref([]);
+let fileUrlList = ref(store.state.home.conversionList);
 
 // 监听用户id
 watch(
   () => store.state.login.userid,
   (newValue) => {
+    console.log(newValue);
     userid.value = newValue;
     // console.log(userid.value);
     // 获取剩余次数
@@ -340,7 +341,7 @@ let handleInputV = (e) => {
         // 没有添加就添加
         if (!flag) {
           fileList.value.push(uploadFiles[i]);
-          fileUrlList.value.push(uploadFiles[i]);
+          // fileUrlList.value.push(uploadFiles[i]);
         }
       }
     }
@@ -430,6 +431,7 @@ const HandleDrag = (e) => {
 // 获取子组件转化好的视频
 const FileItemParams = (item) => {
   SonList.value = item;
+  fileUrlList.value = item;
 };
 
 let downloadTimer = ref(null);
@@ -457,7 +459,6 @@ const downloadHandle = () => {
     videoDownWc.value.num = SonList.value.length;
     // 查看用户的身份
     // let roleType = store.state.user.userData.roleType;
-
     // 设置一个记录下载为false的变量
     let FalseNum = 0;
     let blogTitle = "下载文件的名字";
@@ -466,17 +467,18 @@ const downloadHandle = () => {
     let cache = {};
     // 要下载图片的url
     let arrImg = [];
-    for (let i = 0; i < fileUrlList.value.length; i++) {
-      if (fileUrlList.value[i].xz === false) {
-        // 下载
-        arrImg.push({
-          path: fileUrlList.value[i].videoUrl,
-          name: fileUrlList.value[i].file.name,
-        });
-        fileUrlList.value[i].xz = true;
-        store.commit("home/setConversionList", fileUrlList.value);
-      }
-    }
+    // for (let i = 0; i < fileUrlList.value.length; i++) {
+    //   if (fileUrlList.value[i].xz === false) {
+    //     fileUrlList.value[i].xz = true;
+    //     store.commit("home/setConversionList", fileUrlList.value);
+
+    //     // 下载
+    //     arrImg.push({
+    //       path: fileUrlList.value[i].videoUrl,
+    //       name: fileUrlList.value[i].file.name,
+    //     });
+    //   }
+    // }
     for (let i = 0; i < SonList.value.length; i++) {
       if (SonList.value[i].xz === false) {
         FalseNum++;
@@ -484,6 +486,13 @@ const downloadHandle = () => {
         store.commit("home/setConversionList", SonList.value);
       }
     }
+    // 每次下载所有xz为true得
+    store.state.home.conversionList.map((item) => {
+      arrImg.push({
+        path: item.videoUrl,
+        name: item.file.name,
+      });
+    });
     // 扣除本地下载次数
     killDownLoadNumber(FalseNum, userid.value);
     // 扣除每天次数

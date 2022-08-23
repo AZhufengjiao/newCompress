@@ -359,6 +359,7 @@ const operationStatusAvinfo = async (infoPid) => {
   return await getOperationStatusAvinfo(infoPid).then((res) => {
     // 轮训成功，获取到压缩之后的大小
     if (res.data.code == 200) {
+  
       compressSize.value = parseInt(res.data.data.newSize / 1024 / 1024);
       // 关闭定时器
       clearInterval(compressSizeTime.value);

@@ -424,9 +424,7 @@ onMounted(() => {
   privilegeTop = privilege.value.offsetTop;
   window.addEventListener("scroll", handleScroll);
 });
-onUnmounted(() => {
-  window.removeEventListener("scroll", handleScroll);
-});
+
 // 滚动定位
 const handleScroll = () => {
   let windowTop = document.documentElement.scrollTop;
@@ -434,6 +432,9 @@ const handleScroll = () => {
     ? (quanyiFlag.value = true)
     : (quanyiFlag.value = false);
 };
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
+});
 
 // 1.2 调用接口，获取用户登录是否过期
 const getUserInfo = (userid) => {
