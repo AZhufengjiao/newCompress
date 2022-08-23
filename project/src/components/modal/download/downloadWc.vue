@@ -118,7 +118,7 @@ const fn = () => {
   setTimeout(() => {
     // store.commit("home/setDayloadNumber", null);
     setInterval(() => {
-      // store.commit("home/setDayloadNumber", null);
+      store.commit("home/setDayloadNumber", null);
     }, 1000 * 60 * 60 * 24);
   }, 1000);
 };
