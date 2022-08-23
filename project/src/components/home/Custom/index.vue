@@ -15,30 +15,49 @@
       <div class="home_compressedVideo_bottom_bottom">
         <div class="home_compressedVideo_bottom_bottom_one" id="qw">
           <div class="zhuanhuan">转换</div>
-          <a-select
-            id="select"
-            v-model:value="selectVal1"
-            :style="{ width: '170px', size: '16px' }"
-            :options="options1"
-            @change="selectChange1"
-            size="large"
-          >
-            <template #suffixIcon>
-              <caret-down-outlined />
-            </template>
-          </a-select>
+          <div class="selectXz" @click="selectF1 = !selectF1">
+            <a-select
+              id="select"
+              v-model:value="selectVal1"
+              :style="{ width: '170px', size: '16px' }"
+              :options="options1"
+              @change="selectChange1"
+              size="large"
+            >
+              <template #suffixIcon>
+                <caret-down-outlined
+                  :style="{ fontSize: '16px', color: '#AFC0F3' }"
+                  v-if="!selectF1"
+                />
+                <caret-up-outlined
+                  :style="{ fontSize: '16px', color: '#AFC0F3' }"
+                  v-else-if="selectF1"
+                />
+              </template>
+            </a-select>
+          </div>
+
           <div class="zhuanhuan zhi">至</div>
-          <a-select
-            v-model:value="selectVal2"
-            style="width: 170px"
-            :options="options2"
-            @change="selectChange2"
-            size="large"
-          >
-            <template #suffixIcon>
-              <caret-down-outlined />
-            </template>
-          </a-select>
+          <div class="selectXz" @click="selectF2 = !selectF2">
+            <a-select
+              v-model:value="selectVal2"
+              style="width: 170px"
+              :options="options2"
+              @change="selectChange2"
+              size="large"
+            >
+              <template #suffixIcon>
+                <caret-down-outlined
+                  :style="{ fontSize: '16px', color: '#AFC0F3' }"
+                  v-if="!selectF2"
+                />
+                <caret-up-outlined
+                  :style="{ fontSize: '16px', color: '#AFC0F3' }"
+                  v-else-if="selectF2"
+                />
+              </template>
+            </a-select>
+          </div>
 
           <div class="home_compressedVideo-icon">
             <a-popconfirm
@@ -53,14 +72,18 @@
                     保持原尺寸
                   </a-checkbox>
                   <br />
-                  <a-checkbox v-model:checked="checked">
+                  <a-checkbox
+                    :style="{ marginTop: '10px' }"
+                    v-model:checked="checked"
+                  >
                     <a-input
-                      style="width: 77px; height: 33px"
+                      type="number"
+                      style="width: 77px; height: 33px; margin-right: 8px"
                       v-model:value="sizeIpt1"
                       placeholder="1080"
                     />
 
-                    <caret-up-outlined
+                    <!-- <caret-up-outlined
                       v-on:click="handleC"
                       class="sizeIpt1-icon-top"
                     />
@@ -75,8 +98,9 @@
                     <caret-up-outlined
                       v-on:click="handleC"
                       class="sizeIpt2-icon-top"
-                    />
+                    /> -->
                     <a-input
+                      type="number"
                       style="width: 77px; height: 33px"
                       v-model:value="sizeIpt2"
                       placeholder="1080"
@@ -123,7 +147,7 @@ import JSZip from "jszip";
 import FileSaver from "file-saver";
 import { useRouter } from "vue-router";
 components: {
-  UploadModule, SmileOutlined, MehOutlined, CaretDownOutlined;
+  UploadModule, SmileOutlined, MehOutlined, CaretDownOutlined, CaretUpOutlined;
 }
 const store = useStore();
 const activeKey = ref(3);
@@ -164,6 +188,10 @@ const options2 = ref([
     label: "mp1",
   },
 ]);
+
+// 选择器箭头切换
+let selectF1 = ref(false);
+let selectF2 = ref(false);
 
 const selectChange1 = (value) => {
   selectVal1.value = value;
@@ -206,6 +234,12 @@ onUpdated(() => {
 // @import "../../assets/styles/test.scss"; 相对路径
 /*文件上传css*/
 
+input[type="number"] {
+  -moz-appearance: textfield;
+  background: transparent;
+  // -webkit-appearance: none !important;
+}
+
 // 新添加的下载按钮
 .home .home_uploadingVideo_box .download {
   margin-top: 53px;
@@ -224,11 +258,20 @@ onUpdated(() => {
   }
 }
 
+.popconfirm-box {
+  padding-bottom: 4px;
+  padding-right: 42px;
+}
+
 :deep .ant-select-selector {
   height: 50px !important;
 }
 :deep .ant-select-selection-item {
   line-height: 48px !important;
+}
+
+:deep .ant-popover-inner-content {
+  padding: 12px 20px;
 }
 
 .home
@@ -309,10 +352,25 @@ onUpdated(() => {
           font-weight: 500;
           color: #0544ff;
         }
+        // 选择器div
+        .selectXz {
+          :deep .anticon-caret-up {
+            pointer-events: none;
+          }
+        }
       }
     }
   }
 }
+#app .home_compressedVideo-icon {
+  margin-left: 12px;
+}
+.modal {
+  :global(.ant-popover-buttons button:nth-child(2)) {
+    background: #0d4aff;
+  }
+}
+
 .fenjxian {
   width: 1px;
   height: 23px;
@@ -328,7 +386,7 @@ onUpdated(() => {
   background: #e1e9ff !important;
 }
 
-// @import "@/assets/css/home/homeNav/CustomCompressed/CustomCompressed1440px.scss";
-// @import "@/assets/css/home/homeNav/CustomCompressed/CustomCompressed1280px.scss";
+@import "@/assets/css/home/homeNav/Custom/CustomCompressed1440px.scss";
+@import "@/assets/css/home/homeNav/CustomCompressed/CustomCompressed1280px.scss";
 // @import "@/assrts/styles/animation/home/CompressedVideo/index.scss";
 </style>

@@ -63,4 +63,9 @@ ul {
   text-decoration: none;
   list-style: none;
 }
+
+:deep .ant-popover {
+  left: 842px !important;
+  top: 308px !important;
+}
 </style>
