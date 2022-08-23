@@ -122,12 +122,15 @@ import VueQr from "vue-qr/src/packages/vue-qr.vue";
 // 调用接口
 import { getScanQRcodes, userLogin } from "@/api/login";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 const store = useStore();
 // 二维码中图片url
 let logo = require("@/assets/img/modal/loginModal/wechat-small_slices/wechat-small@2x.png");
 components: {
   VueQr;
 }
+// 跳转
+const router = useRouter();
 
 // 父传子
 const props = defineProps({
@@ -212,6 +215,7 @@ const scanQRcodes = (ticket) => {
 
       // 登录成功，关闭弹窗
       cancelHandle();
+      router.go(0);
     }
   });
 };

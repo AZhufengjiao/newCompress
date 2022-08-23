@@ -142,16 +142,27 @@ const inputFlag = ref(true);
 const activeKeySon = ref(1);
 // 定义选择的压缩类型数组
 let fileList = ref([]);
+// 转化好的视频数组
+let SonList = ref([]);
 // 转码要的参数
 let params1 = ref(null);
 // 获取用户id
 let userid = ref(store.state.login.userid);
 // 获取该用户下载次数
 let downloadNumber = ref(0);
+// 用户每天下载次数
+let dayloadNumber = ref(0);
 watch(
   () => store.state.home.downloadNumber,
   (newValue) => {
     downloadNumber.value = newValue;
+  },
+  { immediate: true }
+);
+watch(
+  () => store.state.home.dayloadNumber,
+  (newValue) => {
+    dayloadNumber.value = newValue;
   },
   { immediate: true }
 );
@@ -273,14 +284,14 @@ let upload = ref(null);
 //   });
 // };
 
-//  添加按钮，触发input，让文件夹弹出  3.
+//  功能1.添加按钮，触发input，让文件夹弹出  3.
 const handleUploading = (e) => {
   // 点击弹出框先判断用户有没有登录
   if (userid.value !== null) {
     // 让文件夹打开
     upload.value.click();
   } else {
-    // 未登录先登录
+    // 未登录先登录，弹出登录弹出框
     loginFlag.value = true;
   }
 };
@@ -307,6 +318,7 @@ watch(
   },
   { immediate: true }
 );
+//  功能2.input获取上传视频，身份判断
 let handleInputV = (e) => {
   // 为我要试试功能存储
   filtsShi.value = e.target.files;
@@ -406,7 +418,7 @@ const myFunction = (e) => {
 const HandleDragover = (e) => {
   e.preventDefault();
 };
-// 拖拽file
+// 功能3.拖拽file
 const HandleDrag = (e) => {
   e.preventDefault();
   let FileArr = e.dataTransfer.files;
@@ -415,8 +427,13 @@ const HandleDrag = (e) => {
   }
 };
 
+// 获取子组件转化好的视频
+const FileItemParams = (item) => {
+  SonList.value = item;
+};
+
 let downloadTimer = ref(null);
-// 点击下载全部
+// 功能4.点击下载全部
 const downloadHandle = () => {
   // 点击全部，判断试试功能状态是否为true，如果是true，就不能下载，用户权限不够，是false才能下载
   if (shishiFlag.value) {
@@ -424,16 +441,20 @@ const downloadHandle = () => {
   } else {
     // 判断下载次数是否小于用户准备下载视频的个数
     if (downloadNumber.value < fileUrlList.value.length) {
-      // 复制参数，修改弹出框信息
-      return (UploadModal.value = {
-        flag: true,
-        state: roleType.value,
-      });
+      // 判断身份是否有次数限制
+      if (roleType.value !== "platinum" && roleType.value !== "diamond") {
+        console.log(111);
+        // 复制参数，修改弹出框信息
+        return (UploadModal.value = {
+          flag: true,
+          state: roleType.value,
+        });
+      }
     }
     // 让下载中弹窗显示
     videoXz.value.flag = true;
-    videoXz.value.num = fileUrlList.value.length;
-    videoDownWc.value.num = fileUrlList.value.length;
+    videoXz.value.num = SonList.value.length;
+    videoDownWc.value.num = SonList.value.length;
     // 查看用户的身份
     // let roleType = store.state.user.userData.roleType;
 
@@ -447,7 +468,6 @@ const downloadHandle = () => {
     let arrImg = [];
     for (let i = 0; i < fileUrlList.value.length; i++) {
       if (fileUrlList.value[i].xz === false) {
-        FalseNum++;
         // 下载
         arrImg.push({
           path: fileUrlList.value[i].videoUrl,
@@ -457,8 +477,17 @@ const downloadHandle = () => {
         store.commit("home/setConversionList", fileUrlList.value);
       }
     }
+    for (let i = 0; i < SonList.value.length; i++) {
+      if (SonList.value[i].xz === false) {
+        FalseNum++;
+        SonList.value[i].xz = true;
+        store.commit("home/setConversionList", SonList.value);
+      }
+    }
     // 扣除本地下载次数
     killDownLoadNumber(FalseNum, userid.value);
+    // 扣除每天次数
+    store.commit("home/jianDayloadNumber", FalseNum);
     for (let item of arrImg) {
       const promise = getImgArrayBuffer(item.path).then((data) => {
         // 下载文件，并存成ArrayBuffer对象（blob）
@@ -503,7 +532,7 @@ const downloadHandle = () => {
 };
 
 /**
- * 多文件打包下载功能
+ * 功能5.多文件打包下载功能
  * @param {string} url 文件地址
  */
 const getImgArrayBuffer = (url) => {
@@ -525,20 +554,14 @@ const getImgArrayBuffer = (url) => {
   });
 };
 
-// 点击下载扣除次数
-const killDownLoadNumber = (picNumber, userId) => {
-  return getKillDownloadNum(picNumber, userId).then((res) => {
+// 功能6.点击下载扣除次数
+const killDownLoadNumber = async (picNumber, userId) => {
+  return await getKillDownloadNum(picNumber, userId).then((res) => {
     if (res.data.code == 200) {
       // 修改本地下载次数
       store.commit("home/setDownloadNumber", res.data.data.newDownloadNumber);
     }
   });
-};
-
-let SonList = ref([]);
-// 获取子组件转化好的视频
-const FileItemParams = (item) => {
-  SonList.value.push(item);
 };
 </script>
 

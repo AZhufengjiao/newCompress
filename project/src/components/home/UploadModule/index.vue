@@ -163,9 +163,10 @@ const updataModalFlag = (bol) => {
 // 支付成功，关闭自己
 const closeHandle = (state) => {
   modalFlag.value = state;
-    // modalShow.value = state;
+  // modalShow.value = state;
 };
 
+// 1.进入页面，获取input上传视频，判断视频格式
 onMounted(() => {
   // 获取文件上传url，赋值给video
   fileURL.value = URL.createObjectURL(file.value); // https://blog.csdn.net/qq_21479345/article/details/108550762
@@ -206,8 +207,8 @@ succeedtime.value = setTimeout(() => {
 clearTimeout(time);
 // 获取文件url
 
-// 4.上传url
-// 视频路径
+// 2.上传url
+// 视频路径，调用七牛上传接口
 let uploadinUrl = ref(null);
 let completeWih = ref(null);
 const getCompressTK = (suffix) => {
@@ -247,11 +248,11 @@ const getCompressTK = (suffix) => {
   });
 };
 
-//  转码api
+//  3.转码api
 let pid = ref(null);
 // 轮训定时器
 let lxTime = ref(null);
-const setTranscoding = () => {
+const setTranscoding = async () => {
   let {
     watermark,
     format,
@@ -268,7 +269,7 @@ const setTranscoding = () => {
     resolution,
   } = props.payload;
   let url = uploadinUrl.value;
-  return getTranscoding(
+  return await getTranscoding(
     url,
     watermark,
     format,
@@ -319,8 +320,8 @@ let compressSizeTime = ref(null);
 // 获取异步处理进度  进入轮训
 // 获取用户下载url
 let videoUrl = ref(null);
-const setSchedule = (pid) => {
-  return getSchedule(pid).then((res) => {
+const setSchedule = async (pid) => {
+  return await getSchedule(pid).then((res) => {
     if (res.data.code == 200) {
       // 获取压缩文件大小需要的参数
       compressVideoSize.value = res.data.data.infoPid;
@@ -354,8 +355,8 @@ const setSchedule = (pid) => {
 };
 
 // 获取压缩文件大小
-const operationStatusAvinfo = (infoPid) => {
-  return getOperationStatusAvinfo(infoPid).then((res) => {
+const operationStatusAvinfo = async (infoPid) => {
+  return await getOperationStatusAvinfo(infoPid).then((res) => {
     // 轮训成功，获取到压缩之后的大小
     if (res.data.code == 200) {
       compressSize.value = parseInt(res.data.data.newSize / 1024 / 1024);
@@ -379,7 +380,7 @@ let UploadModal = ref({
 const updateStateHandle = (state) => {
   UploadModal.value.flag = state;
 };
-// 用户点击下载
+// 4.用户点击下载
 const downloadBtn = () => {
   // 点击全部，判断试试功能状态是否为true，如果是true，就不能下载，用户权限不够，是false才能下载
   if (store.state.home.trial) {
@@ -391,11 +392,14 @@ const downloadBtn = () => {
     videoXz.value.num = 1;
     // 判断下载次数是否小于用户准备下载视频的个数
     if (downloadNumber.value < 1) {
-      // 复制参数，修改弹出框信息
-      return (UploadModal.value = {
-        flag: true,
-        state: roleType,
-      });
+      // 判断身份是否有次数限制
+      if (roleType !== "platinum" && roleType !== "diamond") {
+        // 复制参数，修改弹出框信息
+        return (UploadModal.value = {
+          flag: true,
+          state: roleType,
+        });
+      }
     }
     if (state.value == "zh" && completeWih.value == 100) {
       downloadFn();
@@ -408,14 +412,16 @@ const downloadBtn = () => {
         store.commit("home/setConversionList", fileUrlList.value);
         // 扣除本地下载次数
         killDownLoadNumber(1, userid.value);
+            // 扣除每天次数
+    store.commit("home/jianDayloadNumber", 1);
       }
     });
   }
 };
 
 // 点击下载扣除次数
-const killDownLoadNumber = (picNumber, userId) => {
-  return getKillDownloadNum(picNumber, userId).then((res) => {
+const killDownLoadNumber = async (picNumber, userId) => {
+  return await getKillDownloadNum(picNumber, userId).then((res) => {
     if (res.data.code == 200) {
       // 修改本地下载次数
       store.commit("home/setDownloadNumber", res.data.data.newDownloadNumber);
@@ -426,13 +432,13 @@ const killDownLoadNumber = (picNumber, userId) => {
 // 下载定时器
 const downloadTimer = ref(null);
 // 保存文件视频到本地
-const downloadFn = () => {
+const downloadFn = async () => {
   // 下载默认时间
   let delayTime = 1800;
   // 下载起始时间
   let currentTime = new Date().getTime();
 
-  return axios({
+  return await axios({
     method: "post",
     url: videoUrl.value,
     responseType: "blob",

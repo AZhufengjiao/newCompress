@@ -85,9 +85,9 @@ let compressSuoyou = ref([]);
 let compressNav = ref([]);
 // 第二层数据
 let compressSon = ref([]);
-// 获取数据列表
-const getTemplateList = () => {
-  return homeTemplateList(null, 1, 10).then((res) => {
+// 1.获取,并处理数据列表
+const getTemplateList = async () => {
+  return await homeTemplateList(null, 1, 10).then((res) => {
     if (res.data.code == 200) {
       // 赋值所有数据
       compressSuoyou.value = res.data.data.list;
@@ -96,9 +96,7 @@ const getTemplateList = () => {
         if (item.sceneType === "compress") {
           item.compressState = false;
           // 判断第一层如果没有就添加进去，有就不添加
-          let flag = compressNav.value.some(
-            (j, jIndex) => j.type == item.scene1
-          );
+          let flag = compressNav.value.some((j) => j.type == item.scene1);
           if (!flag) {
             let obj = {
               type: item.scene1,
@@ -114,15 +112,28 @@ const getTemplateList = () => {
               }
             });
           }
+          // 判断路由是否传参，没有传参就默认compressSuoyou数据第一个tmpId
+          if ($router.params.id != undefined) {
+            // 让第一层选中得填上css样式s
+            if (item.tmpId === $router.params.id) {
+              item.compressState = true;
+              activeKey.value = item.scene1;
+              activeKeySon.value = item.tmpId;
 
-          // 让第一层选中得填上css样式s
-          if (item.tmpId === $router.params.id) {
-            item.compressState = true;
-            activeKey.value = item.scene1;
-            activeKeySon.value = item.tmpId;
+              // 场景是什么，对应的类型发起请求
+              CompressScenes(item.tmpId);
+            }
+          } else {
+            //   跳转页面
+            // 让第一层选中得填上css样式s
+            if (item.tmpId === compressSuoyou.value[0].tmpId) {
+              item.compressState = true;
+              activeKey.value = item.scene1;
+              activeKeySon.value = item.tmpId;
 
-            // 场景是什么，对应的类型发起请求
-            CompressScenes(item.tmpId);
+              // 场景是什么，对应的类型发起请求
+              CompressScenes(item.tmpId);
+            }
           }
         }
       });
@@ -191,7 +202,7 @@ let CompressFaList = ref([]);
 let SonList = ref([]);
 // 子组件全部数据
 let SonTmpIdList = ref([]);
-// 1.点击压缩类型切换转换压缩场景
+// 2.点击压缩类型切换转换压缩场景
 const compressHandle = (item) => {
   // 修改第一层css
   activeKey.value = item.type;
@@ -297,25 +308,24 @@ const compressHandle = (item) => {
 //   }
 // };
 
-// 2.点击切换压缩场景获取压缩场景
+// 3.点击切换压缩场景获取压缩场景
 const compressSceneClick = (item) => {
   // // // 跳转页面
   router.push({ path: "/video-compressor/" + item.tmpId });
   compressNav.value.map((j) => {
     if (item.scene1 == j.type) {
       j.arr.map((Jarr) => {
+        // 排它
         Jarr.compressState = false;
         if (item.tmpId === Jarr.tmpId) {
           // 点击切换类名
           Jarr.compressState = true;
           activeKeySon.value = Jarr.tmpId;
         }
-
-        // console.log(Jarr);
       });
     }
   });
-  // 场景是什么，对应的类型发起qqiu
+  // 场景是什么，对应的类型发起请求
   CompressScenes(item.tmpId);
 
   // SonList.value.data.map((data) => {
@@ -328,13 +338,13 @@ const compressSceneClick = (item) => {
   // });
 };
 
-// 2.1。根据压缩场景切换获取转码要用的参数
-const CompressScenes = (tmpId) => {
+// 4.1。根据压缩场景切换获取转码要用的参数
+const CompressScenes = async (tmpId) => {
   let arr = {};
   // 如果没有，就发请求
   if (!SonTmpIdList.value.some((item) => item.id === tmpId)) {
     // 场景是什么，对应的类型发起请求
-    return getCompressScenes(tmpId).then((res) => {
+    return await getCompressScenes(tmpId).then((res) => {
       if (res.data.code == 200) {
         params1.value = res.data.data;
         store.commit("home/setParams1", params1.value);

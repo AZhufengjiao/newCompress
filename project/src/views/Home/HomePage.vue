@@ -63,7 +63,7 @@ import aboutNav from "@/components/aboutNav/index.vue";
 import { userList } from "@/api/user";
 import { userLogOut } from "@/api/login";
 import { useStore } from "vuex";
-import { onMounted, onUpdated, ref, watch } from "vue";
+import { computed, onMounted, onUpdated, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
 const store = useStore();
@@ -84,8 +84,8 @@ onMounted(() => {
 onUpdated(() => {});
 
 // 1.2 调用接口，获取用户登录是否过期
-const getUserInfo = (userid) => {
-  return userList(userid).then((res) => {
+const getUserInfo = async (userid) => {
+  return await userList(userid).then((res) => {
     // 没有过期 保存用户状态信息
     if (res.data.code == 200) {
       // console.log(res.data.data.roleType);
@@ -106,8 +106,8 @@ const getUserInfo = (userid) => {
 
 // 更新下载次数
 // 3.获取工具剩余次数
-const getFrequency = (userid) => {
-  return getDownloadNum(userid).then((res) => {
+const getFrequency = async (userid) => {
+  return await getDownloadNum(userid).then((res) => {
     // console.log(res.data);
     if (res.data.code == 200) {
       // 保存次数至本地
@@ -133,6 +133,35 @@ watch(
     deep: true,
     immediate: true,
   }
+);
+
+// 监听身份
+let roleType = computed(() => {
+  return store.state.user.userData.roleType;
+});
+
+// 监听用户身份，存储用户每天次数
+watch(
+  () => roleType.value,
+  (newValue) => {
+    if (
+      store.state.home.dayloadNumber === null ||
+      store.state.home.dayloadNumber <= 0
+    ) {
+      if (newValue == "free") {
+        store.commit("home/setDayloadNumber", 1);
+      } else if (newValue == "silver") {
+        store.commit("home/setDayloadNumber", 3);
+      } else if (newValue == "goid") {
+        store.commit("home/setDayloadNumber", 10);
+      } else if (newValue == "platinum") {
+        store.commit("home/setDayloadNumber", 100);
+      } else if (newValue == "diamond") {
+        store.commit("home/setDayloadNumber", "无限制");
+      }
+    }
+  },
+  { immediate: true }
 );
 
 // onMounted(() => {

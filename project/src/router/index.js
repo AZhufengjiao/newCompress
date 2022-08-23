@@ -17,16 +17,30 @@ const routes = [
     children: [
       // 自定义格式
       {
-        path: "/video-converter/:id",
+        path: "/video-converter",
         name: "video-custom-converter",
         component: () => import("@/components/home/Custom/index.vue"),
+        children: [
+          {
+            path: "/video-converter/:id",
+            name: "video-custom-converter/id",
+            component: () => import("@/components/home/Custom/index.vue"),
+          },
+        ],
       },
       // 视频格式
       {
-        path: "/video-compressor/:id",
+        path: "/video-compressor",
         name: "video-converter",
         // redirect: "/video-converter",
         component: () => import("@/components/home/defaultYS/index.vue"),
+        children: [
+          {
+            path: "/video-compressor/:id",
+            name: "video-converter/id",
+            component: () => import("@/components/home/defaultYS/index.vue"),
+          },
+        ],
       },
     ],
     // children: [

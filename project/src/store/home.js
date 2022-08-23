@@ -8,6 +8,8 @@ const home = {
       setMealInfo: [],
       // 工具剩余次数
       downloadNumber: Number,
+      // 当天剩余次数
+      dayloadNumber: null,
       // 可用会员数据
       myCoupon: [],
       // 转化之后的数组
@@ -46,6 +48,14 @@ const home = {
     },
     setParams1(state, obj) {
       state.params1 = obj;
+    },
+    // 当天剩余次数
+    setDayloadNumber(state, boolean) {
+      state.dayloadNumber = boolean;
+    },
+    // 扣除当天剩余次数
+    jianDayloadNumber(state, number) {
+      state.dayloadNumber -= number;
     },
   },
 };

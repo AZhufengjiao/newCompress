@@ -14,7 +14,7 @@
         </div>
         <!-- 右 -->
         <div class="header-login-box">
-          <div class="home_vip" v-on:click="$router.push('/pricing')">
+                  <div class="home_vip" v-on:click="$router.push('/pricing')">
             会员vip
           </div>
           <!--  未登录显示 -->
@@ -109,6 +109,7 @@ import { userLogOut } from "@/api/login";
 import { onMounted, ref, toRefs, watch } from "vue";
 import { useStore } from "vuex";
 import { imgList } from "./index.js";
+import { useRouter } from "vue-router";
 components: {
   loginModel;
 }
@@ -117,6 +118,8 @@ const props = defineProps({
 });
 const { white } = toRefs(props);
 const store = useStore();
+// 跳转
+const router = useRouter();
 let visible = ref(true);
 
 // 获取本地用户id，查看是否登录
@@ -172,6 +175,8 @@ const logoutHandle = () => {
   return userLogOut().then((res) => {
     if (res.data.code) {
       localStorage.removeItem("lanhu");
+      // 刷新页面
+      router.go(0);
     }
   });
 };

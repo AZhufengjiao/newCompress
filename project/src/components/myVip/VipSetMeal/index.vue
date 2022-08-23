@@ -355,8 +355,6 @@ const setMealInfo = (id) => {
             : item.discountPrice;
         }
       });
-      // console.log(myCouponList.value);
-      // console.log(setMealList.value);
     }
   });
 };

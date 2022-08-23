@@ -17,11 +17,14 @@
         </div>
         <h1>
           今日剩余下载数<span>{{
-            dayNum === "无限制*" ? "无限" : dayNum - downloadModal.num
+            dayNum === "无限制*" ? "无限" : store.state.home.dayloadNumber
           }}</span>
           /{{ dayNum }}张
         </h1>
-        <h2>不确定图片下载到哪里? <span>点击这里</span> ，查看文件储存位置</h2>
+        <h2>
+          {{ dayNum }}不确定图片下载到哪里?
+          <span>点击这里</span> ，查看文件储存位置
+        </h2>
       </div>
       <div class="download1-bottom">
         <h1>升级钻石会员，可享无限次下载，<span>立即升级会员》</span></h1>
@@ -45,7 +48,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUpdated, ref, toRefs, watch } from "vue";
+import { onMounted, onUpdated, ref, toRefs, watch, computed } from "vue";
 import VueQr from "vue-qr/src/packages/vue-qr.vue";
 import { useStore } from "vuex";
 components: {
@@ -62,40 +65,48 @@ let { downloadModal } = toRefs(props);
 const exitBtnHandle = () => {
   emit("updateFlag", false);
 };
-const dayNum = ref(0);
-// 用户身份
-let identity = ref(store.state.user.userData.roleType);
+const dayNum = ref(null);
+// 监听身份
+let identity = computed(() => {
+  return store.state.user.userData.roleType;
+});
+
 // 用户身份变化的时候，修改身份
 watch(
   () => identity.value,
   (newValue) => {
-    identity.value = newValue;
+    if (newValue == "free") {
+      dayNum.value = 1;
+    } else if (newValue == "silver") {
+      dayNum.value = 3;
+    } else if (newValue == "goid") {
+      dayNum.value = 10;
+    } else if (newValue == "platinum") {
+      dayNum.value = 100;
+    } else if (newValue == "diamond") {
+      dayNum.value = "无限制";
+    }
+  },
+  {
+    immediate: true,
   }
 );
 
-// 当弹出框显示的时候，进行操作
-watch(
-  () => props.downloadModal,
-  (newValue) => {
-    if (newValue) {
-      if (store.state.user.userData.roleType == "free") {
-        dayNum.value = 1;
-      } else if (store.state.user.userData.roleType == "silver") {
-        dayNum.value = 3;
-      } else if (store.state.user.userData.roleType == "goid") {
-        dayNum.value = 10;
-      } else if (store.state.user.userData.roleType == "platinum") {
-        dayNum.value = 100;
-      } else if (store.state.user.userData.roleType == "diamond") {
-        dayNum.value = "无限制*";
-      }
-    }
-  },
-  { immediate: true }
-);
+onMounted(() => {});
+// watch(
+//   () => store.state.home.dayloadNumber,
+//   (newValue) => {
+//     console.log(newValue);
+//   }
+// );
+
+onMounted(() => {
+  // 开启定时器
+  fn();
+});
 
 //执行每天24:00 刷新
-const setTimeout = () => {
+const fn = () => {
   var nowTemp = new Date().getTime(); //获取当前时间戳
 
   var tomorrowTemp =
@@ -104,16 +115,12 @@ const setTimeout = () => {
   var residueTemp = tomorrowTemp - nowTemp; //距离当天24：00的时间戳
 
   //执行定时任务
-
   setTimeout(() => {
-    this.nowData();
-
-    //次天0点 执行每天24;00 刷新
-
+    // store.commit("home/setDayloadNumber", null);
     setInterval(() => {
-      this.nowData();
+      // store.commit("home/setDayloadNumber", null);
     }, 1000 * 60 * 60 * 24);
-  }, residueTemp);
+  }, 1000);
 };
 
 // 父组件代码
