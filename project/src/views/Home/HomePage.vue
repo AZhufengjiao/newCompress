@@ -152,16 +152,29 @@ watch(
         store.commit("home/setDayloadNumber", 1);
       } else if (newValue == "silver") {
         store.commit("home/setDayloadNumber", 3);
-      } else if (newValue == "goid") {
+      } else if (newValue == "gold") {
         store.commit("home/setDayloadNumber", 10);
       } else if (newValue == "platinum") {
-        store.commit("home/setDayloadNumber", 100);
+        store.commit("home/setDayloadNumber", 1);
       } else if (newValue == "diamond") {
         store.commit("home/setDayloadNumber", "无限制");
       }
     }
   },
   { immediate: true }
+);
+
+// 监听每天次数,如果小于0，就等于0，并且不可以下载了
+watch(
+  () => store.state.home.dayloadNumber,
+  (newValue) => {
+    if (newValue <= 0) {
+      store.commit("home/setDayloadNumber", 0);
+    }
+  },
+  {
+    immediate: true,
+  }
 );
 
 // onMounted(() => {

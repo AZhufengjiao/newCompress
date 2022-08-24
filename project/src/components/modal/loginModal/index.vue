@@ -94,7 +94,7 @@
           >》</a-checkbox
         >
         <!-- 登录按钮 -->
-        <a-button type="primary">
+        <!-- <a-button type="primary">
           <div class="primary-img">
             <img
               src="@/assets/img/modal/loginModal/phone_slices/phone.png"
@@ -102,7 +102,7 @@
             />
           </div>
           手机登录
-        </a-button>
+        </a-button> -->
       </div>
     </div>
   </div>

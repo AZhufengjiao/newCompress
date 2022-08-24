@@ -26,7 +26,7 @@
             <div class="modal-header-span">
               <div class="modal-header-name">
                 <div>{{ store.state.login.userObj.nickname }}</div>
-                <div class="modal-header-identity">黄金</div>
+                <div class="modal-header-identity">{{ shenfen }}</div>
               </div>
               <span>2028.09.23到期</span>
             </div>
@@ -351,6 +351,7 @@ import {
   onUnmounted,
   onBeforeUnmount,
   toRefs,
+  computed,
 } from "vue";
 import { useStore } from "vuex";
 import QrcodeVue from "qrcode.vue";
@@ -365,6 +366,10 @@ components: {
 const store = useStore();
 // 跳转router
 const router = useRouter();
+/**
+ * modalFlag 弹出框显示与隐藏
+ * currentId 套餐id
+ */
 const props = defineProps({
   modalFlag: Boolean,
   currentId: Number,
@@ -375,7 +380,9 @@ const emit = defineEmits(["updataVisible", "close"]);
 // 控制弹出框显示与隐藏
 const visible = ref(props.modalFlag);
 // 套餐选择的身份
-let roleType = ref(null);
+let roleType = computed(() => {
+  return store.state.user.userData.roleType;
+});
 
 // 点击切换动画
 const StyleFlag = ref(null);
@@ -389,7 +396,9 @@ let paymentAmount = ref({
   discounts: null,
 });
 // 用户id
-let userid = ref(store.state.login.userid);
+let userid = computed(() => store.state.login.userid);
+// 用户身份
+let shenfen = ref("");
 // 获取支付宝二维码需要的参数
 let ticketType = ref(null);
 // 支付宝二维码字符串
@@ -400,7 +409,7 @@ let payNum = ref(0);
 // 支付定时器
 let payTimer = ref(null);
 // Pid
-let Id = ref(Number);
+let Id = ref(null);
 
 // 优惠券列表
 const myCouponList = ref([]);
@@ -414,14 +423,9 @@ const updateFlagHandle = (res) => {
   paySuccessF.value = res;
 };
 
-// 1.从本地拿套餐数据
-onMounted(() => {
-  roleType.value = store.state.user.userData;
-});
-
 // 1. 获取套餐信息列表存储本地
-const setMealInfo = (id) => {
-  return getSetMeal(id).then((res) => {
+const setMealInfo = async (id) => {
+  return await getSetMeal(id).then((res) => {
     if (res.data.code == 200) {
       // 1.1赋值
       // taocanList.value = res.data.data;
@@ -444,10 +448,10 @@ const setMealInfo = (id) => {
 };
 
 // 用户是否已支付
-const getPayStatus = (userId) => {
+const getPayStatus = async (userId) => {
   let formData = new FormData();
   formData.append("userId", userId);
-  return getPayState(formData).then((res) => {
+  return await getPayState(formData).then((res) => {
     // 支付成功
     if (res.data.code == 200) {
       // 支付成功，刷新页面
@@ -475,8 +479,8 @@ const getPayStatus = (userId) => {
 };
 
 // 1.2 调用接口，获取用户信息
-const getUserInfo = (userid) => {
-  return userList(userid).then((res) => {
+const getUserInfo = async (userid) => {
+  return await userList(userid).then((res) => {
     // 没有过期 保存用户状态信息
     if (res.data.code == 200) {
       // 存本地
@@ -486,8 +490,8 @@ const getUserInfo = (userid) => {
 };
 
 // 3.获取工具剩余次数
-const getFrequency = (userid) => {
-  return getDownloadNum(userid).then((res) => {
+const getFrequency = async (userid) => {
+  return await getDownloadNum(userid).then((res) => {
     if (res.data.code == 200) {
       // 保存次数至本地
       store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
@@ -520,8 +524,8 @@ const payTimerHandle = () => {
 };
 
 // 获取支付宝支付二维码
-const getZfbQR = (productId, userId, ticketType) => {
-  return getAlipayQR(productId, userId, ticketType).then((res) => {
+const getZfbQR = async (productId, userId, ticketType) => {
+  return await getAlipayQR(productId, userId, ticketType).then((res) => {
     if (res.data.code == 200) {
       // 获取支付宝二维码赋值
       ZFBQR.value = res.data.data.code_url;
@@ -530,15 +534,14 @@ const getZfbQR = (productId, userId, ticketType) => {
 };
 
 // 获取微信支付二维码
-const getWxQRHandle = (productId, userId, ticketType) => {
-  return getWxQR(productId, userId, ticketType).then((res) => {
+const getWxQRHandle = async (productId, userId, ticketType) => {
+  return await getWxQR(productId, userId, ticketType).then((res) => {
     if (res.data.code == 200) {
       // 获取微信二维码赋值
       ZFBQR.value = res.data.data.code_url;
     }
   });
 };
-
 // 1.监听父组件传递的套餐id currentId
 watch(
   () => currentId.value,
@@ -552,6 +555,9 @@ watch(
 watch(
   () => props.modalFlag,
   (newValue) => {
+    if (newValue === false) {
+      Id.value = null;
+    }
     // 参数是true，就赋值显示弹出框
     if (newValue == true) {
       // 获取可用优惠券信息
@@ -561,17 +567,6 @@ watch(
 
       // 赋值
       visible.value = newValue;
-
-      if (taocanList.value.length !== 0) {
-        taocanList.value.map((item, index) => {
-          // 判断数组是否大于4，并且ID是都是最后一个，如果是最后，那么就要滚动支付弹出框
-          if (taocanList.value.length > 4) {
-            if (index === 3 || index === 4) {
-              StyleFlag.value = false;
-            }
-          }
-        });
-      }
     }
   },
   {
@@ -586,38 +581,74 @@ watch(
   (newValue) => {
     if (newValue.length != 0) {
       // 判断id是否为空
-      if (Id.value == null || Id.value.length === 0) {
+      if (Id.value == null || Id.value === 0) {
         // 修改支付金额
         taocanList.value.map((item, index) => {
           //  修改最开始的pid
-          if (roleType.value.roleType == "free") {
+          if (roleType.value == "free") {
+            Id.value = taocanList.value.filter(
+              (item) => item.roleType === "silver"
+            )[0].pId;
+            // 动画
+            if (item.roleType === "silver") {
+              donghuaFlag(index);
+            }
+          }
+          if (roleType.value == "silver") {
             Id.value = taocanList.value.filter(
               (item) => item.roleType === "gold"
             )[0].pId;
+            // 动画
+            if (item.roleType === "gold") {
+              donghuaFlag(index);
+            }
           }
-          if (roleType.value.roleType == "gold") {
+          if (roleType.value == "gold") {
             Id.value = taocanList.value.filter(
               (item) => item.roleType === "platinum"
-            )[0].pId;
+            )[0].pId; // 动画
+            if (item.roleType === "platinum") {
+              donghuaFlag(index);
+            }
           }
-
-          // 判断数组是否大于4，并且ID是都是最后一个，如果是最后，那么就要滚动支付弹出框
-          if (taocanList.value.length > 4) {
-            if (index === 3 || index === 4) {
-              StyleFlag.value = false;
+          if (roleType.value == "platinum") {
+            Id.value = taocanList.value.filter(
+              (item) => item.roleType === "diamond"
+            )[1].pId;
+            // 动画
+            if (item.roleType === "diamond") {
+              donghuaFlag(index);
+            }
+          }
+          if (roleType.value == "diamond") {
+            // 赋值id为第二个
+            Id.value = taocanList.value.filter(
+              (item) => item.roleType === "diamond"
+            )[1].pId;
+            // 动画
+            if (item.roleType === "diamond") {
+              donghuaFlag(index);
+            }
+          }
+          // 动画
+          function donghuaFlag(index) {
+            // 判断数组是否大于4，并且ID是都是最后一个，如果是最后，那么就要滚动支付弹出框
+            if (taocanList.value.length > 4) {
+              if (index === 3 || index === 4) {
+                StyleFlag.value = false;
+              }
             }
           }
 
-          // if (item.pId == Id.value) {
-          //   console.log(item);
-          //   ticketType.value = item.timeLimit;
-          //   // 套餐id改变时，修改支付金额
-          //   paymentAmount.value.price = item.discountPrice;
-          //   paymentAmount.value.discounts = item.pPrice - item.discountPrice;
-          //   // 赋值
-          //   // 获取支付宝支付二维码
-          //   getZfbQR(Id.value, userid.value, ticketType.value);
-          // }
+          if (item.pId == Id.value) {
+            ticketType.value = item.timeLimit;
+            // 套餐id改变时，修改支付金额
+            paymentAmount.value.price = item.discountPrice;
+            paymentAmount.value.discounts = item.pPrice - item.discountPrice;
+            // 赋值
+            // 获取支付宝支付二维码
+            getZfbQR(Id.value, userid.value, ticketType.value);
+          }
         });
 
         // 弹出框显示，展示支付二维码，查看用户是否支付
@@ -660,7 +691,29 @@ watch(
         payTimerHandle();
       }
     }
+  },
+  {
+    immediate: true,
   }
+);
+
+// 监听用户身份
+watch(
+  () => store.state.user.userData.roleType,
+  (newValue) => {
+    if (newValue === "free") {
+      shenfen.value = "免费";
+    } else if (newValue == "silver") {
+      shenfen.value = "白银";
+    } else if (newValue == "gold") {
+      shenfen.value = "黄金";
+    } else if (newValue == "platinum") {
+      shenfen.value = "白金";
+    } else if (newValue == "diamond") {
+      shenfen.value = "钻石";
+    }
+  },
+  { immediate: true }
 );
 
 onBeforeUnmount(() => {});
@@ -709,16 +762,17 @@ const clickLiHandle = (item, index) => {
   getZfbQR(Id.value, userid.value, ticketType.value);
 
   // 获取优惠券
-  let yhq = [];
-  myCouponList.value.map((res) => {
-    if (res.roleType === item.roleType) {
-      yhq.push(res);
-    } else {
-      yhq.push({ discountPrice: 0 });
-    }
-  });
+  // let yhq = [];
+  // myCouponList.value.map((res) => {
+  //   if (res.roleType === item.roleType) {
+  //     yhq.push(res);
+  //   } else {
+  //     yhq.push({ discountPrice: 0 });
+  //   }
+  // });
   // 更新支付金额
-  paymentAmount.value.price = item.discountPrice - yhq[0].discountPrice;
+  paymentAmount.value.price = item.discountPrice - item.yhq[0].discountPrice;
+
   // 已优惠
   paymentAmount.value.discounts = item.yhq[0].discountPrice;
   if (paymentAmount.value.price <= 0) {
@@ -773,8 +827,8 @@ const carouselRotation = () => {
 };
 
 // 4.获取可用优惠券
-const getCoupon = (userid) => {
-  return getMyCoupon(userid).then((res) => {
+const getCoupon = async (userid) => {
+  return await getMyCoupon(userid).then((res) => {
     if (res.data.code == 200) {
       res.data.data.map((item) => {
         if (item.roleType === "diamond") {
@@ -798,7 +852,6 @@ const getCoupon = (userid) => {
 // 点击优惠券
 const handleYhq = (item) => {
   taocanList.value.map((res) => {
-    console.log(res);
     if (res.roleType === item.roleType) {
       Id.value = res.pId;
       if (res.roleType === "diamond") {
@@ -807,7 +860,6 @@ const handleYhq = (item) => {
       // 套餐id改变时，修改支付金额s
 
       paymentAmount.value.price = res.discountPrice - item.discountPrice;
-      // paymentAmount.value.discounts = res.pPrice - item.discountPrice;
       paymentAmount.value.discounts = item.discountPrice;
     }
   });
@@ -822,6 +874,7 @@ onUnmounted(() => {
   // 轮播图 去除定时器
   clearInterval(carouselTimer.value);
   carouselTimer.value = null;
+  Id.value = null;
 });
 </script>
 

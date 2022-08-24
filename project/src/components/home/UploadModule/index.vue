@@ -120,7 +120,7 @@ let fileType = ref(props.item.type);
 // 获取上传视频名字
 let fileName = ref(props.item.name);
 // 获取文件 大小
-let fileSize = ref(parseInt(props.item.size / 1024 / 1024));
+let fileSize = ref((props.item.size / 1024 / 1024).toFixed(2));
 // 获取压缩文件大小
 let compressSize = ref(null);
 // 视频src
@@ -359,8 +359,7 @@ const operationStatusAvinfo = async (infoPid) => {
   return await getOperationStatusAvinfo(infoPid).then((res) => {
     // 轮训成功，获取到压缩之后的大小
     if (res.data.code == 200) {
-  
-      compressSize.value = parseInt(res.data.data.newSize / 1024 / 1024);
+      compressSize.value = (res.data.data.newSize / 1024 / 1024).toFixed(2);
       // 关闭定时器
       clearInterval(compressSizeTime.value);
       compressSizeTime.value = true;
@@ -413,8 +412,8 @@ const downloadBtn = () => {
         store.commit("home/setConversionList", fileUrlList.value);
         // 扣除本地下载次数
         killDownLoadNumber(1, userid.value);
-            // 扣除每天次数
-    store.commit("home/jianDayloadNumber", 1);
+        // 扣除每天次数
+        store.commit("home/jianDayloadNumber", 1);
       }
     });
   }
@@ -501,6 +500,7 @@ const downloadFn = async () => {
         margin-top: 27px;
       }
       .home_fileCompression_box_zh {
+        cursor: pointer;
         width: 93px;
         height: 29px;
         font-size: 21px;

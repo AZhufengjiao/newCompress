@@ -7,7 +7,7 @@
  * pId                套餐id，用于付款二维码
  * pPrice             原价
  * downloadTimes      每天下载次数
- * roleType           会员身份   free:免费  silver:银  goid：黄金   platinum：白金  diamond：钻石
+ * roleType           会员身份   free:免费  silver:银  gold：黄金   platinum：白金  diamond：钻石
  * huiYuanType        会员类型   钻石，白金，黄金，银
  * timeLimit          套餐时间日期
  * newTimeLimit       修改过套餐时间日期

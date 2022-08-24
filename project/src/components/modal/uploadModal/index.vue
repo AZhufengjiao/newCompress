@@ -22,9 +22,14 @@
         <h1>成为黄金会员立享<span>100</span>M内视频上传</h1>
       </div>
       <!-- 黄金会员 -->
-      <div v-else-if="UploadModal.state === 'goid'">
+      <div v-else-if="UploadModal.state === 'gold'">
         <p>黄金会员支持大小不超过100M视频上传</p>
         <h1>成为白金会员立享<span>无限制</span>视频上传</h1>
+      </div>
+      <!-- 白金会员 -->
+      <div v-else-if="UploadModal.state === 'platinum'">
+        <p>白金会员支持每日100次视频上传</p>
+        <h1>成为钻石会员立享<span>无限制</span>视频上传</h1>
       </div>
       <div class="button">
         <a-button @click="handleShiShi">我先试试</a-button>

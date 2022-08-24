@@ -20,6 +20,8 @@ const home = {
       trial: false,
       // 转化需要的参数
       params1: {},
+      // 工具页面选择的数据
+      gongjuList: [],
     };
   },
   mutations: {
@@ -57,7 +59,14 @@ const home = {
     jianDayloadNumber(state, number) {
       state.dayloadNumber -= number;
     },
+    // 修改工具页选择的数据
+    setGongjuList(state, arr) {
+      console.log(arr);
+      // state.gongjuList.push(arr);
+      state.gongjuList = arr["0"];
+    },
   },
 };
 
 export default home;
+// store.commit("home/setGongjuList",SonList.value);

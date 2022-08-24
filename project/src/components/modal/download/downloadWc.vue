@@ -1,5 +1,12 @@
 <template>
   <div v-if="downloadModal.flag" class="downloadWc">
+    <!-- 支付弹出层 -->
+    <payModel
+      :modalFlag="modalFlag"
+      @updataVisible="updataModalFlag"
+      @close="closeHandle"
+    ></payModel>
+
     <!-- 遮罩层 -->
     <div class="zzc"></div>
     <!-- 弹出框盒子部分 -->
@@ -17,7 +24,7 @@
         </div>
         <h1>
           今日剩余下载数<span>{{
-            dayNum === "无限制*" ? "无限" : store.state.home.dayloadNumber
+            dayNum === "无限制" ? "无限" : store.state.home.dayloadNumber
           }}</span>
           /{{ dayNum }}张
         </h1>
@@ -27,7 +34,11 @@
         </h2>
       </div>
       <div class="download1-bottom">
-        <h1>升级钻石会员，可享无限次下载，<span>立即升级会员》</span></h1>
+        <h1>
+          升级钻石会员，可享无限次下载，<span @click="modalFlag = true"
+            >立即升级会员》</span
+          >
+        </h1>
         <div class="download1-Tencent">
           <div class="qr-code">
             <vue-qr
@@ -49,10 +60,11 @@
 
 <script setup>
 import { onMounted, onUpdated, ref, toRefs, watch, computed } from "vue";
+import payModel from "@/components/modal/payModal/index.vue"; // 用户支付弹出框
 import VueQr from "vue-qr/src/packages/vue-qr.vue";
 import { useStore } from "vuex";
 components: {
-  VueQr;
+  VueQr, payModel;
 }
 let store = useStore();
 // 二维码中图片url
@@ -71,6 +83,18 @@ let identity = computed(() => {
   return store.state.user.userData.roleType;
 });
 
+// 4. 支付弹出框
+// 支付弹出框
+let modalFlag = ref(false);
+// 点击弹出框确定按钮，隐藏弹出框
+const updataModalFlag = (bol) => {
+  modalFlag.value = bol;
+};
+// 支付成功，关闭自己
+const closeHandle = (state) => {
+  modalShow.value = state;
+};
+
 // 用户身份变化的时候，修改身份
 watch(
   () => identity.value,
@@ -79,7 +103,7 @@ watch(
       dayNum.value = 1;
     } else if (newValue == "silver") {
       dayNum.value = 3;
-    } else if (newValue == "goid") {
+    } else if (newValue == "gold") {
       dayNum.value = 10;
     } else if (newValue == "platinum") {
       dayNum.value = 100;

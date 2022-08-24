@@ -25,13 +25,13 @@
               size="large"
             >
               <template #suffixIcon>
-                <caret-down-outlined
-                  :style="{ fontSize: '16px', color: '#AFC0F3' }"
-                  v-if="!selectF1"
-                />
                 <caret-up-outlined
                   :style="{ fontSize: '16px', color: '#AFC0F3' }"
-                  v-else-if="selectF1"
+                  v-if="selectF1"
+                />
+                <caret-down-outlined
+                  :style="{ fontSize: '16px', color: '#AFC0F3' }"
+                  v-else-if="!selectF1"
                 />
               </template>
             </a-select>
@@ -47,13 +47,13 @@
               size="large"
             >
               <template #suffixIcon>
-                <caret-down-outlined
-                  :style="{ fontSize: '16px', color: '#AFC0F3' }"
-                  v-if="!selectF2"
-                />
                 <caret-up-outlined
                   :style="{ fontSize: '16px', color: '#AFC0F3' }"
-                  v-else-if="selectF2"
+                  v-if="selectF2"
+                />
+                <caret-down-outlined
+                  :style="{ fontSize: '16px', color: '#AFC0F3' }"
+                  v-else-if="!selectF2"
                 />
               </template>
             </a-select>
@@ -368,6 +368,11 @@ input[type="number"] {
 .modal {
   :global(.ant-popover-buttons button:nth-child(2)) {
     background: #0d4aff;
+  }
+}
+.modal {
+  :global(.ant-select-arrow .anticon-caret-down) {
+    pointer-events: none;
   }
 }
 

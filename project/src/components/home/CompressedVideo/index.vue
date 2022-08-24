@@ -72,7 +72,11 @@
             ref="videoDom"
             @canplaythrough="myFunction"
           ></video>
-          <h1>最大支持400M以内视频压缩，<span>升级会员 </span>享受无限大小</h1>
+          <h1>
+            最大支持400M以内视频压缩，<span @click="modalFlag = true"
+              >升级会员 </span
+            >享受无限大小
+          </h1>
         </div>
         <div v-if="fileList.length > 0" class="home_fileCompression">
           <div class="home_fileCompression_flex">
@@ -230,11 +234,6 @@ const CancelChild = (val) => {
 // 4. 支付弹出框
 // 支付弹出框
 let modalFlag = ref(false);
-// 点击显示弹出框
-const payModalShow = () => {
-  emit("updateFlag", false);
-  modalFlag.value = true;
-};
 // 点击弹出框确定按钮，隐藏弹出框
 const updataModalFlag = (bol) => {
   modalFlag.value = bol;
@@ -256,7 +255,7 @@ watch(
   () => store.state.home.trial,
   (newValue) => {
     shishiFlag.value = newValue;
-    fileList.value = filtsShi.value;
+    // fileList.value = filtsShi.value;
   },
   { immediate: true }
 );
@@ -326,6 +325,7 @@ let handleInputV = (e) => {
   // 获取选中的视频
   const uploadFiles = e.target.files;
   // 获取视频大小
+  // console.log(uploadFiles[0].size / 1024 / 1024);
   let videoSize = parseInt(uploadFiles[0].size / 1024 / 1024);
   // 查看用户的身份
   // let roleType = store.state.user.userData.roleType;
@@ -335,13 +335,18 @@ let handleInputV = (e) => {
       // 遍历选中的文件
       for (let i = 0; i < uploadFiles.length; i++) {
         // 判断该文件是否添加
+        // console.log(111111, fileList.value);
         let flag = fileList.value.some(
           (item) => item.lastModified === uploadFiles[i].lastModified
         );
         // 没有添加就添加
         if (!flag) {
           fileList.value.push(uploadFiles[i]);
+          // console.log(JSON.parse(uploadFiles[i]));
           // fileUrlList.value.push(uploadFiles[i]);
+          // console.log(2222, fileList.value);
+          console.log( fileList.value)
+    store.commit('home/setGongjuList', fileList.value)
         }
       }
     }
@@ -398,7 +403,7 @@ let handleInputV = (e) => {
       estimateFn(roleType.value, 50);
     }
     // 黄金
-    else if (roleType.value === "goid") {
+    else if (roleType.value === "gold") {
       estimateFn(roleType.value, 100);
     }
     // 白金或者钻石
@@ -445,7 +450,17 @@ const downloadHandle = () => {
     if (downloadNumber.value < fileUrlList.value.length) {
       // 判断身份是否有次数限制
       if (roleType.value !== "platinum" && roleType.value !== "diamond") {
-        console.log(111);
+        // 复制参数，修改弹出框信息
+        return (UploadModal.value = {
+          flag: true,
+          state: roleType.value,
+        });
+      }
+    }
+    // 判断每天下载次数是否小于等于0
+    if (store.state.home.dayloadNumber <= 0) {
+      // 判断身份是否有次数限制
+      if (roleType.value !== "diamond") {
         // 复制参数，修改弹出框信息
         return (UploadModal.value = {
           flag: true,
@@ -483,6 +498,7 @@ const downloadHandle = () => {
       if (SonList.value[i].xz === false) {
         FalseNum++;
         SonList.value[i].xz = true;
+        console.log(SonList.value);
         store.commit("home/setConversionList", SonList.value);
       }
     }
