@@ -211,7 +211,7 @@ import { useRouter } from "vue-router";
 import payModel from "@/components/modal/payModal/index.vue"; // 支付弹出框
 import loginModel from "@/components/modal/loginModal/index.vue"; // 支付弹出框
 import { getSetMeal, getMyCoupon } from "@/api/about";
-import { onMounted, onUpdated, ref, watch, onUnmounted } from "vue";
+import { onMounted, onUpdated, ref, watch, onUnmounted, computed } from "vue";
 import taoCanFn from "@/assets/js/taoCanFn.js"; // 封装套餐数据
 import { useStore } from "vuex";
 components: {
@@ -221,7 +221,7 @@ var erd = elementResizeDetectorMaker(); //创建实例
 const $router = useRouter();
 const store = useStore();
 // 用户id
-let userid = ref(store.state.login.userid);
+let userid = computed(() => store.state.login.userid);
 // 选择套餐id
 let currentId = ref(null);
 // 支付弹出框 -----------------支付弹出框
@@ -267,7 +267,7 @@ onUpdated(() => {
 watch(
   () => store.state.login.userid,
   (newValue) => {
-    userid.value = newValue;
+    // userid.value = newValue;
     // 获取优惠券
     getCoupon(userid.value);
     // 获取套餐数据

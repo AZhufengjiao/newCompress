@@ -4,7 +4,6 @@
     <payModel
       :modalFlag="modalFlag"
       @updataVisible="updataModalFlag"
-      @close="closeHandle"
     ></payModel>
 
     <!-- 遮罩层 -->
@@ -90,10 +89,10 @@ let modalFlag = ref(false);
 const updataModalFlag = (bol) => {
   modalFlag.value = bol;
 };
-// 支付成功，关闭自己
-const closeHandle = (state) => {
-  modalShow.value = state;
-};
+// // 支付成功，关闭自己
+// const closeHandle = (state) => {
+//   modalShow.value = state;
+// };
 
 // 用户身份变化的时候，修改身份
 watch(

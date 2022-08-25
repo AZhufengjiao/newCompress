@@ -7,7 +7,7 @@
       <!-- 标题 -->
       <div class="about-hrycut">
         <div class="container">
-          <h2>HEYCUT 视频压缩</h2>
+          <h2 @click="hashs">HEYCUT 视频压缩</h2>
           <div>智能场景压缩 · 一步搞定所有视频需求</div>
         </div>
       </div>
@@ -211,7 +211,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 import aboutNav from "@/components/aboutNav/index.vue";
@@ -227,7 +227,7 @@ const $router = useRouter();
 const store = useStore();
 
 // 获取本地用户id，查看是否登录
-let state = ref(store.state.login.userid);
+let state = computed(() => store.state.login.userid);
 // 获取工具跳转列表
 let TemplateList = ref([]);
 onMounted(() => {

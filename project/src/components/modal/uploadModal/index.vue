@@ -40,11 +40,7 @@
     </div>
   </div>
   <!-- 支付弹出层 -->
-  <payModel
-    :modalFlag="modalFlag"
-    @updataVisible="updataModalFlag"
-    @close="closeHandle"
-  ></payModel>
+  <payModel :modalFlag="modalFlag" @updataVisible="updataModalFlag"></payModel>
 </template>
 
 <script setup>
@@ -95,10 +91,10 @@ const payModalShow = () => {
 const updataModalFlag = (bol) => {
   modalFlag.value = bol;
 };
-// 支付成功，关闭自己
-const closeHandle = (state) => {
-  modalShow.value = state;
-};
+// // 支付成功，关闭自己
+// const closeHandle = (state) => {
+//   modalShow.value = state;
+// };
 
 // 点击我先试试
 const handleShiShi = () => {

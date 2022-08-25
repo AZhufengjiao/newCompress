@@ -57,11 +57,7 @@
   ></downloadWc>
 
   <!-- 支付弹出层 -->
-  <payModel
-    :modalFlag="modalFlag"
-    @updataVisible="updataModalFlag"
-    @close="closeHandle"
-  ></payModel>
+  <payModel :modalFlag="modalFlag" @updataVisible="updataModalFlag"></payModel>
 
   <!-- 用户身份 下载弹出框  选择试试 和立即升级 -->
   <uploadModal
@@ -84,7 +80,7 @@ import downloadWc from "@/components/modal/download/downloadWc.vue"; // 视频�
 import uploadModal from "@/components/modal/uploadModal/index.vue"; // 选择支付试试弹出框
 import payModel from "@/components/modal/payModal/index.vue"; // 用户支付弹出框
 import { useStore } from "vuex";
-import { ref, onMounted, onUpdated, watch, toRefs } from "vue";
+import { ref, onMounted, onUpdated, watch, toRefs, computed } from "vue";
 import { defineEmits } from "vue";
 import { message } from "ant-design-vue";
 import { saveFile } from "@/components/home/CompressedVideo/download.js";
@@ -95,7 +91,7 @@ components: {
 const store = useStore();
 const emit = defineEmits(["getFileItemParams"]);
 // 获取用户id
-let userid = ref(store.state.login.userid);
+let userid = computed(() => store.state.login.userid);
 // 获取压缩文件大小需要的参数
 let compressVideoSize = ref(null);
 let flag = ref(false);
@@ -161,10 +157,10 @@ const updataModalFlag = (bol) => {
   modalFlag.value = bol;
 };
 // 支付成功，关闭自己
-const closeHandle = (state) => {
-  modalFlag.value = state;
-  // modalShow.value = state;
-};
+// const closeHandle = (state) => {
+//   modalFlag.value = state;
+//   // modalShow.value = state;
+// };
 
 // 1.进入页面，获取input上传视频，判断视频格式
 onMounted(() => {
@@ -172,18 +168,18 @@ onMounted(() => {
   fileURL.value = URL.createObjectURL(file.value); // https://blog.csdn.net/qq_21479345/article/details/108550762
   subVideoDom.value.src = fileURL.value;
 
-  // API：上传文件后缀
-  // 判断上传的格式是否是视频
-  if (fileType.value.indexOf("video/") > -1) {
-    // 发起请求获取上传token
-    // video/ replace .
-    // video/mp4 .mp4 xxxx.mp4
-    // video/mov .mov xxxx.mov
-    let suffix = fileType.value.replace("video/", ".");
-    getCompressTK(suffix);
-  } else {
-    message.warning("您上传的视频格式有误，请重新上传");
-  }
+  // // API：上传文件后缀
+  // // 判断上传的格式是否是视频
+  // if (fileType.value.indexOf("video/") > -1) {
+  //   // 发起请求获取上传token
+  //   // video/ replace .
+  //   // video/mp4 .mp4 xxxx.mp4
+  //   // video/mov .mov xxxx.mov
+  let suffix = fileType.value.replace("video/", ".");
+  getCompressTK(suffix);
+  // } else {
+  //   message.warning("您上传的视频格式有误，请重新上传");
+  // }
 });
 
 onUpdated(() => {});
@@ -313,13 +309,14 @@ const setTranscoding = async () => {
 // 生成一个对象，好push到本地
 let obj = ref(null);
 // 创建一个可以下载的url数组
-let fileUrlList = ref(store.state.home.conversionList);
+let fileUrlList = computed(() => store.state.home.conversionList);
 // 加一个定时器，获取文件压缩大小需要轮询
 let compressSizeTime = ref(null);
 
 // 获取异步处理进度  进入轮训
 // 获取用户下载url
 let videoUrl = ref(null);
+
 const setSchedule = async (pid) => {
   return await getSchedule(pid).then((res) => {
     if (res.data.code == 200) {
@@ -340,10 +337,10 @@ const setSchedule = async (pid) => {
       };
 
       // 获取转换成功存储数组
-      let arr = store.state.home.conversionList;
-      arr.push(obj.value);
-      store.commit("home/setConversionList", arr);
-      emit("getFileItemParams", arr);
+      let arr = computed(() => store.state.home.conversionList);
+      arr.value.push(obj.value);
+      store.commit("home/setConversionList", arr.value);
+      emit("getFileItemParams", arr.value);
 
       // 获取压缩文件大小
       compressSizeTime.value = window.setInterval(() => {
@@ -368,9 +365,9 @@ const operationStatusAvinfo = async (infoPid) => {
 };
 
 // 查看用户的身份
-let roleType = store.state.user.userData.roleType;
+let roleType = computed(() => store.state.user.userData.roleType);
 // 获取该用户下载次数
-let downloadNumber = ref(store.state.home.downloadNumber);
+let downloadNumber = computed(() => store.state.home.downloadNumber);
 // 传给付款组件参数，显示与隐藏
 let UploadModal = ref({
   flag: false,
@@ -382,41 +379,49 @@ const updateStateHandle = (state) => {
 };
 // 4.用户点击下载
 const downloadBtn = () => {
-  // 点击全部，判断试试功能状态是否为true，如果是true，就不能下载，用户权限不够，是false才能下载
-  if (store.state.home.trial) {
-    modalFlag.value = true;
-  } else {
-    videoDownWc.value.num = 1;
-    // 让下载中弹窗显示
-    videoXz.value.flag = true;
-    videoXz.value.num = 1;
+    if (store.state.home.trial === true) {
+    return (modalFlag.value = true); // 支付弹出框
+  }
+  if (obj.value.zh !== true) {
+    // 如果是普通用户的话弹出支付
+    if (
+      roleType.value == "free" &&
+      (fileSize.value >= 10 || downloadNumber.value < 1)
+    ) {
+      return (modalFlag.value = true); // 支付弹出框
+    }
     // 判断下载次数是否小于用户准备下载视频的个数
     if (downloadNumber.value < 1) {
       // 判断身份是否有次数限制
-      if (roleType !== "platinum" && roleType !== "diamond") {
+      if (roleType.value !== "platinum" || roleType.value !== "diamond") {
         // 复制参数，修改弹出框信息
         return (UploadModal.value = {
           flag: true,
-          state: roleType,
+          state: roleType.value,
         });
       }
     }
-    if (state.value == "zh" && completeWih.value == 100) {
-      downloadFn();
-    }
-
-    // 判断本地是否有这个
-    fileUrlList.value.forEach((element) => {
-      if (element.videoUrl === obj.value.videoUrl && element.xz == false) {
-        element.xz = true;
-        store.commit("home/setConversionList", fileUrlList.value);
-        // 扣除本地下载次数
-        killDownLoadNumber(1, userid.value);
-        // 扣除每天次数
-        store.commit("home/jianDayloadNumber", 1);
-      }
-    });
   }
+
+  videoDownWc.value.num = 1;
+  // 让下载中弹窗显示
+  videoXz.value.flag = true;
+  videoXz.value.num = 1;
+  if (state.value == "zh" && completeWih.value == 100) {
+    downloadFn();
+  }
+
+  // 判断本地是否有这个
+  fileUrlList.value.forEach((element) => {
+    if (element.videoUrl === obj.value.videoUrl && element.xz == false) {
+      element.xz = true;
+      store.commit("home/setConversionList", fileUrlList.value);
+      // 扣除本地下载次数
+      killDownLoadNumber(1, userid.value);
+      // 扣除每天次数
+      store.commit("home/jianDayloadNumber", 1);
+    }
+  });
 };
 
 // 点击下载扣除次数
@@ -537,7 +542,7 @@ const downloadFn = async () => {
         align-items: center;
         .home_fileCompression_box_memory {
           // opacity: 0;
-          width: 65px;
+          width: 92px;
           height: 29px;
           font-size: 21px;
           font-family: PingFangSC-Regular, PingFang SC;

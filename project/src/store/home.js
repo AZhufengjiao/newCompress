@@ -21,7 +21,7 @@ const home = {
       // 转化需要的参数
       params1: {},
       // 工具页面选择的数据
-      gongjuList: [],
+      gongjuList: 1,
     };
   },
   mutations: {
@@ -60,10 +60,8 @@ const home = {
       state.dayloadNumber -= number;
     },
     // 修改工具页选择的数据
-    setGongjuList(state, arr) {
-      console.log(arr);
-      // state.gongjuList.push(arr);
-      state.gongjuList = arr["0"];
+    setGongjuList(state, num) {
+      state.gongjuList = num;
     },
   },
 };

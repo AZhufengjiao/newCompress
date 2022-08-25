@@ -11,7 +11,6 @@
     <payModel
       :modalFlag="modalFlag"
       @updataVisible="updataModalFlag"
-      @close="closeHandle"
     ></payModel>
 
     <!-- 视频下载弹出框 -->
@@ -120,7 +119,15 @@ import UploadModule from "@/components/home/UploadModule/index.vue"; // 下载�
 
 import Custom from "@/components/home/Custom/index.vue"; // 自定义压缩
 import defaultYS from "@/components/home/defaultYS/index.vue"; // 压缩场景
-import { onMounted, onUpdated, onUnmounted, ref, watch, toRefs } from "vue";
+import {
+  onMounted,
+  onUpdated,
+  onUnmounted,
+  ref,
+  watch,
+  toRefs,
+  computed,
+} from "vue";
 import { getCompressScenes } from "@/api/home";
 import { getKillDownloadNum, getDownloadNum } from "@/api/about";
 import { useStore } from "vuex";
@@ -149,9 +156,9 @@ let fileList = ref([]);
 // 转化好的视频数组
 let SonList = ref([]);
 // 转码要的参数
-let params1 = ref(null);
+let params1 = computed(() => store.state.home.params1);
 // 获取用户id
-let userid = ref(store.state.login.userid);
+let userid = computed(() => store.state.login.userid);
 // 获取该用户下载次数
 let downloadNumber = ref(0);
 // 用户每天下载次数
@@ -171,15 +178,15 @@ watch(
   { immediate: true }
 );
 
-watch(
-  () => store.state.home.params1,
-  (value) => {
-    params1.value = value;
-  },
-  {
-    immediate: true,
-  }
-);
+// watch(
+//   () => store.state.home.params1,
+//   (value) => {
+//     params1.value = value;
+//   },
+//   {
+//     immediate: true,
+//   }
+// );
 
 // 动画状态
 let flag = ref(false);
@@ -189,19 +196,19 @@ let succeedtime = ref(null);
 let succeed = ref(false);
 
 // 创建一个可以下载的url数组
-let fileUrlList = ref(store.state.home.conversionList);
+let fileUrlList = computed(() => store.state.home.conversionList);
 
-// 监听用户id
-watch(
-  () => store.state.login.userid,
-  (newValue) => {
-    console.log(newValue);
-    userid.value = newValue;
-    // console.log(userid.value);
-    // 获取剩余次数
-    // getFrequency(userid.value);
-  }
-);
+// // 监听用户id
+// watch(
+//   () => store.state.login.userid,
+//   (newValue) => {
+//     console.log(newValue);
+//     userid.value = newValue;
+//     // console.log(userid.value);
+//     // 获取剩余次数
+//     // getFrequency(userid.value);
+//   }
+// );
 
 // 弹出框
 // 1.视频下载弹出框弹出框
@@ -238,10 +245,10 @@ let modalFlag = ref(false);
 const updataModalFlag = (bol) => {
   modalFlag.value = bol;
 };
-// 支付成功，关闭自己
-const closeHandle = (state) => {
-  modalShow.value = state;
-};
+// // 支付成功，关闭自己
+// const closeHandle = (state) => {
+//   modalShow.value = state;
+// };
 
 // 5.点击试试弹出框
 let UploadModal = ref({
@@ -255,7 +262,7 @@ watch(
   () => store.state.home.trial,
   (newValue) => {
     shishiFlag.value = newValue;
-    // fileList.value = filtsShi.value;
+    fileList.value = filtsShi.value;
   },
   { immediate: true }
 );
@@ -310,16 +317,18 @@ let videoDom = ref(null);
 let videoTime = ref(null);
 
 // 查看用户的身份
-let roleType = ref(store.state.user.userData.roleType);
-watch(
-  () => store.state.user.userData.roleType,
-  (newValue) => {
-    roleType.value = newValue;
-  },
-  { immediate: true }
-);
+let roleType = computed(() => store.state.user.userData.roleType);
+// watch(
+//   () => store.state.user.userData.roleType,
+//   (newValue) => {
+//     roleType.value = newValue;
+//   },
+//   { immediate: true }
+// );
 //  功能2.input获取上传视频，身份判断
 let handleInputV = (e) => {
+  console.log(store.state.user.userData.roleType);
+  console.log(roleType.value);
   // 为我要试试功能存储
   filtsShi.value = e.target.files;
   // 获取选中的视频
@@ -342,11 +351,6 @@ let handleInputV = (e) => {
         // 没有添加就添加
         if (!flag) {
           fileList.value.push(uploadFiles[i]);
-          // console.log(JSON.parse(uploadFiles[i]));
-          // fileUrlList.value.push(uploadFiles[i]);
-          // console.log(2222, fileList.value);
-          console.log( fileList.value)
-    store.commit('home/setGongjuList', fileList.value)
         }
       }
     }
@@ -359,7 +363,7 @@ let handleInputV = (e) => {
      */
     function estimateFn(state, num) {
       // 视频大小，不超过身份限制，下载视频
-      if (videoSize <= num || num === null) {
+      if ((videoSize <= num || num === null) && downloadNumber.value > 0) {
         // console.log("我的身份是" + state);
         // 复制参数，修改弹出框信息
         UploadModal.value = {
@@ -404,10 +408,12 @@ let handleInputV = (e) => {
     }
     // 黄金
     else if (roleType.value === "gold") {
+      console.log(11);
       estimateFn(roleType.value, 100);
     }
     // 白金或者钻石
     else if (roleType.value === "platinum" || roleType.value === "diamond") {
+      console.log(111);
       estimateFn(roleType.value, null);
     }
   } else {
@@ -436,124 +442,136 @@ const HandleDrag = (e) => {
 // 获取子组件转化好的视频
 const FileItemParams = (item) => {
   SonList.value = item;
-  fileUrlList.value = item;
+  // fileUrlList.value = item; // computed只读
+  store.commit("home/setConversionList", item);
 };
 
 let downloadTimer = ref(null);
 // 功能4.点击下载全部
 const downloadHandle = () => {
-  // 点击全部，判断试试功能状态是否为true，如果是true，就不能下载，用户权限不够，是false才能下载
-  if (shishiFlag.value) {
-    modalFlag.value = true; // 支付弹出框
-  } else {
-    // 判断下载次数是否小于用户准备下载视频的个数
-    if (downloadNumber.value < fileUrlList.value.length) {
-      // 判断身份是否有次数限制
-      if (roleType.value !== "platinum" && roleType.value !== "diamond") {
-        // 复制参数，修改弹出框信息
-        return (UploadModal.value = {
-          flag: true,
-          state: roleType.value,
-        });
-      }
-    }
-    // 判断每天下载次数是否小于等于0
-    if (store.state.home.dayloadNumber <= 0) {
-      // 判断身份是否有次数限制
-      if (roleType.value !== "diamond") {
-        // 复制参数，修改弹出框信息
-        return (UploadModal.value = {
-          flag: true,
-          state: roleType.value,
-        });
-      }
-    }
-    // 让下载中弹窗显示
-    videoXz.value.flag = true;
-    videoXz.value.num = SonList.value.length;
-    videoDownWc.value.num = SonList.value.length;
-    // 查看用户的身份
-    // let roleType = store.state.user.userData.roleType;
-    // 设置一个记录下载为false的变量
-    let FalseNum = 0;
-    let blogTitle = "下载文件的名字";
-    let zip = new JSZip();
-    let promiseArr = [];
-    let cache = {};
-    // 要下载图片的url
-    let arrImg = [];
-    // for (let i = 0; i < fileUrlList.value.length; i++) {
-    //   if (fileUrlList.value[i].xz === false) {
-    //     fileUrlList.value[i].xz = true;
-    //     store.commit("home/setConversionList", fileUrlList.value);
-
-    //     // 下载
-    //     arrImg.push({
-    //       path: fileUrlList.value[i].videoUrl,
-    //       name: fileUrlList.value[i].file.name,
-    //     });
-    //   }
-    // }
-    for (let i = 0; i < SonList.value.length; i++) {
-      if (SonList.value[i].xz === false) {
-        FalseNum++;
-        SonList.value[i].xz = true;
-        console.log(SonList.value);
-        store.commit("home/setConversionList", SonList.value);
-      }
-    }
-    // 每次下载所有xz为true得
-    store.state.home.conversionList.map((item) => {
-      arrImg.push({
-        path: item.videoUrl,
-        name: item.file.name,
-      });
-    });
-    // 扣除本地下载次数
-    killDownLoadNumber(FalseNum, userid.value);
-    // 扣除每天次数
-    store.commit("home/jianDayloadNumber", FalseNum);
-    for (let item of arrImg) {
-      const promise = getImgArrayBuffer(item.path).then((data) => {
-        // 下载文件，并存成ArrayBuffer对象（blob）
-        zip.file(item.name, data, { binary: true }); // 逐个添加文件
-        cache[item.name] = data;
-      });
-      promiseArr.push(promise);
-    }
-    Promise.all(promiseArr).then(() => {
-      // 下载默认时间
-      let delayTime = 1800;
-      // 下载起始时间
-      let currentTime = new Date().getTime();
-      zip
-        .generateAsync({ type: "blob" })
-        .then((content) => {
-          // 下载后时间
-          let tempTime = new Date().getTime();
-          // 下载时间
-          delayTime =
-            tempTime - currentTime < 1800 ? 1800 : tempTime - currentTime;
-          // 开启定时器
-          downloadTimer.value = window.setInterval(() => {
-            // 下载中弹出框隐藏
-            videoXz.value.flag = false;
-            // 下载完成弹出框显示
-            videoDownWc.value.flag = true;
-            // 去除定时器
-            clearInterval(downloadTimer.value);
-            // 让定时器为空
-            downloadTimer.value = true;
-          }, delayTime);
-          // 生成二进制
-          FileSaver.saveAs(content, blogTitle); // 利用file-saver保存文件 自定义文件名
-          this.btnLoading = false;
-        })
-        .catch((res) => {
-          // message.warning("文件压缩失败");
-        });
-    });
+  if (store.state.home.trial === true) {
+    return (modalFlag.value = true); // 支付弹出框
   }
+  SonList.value.map((item) => {
+    if (item.zh !== true) {
+      // 如果是普通用户的话弹出支付
+      if (
+        roleType.value == "free" &&
+        (filtsShi.value[0].size / 1024 / 1024 >= 10 || downloadNumber.value < 1)
+      ) {
+        return (modalFlag.value = true); // 支付弹出框
+      }
+
+      // 判断下载次数是否小于用户准备下载视频的个数
+      if (downloadNumber.value < fileUrlList.value.length) {
+        // 判断身份是否有次数限制
+        if (roleType.value !== "platinum" || roleType.value !== "diamond") {
+          // 复制参数，修改弹出框信息
+          return (UploadModal.value = {
+            flag: true,
+            state: roleType.value,
+          });
+        }
+      }
+      // 判断每天下载次数是否小于等于0
+      if (store.state.home.dayloadNumber <= 0) {
+        // 判断身份是否有次数限制
+        if (roleType.value !== "diamond") {
+          // 复制参数，修改弹出框信息
+          return (UploadModal.value = {
+            flag: true,
+            state: roleType.value,
+          });
+        }
+      }
+    }
+  });
+
+  // 让下载中弹窗显示
+  videoXz.value.flag = true;
+  videoXz.value.num = SonList.value.length;
+  videoDownWc.value.num = SonList.value.length;
+  // 查看用户的身份
+  // let roleType = store.state.user.userData.roleType;
+  // 设置一个记录下载为false的变量
+  let FalseNum = 0;
+  let blogTitle = "下载文件的名字";
+  let zip = new JSZip();
+  let promiseArr = [];
+  let cache = {};
+  // 要下载图片的url
+  let arrImg = [];
+  // for (let i = 0; i < fileUrlList.value.length; i++) {
+  //   if (fileUrlList.value[i].xz === false) {
+  //     fileUrlList.value[i].xz = true;
+  //     store.commit("home/setConversionList", fileUrlList.value);
+
+  //     // 下载
+  //     arrImg.push({
+  //       path: fileUrlList.value[i].videoUrl,
+  //       name: fileUrlList.value[i].file.name,
+  //     });
+  //   }
+  // }
+  for (let i = 0; i < SonList.value.length; i++) {
+    if (SonList.value[i].xz === false) {
+      FalseNum++;
+      SonList.value[i].xz = true;
+      console.log(SonList.value);
+      store.commit("home/setConversionList", SonList.value);
+    }
+  }
+  // 每次下载所有xz为true得
+  store.state.home.conversionList.map((item) => {
+    arrImg.push({
+      path: item.videoUrl,
+      name: item.file.name,
+    });
+  });
+  // 扣除本地下载次数
+  killDownLoadNumber(FalseNum, userid.value);
+  // 扣除每天次数
+  store.commit("home/jianDayloadNumber", FalseNum);
+  for (let item of arrImg) {
+    const promise = getImgArrayBuffer(item.path).then((data) => {
+      // 下载文件，并存成ArrayBuffer对象（blob）
+      zip.file(item.name, data, { binary: true }); // 逐个添加文件
+      cache[item.name] = data;
+    });
+    promiseArr.push(promise);
+  }
+  Promise.all(promiseArr).then(() => {
+    // 下载默认时间
+    let delayTime = 1800;
+    // 下载起始时间
+    let currentTime = new Date().getTime();
+    zip
+      .generateAsync({ type: "blob" })
+      .then((content) => {
+        // 下载后时间
+        let tempTime = new Date().getTime();
+        // 下载时间
+        delayTime =
+          tempTime - currentTime < 1800 ? 1800 : tempTime - currentTime;
+        // 开启定时器
+        downloadTimer.value = window.setInterval(() => {
+          // 下载中弹出框隐藏
+          videoXz.value.flag = false;
+          // 下载完成弹出框显示
+          videoDownWc.value.flag = true;
+          // 去除定时器
+          clearInterval(downloadTimer.value);
+          // 让定时器为空
+          downloadTimer.value = true;
+        }, delayTime);
+        // 生成二进制
+        FileSaver.saveAs(content, blogTitle); // 利用file-saver保存文件 自定义文件名
+        this.btnLoading = false;
+      })
+      .catch((res) => {
+        // message.warning("文件压缩失败");
+      });
+  });
 };
 
 /**

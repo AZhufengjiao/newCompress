@@ -376,7 +376,7 @@ const props = defineProps({
 });
 let { currentId } = toRefs(props);
 
-const emit = defineEmits(["updataVisible", "close"]);
+const emit = defineEmits(["updataVisible"]);
 // 控制弹出框显示与隐藏
 const visible = ref(props.modalFlag);
 // 套餐选择的身份
@@ -454,8 +454,6 @@ const getPayStatus = async (userId) => {
   return await getPayState(formData).then((res) => {
     // 支付成功
     if (res.data.code == 200) {
-      // 支付成功，刷新页面
-      router.go(0);
       // 支付成功，弹出支付成功弹出框
       paySuccessF.value = true;
 
@@ -468,10 +466,12 @@ const getPayStatus = async (userId) => {
       getUserInfo(userId);
       // 工具剩余次数
       getFrequency(userId);
+      // 试试状态改变
+      store.commit("home/setTrial", false);
 
       // 关闭弹窗
       visible.value = false;
-      emit("close", false);
+      // emit("close", false);
     } else {
       // console.log("未支付");
     }
@@ -518,7 +518,7 @@ const payTimerHandle = () => {
       payNum.value = 0;
       // 关闭弹出框
       visible.value = false;
-      emit("close", false);
+      // emit("close", false);
     }
   }, 1000);
 };

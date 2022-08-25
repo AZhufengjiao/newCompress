@@ -14,7 +14,7 @@
         </div>
         <!-- 右 -->
         <div class="header-login-box">
-                  <div class="home_vip" v-on:click="$router.push('/pricing')">
+          <div class="home_vip" v-on:click="$router.push('/pricing')">
             会员vip
           </div>
           <!--  未登录显示 -->
@@ -106,7 +106,7 @@
 <script setup>
 import loginModel from "@/components/modal/loginModal/index.vue";
 import { userLogOut } from "@/api/login";
-import { onMounted, ref, toRefs, watch } from "vue";
+import { computed, onMounted, ref, toRefs, watch } from "vue";
 import { useStore } from "vuex";
 import { imgList } from "./index.js";
 import { useRouter } from "vue-router";
@@ -123,19 +123,19 @@ const router = useRouter();
 let visible = ref(true);
 
 // 获取本地用户id，查看是否登录
-let userid = ref(store.state.login.userid);
+let userid = computed(() => store.state.login.userid);
 //  获取用户身份
 const identity = ref("");
 const identityInfo = ref("免费会员：终身");
 
-// 监听用户id
-watch(
-  () => store.state.login.userid,
-  (newValue) => {
-    userid.value = newValue;
-  },
-  { immediate: true }
-);
+// // 监听用户id
+// watch(
+//   () => store.state.login.userid,
+//   (newValue) => {
+//     userid.value = newValue;
+//   },
+//   { immediate: true }
+// );
 
 // 监听用户身份
 watch(
