@@ -38,7 +38,10 @@
                 </div>
                 <div class="haveLoggedHover-info">
                   <h1>{{ store.state.login.userObj.nickname }}</h1>
-                  <h2>ID: {{ userid }} &nbsp; 复制</h2>
+                  <h2>
+                    ID: {{ store.state.login.userid }} &nbsp;
+                    <span @click="copyHandle">复制</span>
+                  </h2>
                 </div>
               </div>
               <!-- 开通会员 -->
@@ -49,19 +52,21 @@
                   <h1>{{ identityInfo }}</h1>
                   <h2>享全站工具288+功能</h2>
                 </div>
-                <a-button type="primary">立即开通</a-button>
+                <a-button type="primary" @click="$router.push('/pricing')"
+                  >立即开通</a-button
+                >
               </div>
               <!-- 列表 -->
               <div class="haveLoggedHover-list">
                 <ul>
-                  <li>
+                  <li @click="$router.push('/user/orders')">
                     <img
                       src="@/assets/img/aboutPage/nav/dist/juxing.png"
                       alt=""
                     />
                     <span>我的订单</span>
                   </li>
-                  <li>
+                  <li @click="$router.push('/user/invoices')">
                     <img
                       src="@/assets/img/aboutPage/nav/dist/shenqing.png"
                       alt=""
@@ -69,7 +74,7 @@
                     <span>申请发票</span>
                   </li>
                 </ul>
-                <ul>
+                <!-- <ul>
                   <li>
                     <img src="@/assets/img/aboutPage/nav/dist/my.png" alt="" />
                     <span>我的GIF库</span>
@@ -81,7 +86,7 @@
                     />
                     <span>账号设置</span>
                   </li>
-                </ul>
+                </ul> -->
                 <ul>
                   <li v-on:click="logoutHandle">
                     <img
@@ -110,6 +115,7 @@ import { computed, onMounted, ref, toRefs, watch } from "vue";
 import { useStore } from "vuex";
 import { imgList } from "./index.js";
 import { useRouter } from "vue-router";
+import { message } from "ant-design-vue";
 components: {
   loginModel;
 }
@@ -145,15 +151,15 @@ watch(
     if (newValue !== null || newValue.length !== 0) {
       // 赋值用户身份
       identity.value = newValue;
-      if (identity.value === "free") {
+      if (newValue=== "free") {
         identityInfo.value = "免费会员：终身";
-      } else if (identity.value === "silver") {
+      } else if (newValue=== "silver") {
         identityInfo.value = "白银会员：周卡";
-      } else if (identity.value === "gold") {
+      } else if (newValue=== "gold") {
         identityInfo.value = "黄金会员：月卡";
-      } else if (identity.value === "platinum") {
+      } else if (newValue=== "platinum") {
         identityInfo.value = "白金会员：年卡";
-      } else if (identity.value === "diamond") {
+      } else if (newValue === "diamond") {
         identityInfo.value = "钻石会员：终身";
       }
     }
@@ -178,6 +184,13 @@ const logoutHandle = () => {
       // 刷新页面
       router.go(0);
     }
+  });
+};
+
+// 复制文字
+const copyHandle = () => {
+  navigator.clipboard.writeText(store.state.login.userid).then(() => {
+    message.success("复制成功");
   });
 };
 </script>

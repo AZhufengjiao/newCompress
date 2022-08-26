@@ -199,16 +199,13 @@ let succeed = ref(false);
 let fileUrlList = computed(() => store.state.home.conversionList);
 
 // // 监听用户id
-// watch(
-//   () => store.state.login.userid,
-//   (newValue) => {
-//     console.log(newValue);
-//     userid.value = newValue;
-//     // console.log(userid.value);
-//     // 获取剩余次数
-//     // getFrequency(userid.value);
-//   }
-// );
+watch(
+  () => store.state.login.userid,
+  (newValue) => {
+    // 获取剩余次数;
+    getFrequency(store.state.login.userid);
+  }
+);
 
 // 弹出框
 // 1.视频下载弹出框弹出框
@@ -279,17 +276,17 @@ const trialStateHandle = (state) => {
 let upload = ref(null);
 
 // // 3.获取工具剩余次数
-// const getFrequency = (userid) => {
-//   return getDownloadNum(userid).then((res) => {
-//     // console.log(res.data);
-//     if (res.data.code == 200) {
-//       console.log(res.data);
-//       downloadNumber.value = res.data.data.downloadNumber;
-//       // 保存次数至本地
-//       store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
-//     }
-//   });
-// };
+const getFrequency = (userid) => {
+  return getDownloadNum(userid).then((res) => {
+    // console.log(res.data);
+    if (res.data.code == 200) {
+      console.log(res.data);
+      downloadNumber.value = res.data.data.downloadNumber;
+      // 保存次数至本地
+      store.commit("home/setDownloadNumber", res.data.data.downloadNumber);
+    }
+  });
+};
 
 //  功能1.添加按钮，触发input，让文件夹弹出  3.
 const handleUploading = (e) => {
@@ -362,8 +359,20 @@ let handleInputV = (e) => {
      * @param {number} num  视频大小
      */
     function estimateFn(state, num) {
+      // 判断次数如果小于用户选择的数量就弹出弹出框
+      if (
+        fileList.value.length + e.target.files.length >
+          store.state.home.downloadNumber ||
+        store.state.home.downloadNumber < e.target.files.length
+      ) {
+        // 复制参数，修改弹出框信息
+        UploadModal.value = {
+          flag: true,
+          state: state,
+        };
+      }
       // 视频大小，不超过身份限制，下载视频
-      if ((videoSize <= num || num === null) && downloadNumber.value > 0) {
+      else if ((videoSize <= num || num === null) && downloadNumber.value > 0) {
         // console.log("我的身份是" + state);
         // 复制参数，修改弹出框信息
         UploadModal.value = {

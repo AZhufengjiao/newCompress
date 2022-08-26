@@ -297,7 +297,7 @@
 <script setup>
 import HomeNav from "@/components/home/Nav/index.vue";
 import VipSetMeal from "@/components/myVip/VipSetMeal/index.vue";
-import aboutNav from "@/components/aboutNav/index.vue";
+import aboutNav from "@/components/about/aboutNav/index.vue";
 import { userList } from "@/api/user";
 import { userLogOut } from "@/api/login";
 import { onMounted, ref, watch, onUnmounted } from "vue";

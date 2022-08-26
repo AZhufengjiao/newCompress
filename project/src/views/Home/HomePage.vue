@@ -59,7 +59,7 @@ import HomeNav from "@/components/home/Nav/index.vue";
 import CompressedVideo from "@/components/home/CompressedVideo/index.vue";
 
 import { getDownloadNum } from "@/api/about";
-import aboutNav from "@/components/aboutNav/index.vue";
+import aboutNav from "@/components/about/aboutNav/index.vue";
 import { userList } from "@/api/user";
 import { userLogOut } from "@/api/login";
 import { useStore } from "vuex";

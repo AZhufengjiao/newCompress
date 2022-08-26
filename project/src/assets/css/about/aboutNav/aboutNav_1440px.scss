@@ -117,6 +117,7 @@
             display: none;
             width: 253px;
             height: 404px;
+            height: 323px;
             background: #0544ff;
             // 用户信息
             .haveLoggedHover-user {
@@ -148,6 +149,9 @@
                   font-weight: normal;
                   color: #ffffff;
                   line-height: 16px;
+                  span {
+                    cursor: pointer;
+                  }
                 }
               }
             }

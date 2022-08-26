@@ -214,7 +214,7 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
-import aboutNav from "@/components/aboutNav/index.vue";
+import aboutNav from "@/components/about/aboutNav/index.vue";
 import { userList } from "@/api/user";
 import { userLogOut } from "@/api/login";
 import { getSetMeal, getDownloadNum, getMyCoupon } from "@/api/about";

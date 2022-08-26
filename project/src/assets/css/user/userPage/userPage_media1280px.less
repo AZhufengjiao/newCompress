@@ -1,0 +1,89 @@
+//  适配128px
+@media screen and (max-width: 1280px) {
+  .user {
+    width: 100%;
+    height: 100%;
+    padding-top: 96px;
+    background-color: #f6f7f9;
+    .user-box {
+      display: flex;
+      width: 1044px;
+      height: 488px;
+      margin: auto;
+      // 左
+      .user-left {
+        width: 214px;
+        height: 100%;
+        // 上
+        .user-top {
+          width: 214px;
+          height: 196px;
+          overflow: hidden;
+          text-align: center;
+          background-color: #fff;
+          div {
+            margin: 13px auto 16px;
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            overflow: hidden;
+            img {
+              width: 78px;
+              height: 78px;
+            }
+          }
+          h1 {
+            margin-bottom: 16px;
+            font-size: 13px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            // color: #ffffff;
+            line-height: 19px;
+            letter-spacing: 1px;
+          }
+          p {
+            color: #000000;
+            font-size: 13px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #ffffff;
+            line-height: 19px;
+            letter-spacing: 1px;
+          }
+        }
+        // 下
+        .user-bottom {
+          margin-top: 22px;
+          width: 214px;
+          height: 269px;
+          background-color: #fff;
+          ul {
+            width: 100%;
+            li {
+              cursor: pointer;
+              width: 214px;
+              height: 65px;
+              text-align: center;
+              line-height: 65px;
+            }
+            // li:hover {
+            //   color: #fff;
+            //   background-color: rgb(5, 68, 255, 0.6);
+            // }
+            .liBgc {
+              color: #fff;
+              background-color: rgb(5, 68, 255, 0.6);
+            }
+          }
+        }
+      }
+      // 右
+      .user-right {
+        width: 830px;
+        height: 488px;
+        margin-left: 22px;
+        background-color: #fff;
+      }
+    }
+  }
+}

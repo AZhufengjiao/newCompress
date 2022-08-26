@@ -10,6 +10,7 @@ const routes = [
     name: "about",
     component: () => import("@/views/About/AboutPage.vue"),
   },
+  // 工具页面
   {
     path: "/home",
     name: "home",
@@ -43,52 +44,35 @@ const routes = [
         ],
       },
     ],
-    // children: [
-    //   // 自定义格式
-    //   {
-    //     path: "/video-custom-converter",
-    //     name: "video-custom-converter",
-    //     component: () => import("@/components/home/Custom/index.vue"),
-    //   },
-    //   // 视频格式
-    //   {
-    //     path: "/video-converter",
-    //     name: "video-converter1",
-    //     // redirect: "/video-converter",
-    //     component: () => import("@/components/home/defaultYS/index.vue"),
-    //     children: [
-    //       {
-    //         path: "/video-converter/:id",
-    //         name: "video-converter",
-    //         component: () =>
-    //           import("@/components/home/defaultYS/component/Size/index.vue"),
-    //         // import(
-    //         // "@/components/home/defaultYS/component/Converter/index.vue"
-    //         // ),
-    //       },
-    //       {
-    //         path: "/video-compressor/:id",
-    //         name: "video-compressor",
-    //         component: () =>
-    //           import("@/components/home/defaultYS/component/Size/index.vue"),
-    //       },
-    //       {
-    //         path: "/video-lossless-compression/:id",
-    //         name: "video-lossless-compression",
-    //         component: () =>
-    //           // import("@/components/home/defaultYS/component/Wusun/index.vue"),
-    //           import("@/components/home/defaultYS/component/Size/index.vue"),
-    //       },
-    //     ],
-    //   },
-    // ],
   },
-
+  // vip页面
   {
     path: "/pricing",
     name: "pricing",
-    // component: () => import("@/views/MyVip/index.vue"),
     component: pricing,
+  },
+  // user 用户信息
+  {
+    path: "/user",
+    name: "user",
+    redirect: "/user/orders",
+    component: () => import("@/components/user/user.vue"),
+    children: [
+      // 用户订单页面
+      {
+        path: "/user/orders",
+        name: "userOrders",
+        component: () =>
+          import("@/components/user/components/homeOrders/homeOrders.vue"),
+      },
+      // 申请发票页面
+      {
+        path: "/user/invoices",
+        name: "userInvoices",
+        component: () =>
+          import("@/components/user/components/userInvoices/userInvoices.vue"),
+      },
+    ],
   },
 ];
 
