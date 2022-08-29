@@ -8,6 +8,8 @@ const login = {
       userid: null,
       // 用户数据
       userObj: {},
+      // 获取所有数据
+      entity: {},
     };
   },
   mutations: {
@@ -18,6 +20,10 @@ const login = {
     // 修改用户信息
     setUserObj(state, obj) {
       state.userObj = obj;
+    },
+    // 存储所有数据
+    setEntity(state, obj) {
+      state.entity = obj;
     },
   },
   actions: {},

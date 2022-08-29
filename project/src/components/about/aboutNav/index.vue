@@ -151,13 +151,13 @@ watch(
     if (newValue !== null || newValue.length !== 0) {
       // 赋值用户身份
       identity.value = newValue;
-      if (newValue=== "free") {
+      if (newValue === "free") {
         identityInfo.value = "免费会员：终身";
-      } else if (newValue=== "silver") {
+      } else if (newValue === "silver") {
         identityInfo.value = "白银会员：周卡";
-      } else if (newValue=== "gold") {
+      } else if (newValue === "gold") {
         identityInfo.value = "黄金会员：月卡";
-      } else if (newValue=== "platinum") {
+      } else if (newValue === "platinum") {
         identityInfo.value = "白金会员：年卡";
       } else if (newValue === "diamond") {
         identityInfo.value = "钻石会员：终身";
@@ -208,6 +208,6 @@ li {
   margin: 0;
   padding: 0;
 }
-@import "@/assets/css/about/aboutNav/aboutNav_1440px.scss";
 @import "@/assets/css/about/aboutNav/aboutNav_1280px.scss";
+@import "@/assets/css/about/aboutNav/aboutNav_1440px.scss";
 </style>

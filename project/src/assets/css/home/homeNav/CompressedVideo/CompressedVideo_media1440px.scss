@@ -1,5 +1,5 @@
 // 适配1440px
-@media screen and (max-width: 1440px) {
+@media screen and (max-width: 1680px) {
   .btn {
     margin-bottom: 83px;
     display: flex;
@@ -133,7 +133,7 @@
       height: 251px;
       border-radius: 14px;
       opacity: 0.6;
-      border: 3px solid #0544ff;
+      border: 3px dashed #0544ff;
       .home_uploadingVideo_bottom {
         margin: auto;
         margin-top: 63px;

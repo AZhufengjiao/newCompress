@@ -174,7 +174,7 @@
             font-size: 23px;
             font-family: HarmonyOS_Sans_SC;
             color: #0544ff;
-            line-height: 52px;
+            line-height: 42px;
           }
           .myVip-setMeal-box-plan-xz {
             margin: 0 auto 19px;
@@ -278,7 +278,7 @@
         // 后一个盒子
         .myVip-setMeal-box-finally {
           width: 196px;
-          margin: auto;
+          margin: auto !important;
           h2 {
             width: 128px;
             height: 14px;
@@ -289,7 +289,7 @@
             line-height: 14px;
           }
           .myVip-setMeal-box-finally-box {
-            margin-top: 16px;
+            margin-top: 16px !important;
             display: flex;
             justify-content: space-around;
             width: 196px;

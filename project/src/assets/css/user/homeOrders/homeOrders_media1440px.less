@@ -3,7 +3,17 @@
   .homeOrders {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 80%;
+    .ant-pagination {
+      display: flex;
+      justify-content: center;
+      li {
+        border: none !important;
+      }
+      :deep .ant-pagination-item {
+        border: none !important;
+      }
+    }
     table {
       width: 858px;
       height: 100%;
@@ -26,7 +36,7 @@
         line-height: 51px;
       }
       td:nth-child(1) {
-        width: 66px;
+        width: 72px;
         padding-left: 8px;
       }
       td:nth-child(2) {
@@ -40,6 +50,9 @@
       }
       td:nth-child(5) {
         width: 133px;
+      }
+      td:nth-child(5) {
+        width: 190px;
       }
     }
 

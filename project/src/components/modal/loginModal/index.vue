@@ -206,16 +206,18 @@ const scanQRcodes = (ticket) => {
       let obj = {
         face: res.data.data.entity.face,
         nickname: res.data.data.entity.nickname,
+        sign:res.data.data.entity.sign
       };
+      console.log(res.data.data.entity);
       store.commit("login/setParams", id);
       store.commit("login/setUserObj", obj);
+      store.commit("login/setEntity", res.data.data.entity);
       // 清除定时器
       clearInterval(time.value);
       time.value = null;
 
       // 登录成功，关闭弹窗
       cancelHandle();
-      router.go(0);
     }
   });
 };
