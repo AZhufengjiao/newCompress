@@ -2,13 +2,19 @@
 import { createRouter, createWebHistory } from "vue-router"; //history
 import HomeView from "../views/Home/HomePage.vue";
 import pricing from "@/views/MyVip/index.vue";
+import About from "@/views/About/AboutPage.vue";
 
 const routes = [
   // 首页是obout
   {
     path: "/",
     name: "about",
-    component: () => import("@/views/About/AboutPage.vue"),
+    redirect: "/about",
+  },
+  {
+    path: "/about",
+    // component: () => import("@/views/About/AboutPage.vue"),
+    component: About,
   },
   // 工具页面
   {
@@ -49,7 +55,8 @@ const routes = [
   {
     path: "/pricing",
     name: "pricing",
-    component: pricing,
+    // component: pricing,
+    component: () => import("@/views/MyVip/index.vue"),
   },
   // user 用户信息
   {

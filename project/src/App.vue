@@ -6,12 +6,11 @@
   <router-view />
 </template>
 
-<script>
-export default {
-  mounted() {
-    document.dispatchEvent(new Event("render-event"));
-  },
-};
+<script setup>
+import { onMounted } from "vue";
+onMounted(() => {
+  document.dispatchEvent(new Event("render-event"));
+});
 </script>
 
 <style lang="scss">

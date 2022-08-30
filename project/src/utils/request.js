@@ -1,14 +1,13 @@
 import axios from "axios";
-// import store from "@/store/index";
-// import router from "@/router/index";
+import baseUrl from "./config";
 
 // 2.创建 baseURL 变量用于存储基准的请求地址
-const baseURL = "http://localhost:8080";
+// const baseURL = "http://localhost:8080";
 // const baseURL = "http://demo.heycut.com";
 
 //1.创建一个新的axios 实例对象 专门用来配置相关的请求、
 const instanceWithoutToken = axios.create({
-  baseURL,
+  baseUrl,
 });
 
 //不携带token响应拦截
