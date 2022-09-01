@@ -324,8 +324,6 @@ let roleType = computed(() => store.state.user.userData.roleType);
 // );
 //  功能2.input获取上传视频，身份判断
 let handleInputV = (e) => {
-  console.log(store.state.user.userData.roleType);
-  console.log(roleType.value);
   // 为我要试试功能存储
   filtsShi.value = e.target.files;
   // 获取选中的视频
@@ -417,12 +415,10 @@ let handleInputV = (e) => {
     }
     // 黄金
     else if (roleType.value === "gold") {
-      console.log(11);
       estimateFn(roleType.value, 100);
     }
     // 白金或者钻石
     else if (roleType.value === "platinum" || roleType.value === "diamond") {
-      console.log(111);
       estimateFn(roleType.value, null);
     }
   } else {

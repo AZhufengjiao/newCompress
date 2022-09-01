@@ -1,4 +1,5 @@
 import axios from "axios";
+import config from "./config";
 import baseUrl from "./config";
 
 // 2.创建 baseURL 变量用于存储基准的请求地址
@@ -9,6 +10,21 @@ import baseUrl from "./config";
 const instanceWithoutToken = axios.create({
   baseUrl,
 });
+
+instanceWithoutToken.interceptors.request.use(
+  (config) => {
+    config.headers["Cross-Origin-Opener-Policy"] = "same-origin";
+    config.headers["Cross-Origin-Embedder-Policy"] = "require-corp";
+    // console.log("headers", config.headers);
+    return config;
+  },
+  (error) => {
+    console.log(error);
+    Promise.reject(error);
+  }
+);
+// axios.defaults.headers.common["Cross-Origin-Opener-Policy"] = "same-origin";
+// axios.defaults.headers.common["Cross-Origin-Embedder-Policy"] = "require-corp";
 
 //不携带token响应拦截
 // instanceWithoutToken.interceptors.response.use((response) => {

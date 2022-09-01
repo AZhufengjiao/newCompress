@@ -85,6 +85,7 @@ import { defineEmits } from "vue";
 import { message } from "ant-design-vue";
 import { saveFile } from "@/components/home/CompressedVideo/download.js";
 import axios from "axios";
+import { compressFn } from "@/assets/js/compress.js";
 components: {
   download2, downloadWc, uploadModal, payModel;
 }
@@ -176,7 +177,9 @@ onMounted(() => {
   //   // video/mp4 .mp4 xxxx.mp4
   //   // video/mov .mov xxxx.mov
   let suffix = fileType.value.replace("video/", ".");
-  getCompressTK(suffix);
+  // console.log(props.payload);
+  compressFn(file.value, props.payload);
+  // getCompressTK(suffix);// ---------------------------------------------------
   // } else {
   //   message.warning("您上传的视频格式有误，请重新上传");
   // }
@@ -379,7 +382,7 @@ const updateStateHandle = (state) => {
 };
 // 4.用户点击下载
 const downloadBtn = () => {
-    if (store.state.home.trial === true) {
+  if (store.state.home.trial === true) {
     return (modalFlag.value = true); // 支付弹出框
   }
   if (obj.value.zh !== true) {
