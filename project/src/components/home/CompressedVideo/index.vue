@@ -39,6 +39,7 @@
           class="home_uploadingVideo"
           v-on:dragover="HandleDragover"
           v-on:drop="HandleDrag"
+          v-on:dragenter="handleDragenter"
         >
           <div class="home_uploadingVideo_bottom">
             <div class="home_uploadingVideo_bottom_img">
@@ -72,7 +73,7 @@
             @canplaythrough="myFunction"
           ></video>
           <h1>
-            最大支持400M以内视频压缩，<span @click="modalFlag = true"
+            最大支持400M以内视频压缩，<span @click="upgradeHandle"
               >升级会员 </span
             >享受无限大小
           </h1>
@@ -178,16 +179,6 @@ watch(
   { immediate: true }
 );
 
-// watch(
-//   () => store.state.home.params1,
-//   (value) => {
-//     params1.value = value;
-//   },
-//   {
-//     immediate: true,
-//   }
-// );
-
 // 动画状态
 let flag = ref(false);
 let state = ref("sc");
@@ -254,15 +245,35 @@ let UploadModal = ref({
 });
 // 试试功能
 const filtsShi = ref([]);
-let shishiFlag = ref(false);
+let shishiFlag = computed(() => store.state.home.trial);
 watch(
   () => store.state.home.trial,
   (newValue) => {
-    shishiFlag.value = newValue;
-    fileList.value = filtsShi.value;
+    if (newValue && filtsShi.value.length > 0) {
+      filtsShi.value[0].shishi = false;
+      fileList.value.push(filtsShi.value[0]);
+    }
+    console.log(newValue);
   },
   { immediate: true }
 );
+
+// watch(
+//   () => filtsShi.value,
+//   (newValue) => {
+//       console.log(store.state.home.trial);
+//       //   console.log(shishiFlag.value);
+//       //   if (newValue.length > 0) {
+//       //     fileList.value.push(newValue[0]);
+//       //   }
+//     },
+
+//     // fileList.value.push(newValue[0]);
+//   {
+//     immediate: true,
+//   }
+// );
+
 // 子组件像父组件传递参数，修改UploadModal的状态
 const updateStateHandle = (state) => {
   UploadModal.value.flag = state;
@@ -307,6 +318,17 @@ onMounted(() => {
   store.commit("home/setConversionList", []);
 });
 
+// 点击升级会员
+const upgradeHandle = () => {
+  // 点击先判断用户有没有登录
+  if (userid.value !== null) {
+    modalFlag.value = true;
+  } else {
+    // 未登录先登录，弹出登录弹出框
+    loginFlag.value = true;
+  }
+};
+
 /* 文件夹弹出 选择图片上传 */
 let file = ref(null);
 let videoDom = ref(null);
@@ -324,6 +346,7 @@ let roleType = computed(() => store.state.user.userData.roleType);
 // );
 //  功能2.input获取上传视频，身份判断
 let handleInputV = (e) => {
+  console.log(e.target.files);
   // 为我要试试功能存储
   filtsShi.value = e.target.files;
   // 获取选中的视频
@@ -339,7 +362,6 @@ let handleInputV = (e) => {
       // 遍历选中的文件
       for (let i = 0; i < uploadFiles.length; i++) {
         // 判断该文件是否添加
-        // console.log(111111, fileList.value);
         let flag = fileList.value.some(
           (item) => item.lastModified === uploadFiles[i].lastModified
         );
@@ -435,12 +457,22 @@ const myFunction = (e) => {
 const HandleDragover = (e) => {
   e.preventDefault();
 };
+const handleDragenter = (e) => {
+  e.preventDefault();
+};
 // 功能3.拖拽file
 const HandleDrag = (e) => {
   e.preventDefault();
-  let FileArr = e.dataTransfer.files;
-  for (let i = 0; i < FileArr.length; i++) {
-    fileList.value.push(FileArr[i]);
+
+  // 拖拽先判断用户有没有登录
+  if (userid.value !== null) {
+    let FileArr = e.dataTransfer.files;
+    for (let i = 0; i < FileArr.length; i++) {
+      fileList.value.push(FileArr[i]);
+    }
+  } else {
+    // 未登录先登录，弹出登录弹出框
+    loginFlag.value = true;
   }
 };
 
@@ -454,9 +486,6 @@ const FileItemParams = (item) => {
 let downloadTimer = ref(null);
 // 功能4.点击下载全部
 const downloadHandle = () => {
-  if (store.state.home.trial === true) {
-    return (modalFlag.value = true); // 支付弹出框
-  }
   SonList.value.map((item) => {
     if (item.zh !== true) {
       // 如果是普通用户的话弹出支付
@@ -491,6 +520,12 @@ const downloadHandle = () => {
       }
     }
   });
+
+  // 判断该转化好的视频是否是试试的视频，试试的视频不让下载
+  let findFlag = SonList.value.some((item) => item.file.shishi == false);
+  if (findFlag) {
+    return (modalFlag.value = true); // 支付弹出框
+  }
 
   // 让下载中弹窗显示
   videoXz.value.flag = true;

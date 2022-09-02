@@ -165,6 +165,7 @@ const updataModalFlag = (bol) => {
 
 // 1.进入页面，获取input上传视频，判断视频格式
 onMounted(() => {
+  console.log();
   // 获取文件上传url，赋值给video
   fileURL.value = URL.createObjectURL(file.value); // https://blog.csdn.net/qq_21479345/article/details/108550762
   subVideoDom.value.src = fileURL.value;
@@ -178,8 +179,8 @@ onMounted(() => {
   //   // video/mov .mov xxxx.mov
   let suffix = fileType.value.replace("video/", ".");
   // console.log(props.payload);
-  compressFn(file.value, props.payload);
-  // getCompressTK(suffix);// ---------------------------------------------------
+  // compressFn(file.value, props.payload);
+  getCompressTK(suffix); // ---------------------------------------------------
   // } else {
   //   message.warning("您上传的视频格式有误，请重新上传");
   // }
@@ -290,18 +291,24 @@ const setTranscoding = async () => {
       // 设置定时器
       lxTime.value = null;
       //  获取视频时长
+      // 时间总长十分之一
+      let tenNum = videoTime.value / 10;
       //  获取视频时长的三分之一
-      let threeNum = videoTime.value / 3;
-      //  获取轮训时间;
-      let currentTime = 0;
+      let threeNum = tenNum * 3;
+      //  变化时间;
+      let TimeChange = 0;
+      // 页面每次跑10
       completeWih.value = 10;
+
       lxTime.value = setInterval(() => {
-        if (completeWih.value >= threeNum * 10) {
+        TimeChange += tenNum;
+        if (TimeChange >= threeNum) {
           // 永远显示进度99
           completeWih.value = 99;
         } else {
-          completeWih.value += 15;
+          completeWih.value += 10;
         }
+
         // 并调用处理异步处理进度函数
         setSchedule(pid.value);
       }, 1000);
@@ -382,7 +389,8 @@ const updateStateHandle = (state) => {
 };
 // 4.用户点击下载
 const downloadBtn = () => {
-  if (store.state.home.trial === true) {
+  // 判断该转化好的视频是否是试试的视频，试试的视频不让下载
+  if (obj.value.file.shishi == false) {
     return (modalFlag.value = true); // 支付弹出框
   }
   if (obj.value.zh !== true) {

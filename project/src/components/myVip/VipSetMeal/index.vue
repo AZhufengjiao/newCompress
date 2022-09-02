@@ -309,8 +309,8 @@ onMounted(() => {
 });
 
 // 3.获取可用优惠券
-const getCoupon = (userid) => {
-  return getMyCoupon(userid).then((res) => {
+const getCoupon = async (userid) => {
+  return await getMyCoupon(userid).then((res) => {
     if (res.data.code == 200) {
       myCouponList.value = res.data.data;
 
@@ -320,9 +320,9 @@ const getCoupon = (userid) => {
 };
 
 // 2. 获取套餐信息列表存储本地
-const setMealInfo = (id) => {
+const setMealInfo = async (id) => {
   id = id === null || id.length == 0 ? -1 : id;
-  return getSetMeal(id).then((res) => {
+  return await getSetMeal(id).then((res) => {
     if (res.data.code == 200) {
       // 1.1赋值
       setMealList.value = taoCanFn(res.data.data, store.state.home.myCoupon);

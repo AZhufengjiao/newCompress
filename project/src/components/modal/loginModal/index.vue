@@ -89,7 +89,7 @@
         </div>
 
         <!-- 复选框 -->
-        <a-checkbox v-model:checked="checked"
+        <a-checkbox :checked="true"
           >勾选代表你同意《<router-link to="">会员协议声明</router-link
           >》</a-checkbox
         >
@@ -141,7 +141,7 @@ const emit = defineEmits(["cancelChild"]);
 // 登录弹出框组件显示与隐藏
 const flag = ref(false);
 // 勾选复选框
-const checked = ref(false);
+const checked = ref(true);
 watch(
   () => flag.value,
   (newValue) => {
@@ -206,7 +206,7 @@ const scanQRcodes = (ticket) => {
       let obj = {
         face: res.data.data.entity.face,
         nickname: res.data.data.entity.nickname,
-        sign:res.data.data.entity.sign
+        sign: res.data.data.entity.sign,
       };
       console.log(res.data.data.entity);
       store.commit("login/setParams", id);

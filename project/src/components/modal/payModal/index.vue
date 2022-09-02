@@ -145,7 +145,9 @@
                   ref="stykleUl"
                   :class="[
                     !StyleFlag && StyleFlag != null ? 'StyleaLeft' : '',
-                    StyleFlag && StyleFlag != null ? 'StyleaRight' : '',
+                    StyleFlag && StyleFlag != null && classFlag
+                      ? 'StyleaRight'
+                      : '',
                   ]"
                 >
                   <li
@@ -163,12 +165,12 @@
                       {{ item.tag }}
                     </div>
                     <!-- 左下角-卷 -->
-                    <div v-show="index === 0" class="quan">
+                    <!-- <div v-show="index === 0" class="quan">
                       <img
                         src=" https://www.soogif.com/images/vip/tool-coupon.png"
                         alt=""
                       />
-                    </div>
+                    </div> -->
 
                     <h1>{{ item.huiYuanType }}会员</h1>
                     <!-- <div class="modal-robShopping">显示抢购</div> -->
@@ -201,15 +203,19 @@
 
                 <div
                   class="mvpTC-left"
-                  v-show="
-                    (!StyleFlag || StyleFlag == null) && taocanList.length > 4
+                  v-show="StyleFlag === false"
+                  v-on:click="
+                    StyleFlag = true;
+                    classFlag = true;
                   "
-                  v-on:click="StyleFlag = true"
                 ></div>
                 <div
                   class="mvpTC-right"
                   v-show="StyleFlag === true"
-                  v-on:click="StyleFlag = false"
+                  v-on:click="
+                    StyleFlag = false;
+                    classFlag = true;
+                  "
                 ></div>
               </div>
             </div>
@@ -387,6 +393,8 @@ let roleType = computed(() => {
 // 点击切换动画
 const StyleFlag = ref(null);
 let payToggle = ref(false);
+// 控制动画类名
+let classFlag = ref(false);
 
 // 套餐数据
 let taocanList = ref([]);
@@ -425,6 +433,7 @@ const updateFlagHandle = (res) => {
 
 // 1. 获取套餐信息列表存储本地
 const setMealInfo = async (id) => {
+  id = id === null || id.length == 0 ? -1 : id;
   return await getSetMeal(id).then((res) => {
     if (res.data.code == 200) {
       // 1.1赋值
@@ -633,10 +642,14 @@ watch(
           // 动画
           function donghuaFlag(index) {
             // 判断数组是否大于4，并且ID是都是最后一个，如果是最后，那么就要滚动支付弹出框
-            if (taocanList.value.length > 4) {
+            if (taocanList.value.length > 4 && StyleFlag.value == null) {
               if (index === 3 || index === 4) {
                 StyleFlag.value = false;
+              } else {
+                StyleFlag.value = true;
               }
+            } else if (taocanList.value.length < 4) {
+              StyleFlag.value = null;
             }
           }
 
@@ -661,6 +674,7 @@ watch(
         //   }
         // });
       } else if (currentId.value !== null) {
+        console.log(222);
         // 修改支付金额
         taocanList.value.map((item, index) => {
           if (item.pId === currentId.value) {
@@ -675,10 +689,14 @@ watch(
             paymentAmount.value.discounts = item.yhq[0].discountPrice;
 
             // 判断数组是否大于4，并且ID是都是最后一个，如果是最后，那么就要滚动支付弹出框
-            if (taocanList.value.length > 4) {
+            if (taocanList.value.length > 4 && StyleFlag.value == null) {
               if (index === 3 || index === 4) {
                 StyleFlag.value = false;
+              } else {
+                StyleFlag.value = true;
               }
+            } else if (taocanList.value.length < 4) {
+              StyleFlag.value = null;
             }
 
             // 赋值
@@ -742,6 +760,7 @@ let MousemoveNum = ref(Number);
 let stykleUl = ref("");
 // 鼠标点击li的时候
 const clickLiHandle = (item, index) => {
+  classFlag.value = true;
   if (taocanList.value.length > 4) {
     if (index === 3 || index === 4) {
       StyleFlag.value = false;
@@ -864,7 +883,9 @@ const handleYhq = (item) => {
     }
   });
 };
-
+onMounted(() => {
+  classFlag.value = false;
+});
 // 卸载组件清除定时器
 onUnmounted(() => {
   // 二维码支付
