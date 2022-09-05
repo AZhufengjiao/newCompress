@@ -674,7 +674,6 @@ watch(
         //   }
         // });
       } else if (currentId.value !== null) {
-        console.log(222);
         // 修改支付金额
         taocanList.value.map((item, index) => {
           if (item.pId === currentId.value) {
